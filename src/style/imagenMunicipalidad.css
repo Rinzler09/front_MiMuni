@@ -1,0 +1,8 @@
+.img-Municipalidad {
+    display: flex;
+    flex-direction: column;
+    max-height: 60px;
+    /* flex - direction hace que la imagen hija no se salga del Div*/
+    /* max-width: 330px; */
+    max-width: 80px;
+}

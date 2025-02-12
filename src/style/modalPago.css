@@ -1,0 +1,21 @@
+.modalPago {
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 700px;
+    max-height: 90%;
+    /*La altura maxima sera del 90% del dispositivo que la visualiza*/
+    overflow-y: auto;
+    /* Añade una barra lateral si el contenido en Y se sale de la modal*/
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pagoBotones {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.pagoBotones button {
+    margin: 0px 15px;
+}

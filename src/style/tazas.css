@@ -1,0 +1,189 @@
+.detalles-impuesto-container {
+  padding: 20px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ajustes {
+  font-size: 17px;
+  margin-top: 20px;
+  margin-right: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.form-row label {
+  width: 160px;
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.details-table th,
+.details-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.details-table th {
+  background-color: #ff6600;
+  color: white;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.print-button,
+.pay-button,
+.exit-button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.print-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.pay-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.exit-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+/*Administracion de tarjetas*/
+.admin-tarjetas-container {
+  padding: 20px;
+  width: 930px;
+}
+
+.admin-title {
+  display: flex;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/*Metodo de pagos de tarjetas*/
+
+.card-form-container {
+  margin: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+  background-color: rgb(230, 229, 229);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.credit-card-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 330px;
+  /* Ajustado para dar espacio al botón de eliminar */
+}
+
+.credit-card {
+  margin-right: 0px;
+  position: relative;
+  width: 300px;
+  height: 180px;
+  background-color: #0074cc;
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+
+
+/* Botón de Eliminación */
+.delete-button {
+  position: absolute;
+  right: 0;
+  width: 35px;
+  /* Ancho ajustado */
+  height: 180px;
+  background-color: #e74c3c;
+  border-radius: 0 10px 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  opacity: 0;
+  transform: translateX(-35px);
+  /* Posición inicial dentro de la tarjeta */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 0;
+}
+
+.delete-button2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e74c3c;
+  border-radius: 50px;
+
+}
+
+
+.fa-solid:hover {
+  color: #aa4236;
+  cursor: pointer;
+
+}
+
+.credit-card-container:hover .delete-button {
+  opacity: 1;
+  transform: translateX(0);
+  /* Desliza hacia afuera en hover */
+}
+
+.delete-button i {
+  font-size: 16px;
+  /* Tamaño del ícono de basura */
+}
+
+.save-button {
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.info-text {
+  font-size: 12px;
+  color: #666;
+  margin-top: 10px;
+}

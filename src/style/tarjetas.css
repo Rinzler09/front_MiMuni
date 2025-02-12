@@ -1,0 +1,133 @@
+/*CSS para TarjetasGuardadas*/
+
+.btnAddCard {
+    background-color: rgb(0, 110, 0);
+    max-width: 200px;
+    border-radius: 10px;
+}
+
+/*Estilos tarjeta*/
+.btnAddCard:hover {
+    background-color: rgb(10, 158, 10);
+}
+
+/*Contenedor de la tarjeta*/
+
+.container-card {
+    display: flex;
+    justify-content: start;
+}
+
+/*para div que con tiene el alias*/
+.card-alias {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+}
+
+
+.card-alias button {
+    background-color: rgb(130, 130, 0);
+    max-height: 40px;
+    max-width: 40px;
+    border-radius: 30px;
+    margin: 10px;
+}
+
+.card-alias button:hover {
+    background-color: rgb(146, 29, 0);
+}
+
+.card-alias input {
+    background-color: rgb(193, 193, 193);
+}
+
+
+.btn_EliminarCard {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.btn_EliminarCard button {
+    background-color: #f02913;
+    width: 40px;
+    height: 180px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    border-radius: 10px;
+}
+
+.credit-card:hover>.btn_EliminarCard button {
+    opacity: 1;
+}
+
+/*La transicion con opacity se pone el elemento sin hover*/
+.card-alias button {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/*Si son elementos hermanos en un div se puede usar un +*/
+/*
+Ejemplo
+.card-alias input:hover+button {
+  opacity: 1;
+}*/
+
+.card-alias:hover button {
+    opacity: 1;
+}
+
+
+
+.card-chip {
+    font-size: 10px;
+    font-weight: bold;
+    color: rgb(177, 164, 164);
+    width: 40px;
+    height: 25px;
+    background-color: gold;
+    border-radius: 4px;
+    display: flex;
+    /* el display flex nos ayuda a orientar objetos dentro del div */
+    align-items: center;
+    /* lo orienta en el centro verticalmente */
+    justify-content: center;
+    /* lo orienta en el centro horizontalmente */
+}
+
+.card-logo {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    font-size: 24px;
+    font-style: italic;
+}
+
+.card-number {
+    position: absolute;
+    bottom: 80px;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+.card-holder {
+    position: absolute;
+    bottom: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.card-expiry {
+    font-size: 12px;
+    position: absolute;
+    right: 105px;
+    bottom: 50px;
+}

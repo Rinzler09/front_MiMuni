@@ -1,0 +1,10 @@
+.imgMuni {
+    display: flex;
+    /*Estandar para manipular el max-width*/
+    flex-direction: column;
+    /*Estandar para manipular el max-width*/
+    max-width: 500px;
+    margin-top: 60px;
+    color: #044d40;
+    ;
+}

@@ -1,0 +1,118 @@
+
+/* Estilo para el contenedor principal */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #dddddd; /* Gris claro */
+    margin: 0;
+    padding: 0;
+  }
+  
+  
+ /* Estilo para la caja de login */
+.login-box {
+    background-color: #eeeded;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+    position: relative; /* Importante para las posiciones absolutas dentro del contenedor */
+  }
+  
+  
+  /* Estilo para los logos */
+/* Modificación para el logo del Banco Atlántida */
+.logo {
+    width: 125px;
+    margin-bottom: 20px;
+    position: absolute; /* Posición absoluta para poder moverlo */
+    top: 30px; /* Ajuste vertical */
+    left: 30px; /* Ajuste horizontal para moverlo a la izquierda */
+  }
+  
+  
+  .banco {
+    width: 160px;
+    margin-bottom: 30px;
+    padding: 20px;
+    top: 30px;
+    position: relative;
+  }
+  
+  /* Estilo para los campos de input */
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo del botón de acceder */
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #FF6600;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  /* Efecto hover para el botón */
+  button:hover {
+    background-color: #e65c00;
+  }
+  
+  /* Estilo para el texto "Powered by" */
+  .powered-by {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .powered-by strong {
+    color: #FF6600;
+  }
+  
+
+  /*=============================== Logo de planificacion ======================*/
+  .layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .layout-content {
+    display: flex;
+    flex: 1;
+  }
+  
+
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eeeded;
+  }
+  
+  .center-content {
+    text-align: center;
+  }
+  
+ .main-image {
+    max-width: 100%; /* Ajusta esto según el tamaño que desees */
+    height: auto;
+    
+}
+

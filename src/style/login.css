@@ -1,0 +1,175 @@
+/* Fondo de círculos difuminados */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #e7e7e7;
+  /* Fondo suave */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: -1;
+  /* Enviar al fondo */
+}
+
+/* Círculos difuminados */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(120px);
+}
+
+.circle1 {
+  width: 500px;
+  height: 500px;
+  background-color: #FF6600;
+  top: 10%;
+  left: 15%;
+}
+
+.circle2 {
+  width: 400px;
+  height: 400px;
+  background-color: #4E90FF;
+  bottom: 10%;
+  right: 20%;
+}
+
+.circle3 {
+  width: 300px;
+  height: 300px;
+  background-color: #FF6600;
+  bottom: 30%;
+  left: 30%;
+}
+
+/* Ajustes para el contenedor principal del formulario */
+.login-wrapper {
+  position: relative;
+  display: flex;
+  width: 85%;
+  max-width: 800px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 1;
+  /* Mantener al frente del fondo */
+}
+
+.left-section,
+.right-section {
+  padding: 30px;
+}
+
+.left-section {
+  width: 45%;
+  background-color: #f3ecec;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid #ddd;
+}
+
+.right-section {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.titu {
+
+  font-size: 25px;
+  color: #044d40;
+  /* color: black; */
+  margin-bottom: 40px;
+}
+
+/* Ajuste para inputs con iconos */
+.input-group {
+  position: relative;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  /* Espacio para el icono */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-group .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+/*Clase contenedor de Botones Login*/
+.loginBotones {
+  display: flex;
+  flex-wrap: nowrap;
+
+}
+
+.login-btn {
+  margin: 10px;
+  background-color: #FF6600;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #e55d00;
+}
+
+/*CAMBIOS illustration :Se definio un max height y se le quito el margen*/
+
+/* Ajusta el tamaño de la ilustración en la sección izquierda */
+.illustration {
+  max-width: 320px;
+  /* Ajusta el tamaño de la imagen */
+  max-height: 230px;
+  /* Mantiene la proporción de la imagen */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* Centra la imagen horizontalmente */
+
+  /* Aumenta el espacio superior */
+}
+
+
+/* Imagen de Banco Atlántida */
+.top-image img.BancoLinea {
+  max-width: 150px;
+  /* Máximo ancho permitido */
+  height: auto;
+  /* Ajuste de altura automático */
+  margin-bottom: 20px;
+  margin-right: 130px;
+  margin-top: 20px;
+}
+
+/* CAMBIOS letras: hubo cambio en letras se bajo el margen de 100px a 20px*/
+.letras img {
+  max-width: 150px;
+}

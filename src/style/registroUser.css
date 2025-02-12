@@ -1,0 +1,47 @@
+.btn-primary {
+    display: grid;
+    justify-self: center;
+    /*Si no esta en un div se usa el self*/
+    border: none;
+    background-color: #f25a1f;
+    max-width: 400px;
+    margin-bottom: 60px;
+    font-weight: bold;
+    text-align: center;
+    /*El text align solo funciona con grid*/
+}
+
+.btn-primary:hover {
+    background-color: #fa883d;
+}
+
+.form-container {
+    background-color: rgb(232, 231, 231);
+    padding: 15px 0px;
+    margin-bottom: 30px;
+    border-radius: 20px;
+}
+
+.form-container>div {
+    margin: 0px 19px;
+}
+
+.linea {
+    margin: 0px 19px;
+}
+
+.divTitle {
+    display: flex;
+    justify-content: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.logoRegistro {
+    max-width: 500px;
+}
+
+.logoMuni {
+    display: flex;
+    justify-self: center;
+    margin-top: -50px;
+}

@@ -1,0 +1,32 @@
+/*CSS para AdministradorTarjetasComponents*/
+
+.agregarTarjeta {
+
+    /*Alinea el componente de historial factura a una posicion relativa a otro componente*/
+    position: relative;
+    left: 5px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 950px;
+    /* Limita el ancho máximo */
+    height: 100%;
+    /* Ajusta la altura según el contenido */
+    margin-left: 27%;
+    /* Ajusta margen para centrar */
+    border: 1px solid #d3d3d3;
+    /* Borde gris claro */
+    margin-top: 40px;
+}
+
+.btnBack {
+    background-color: rgb(170, 0, 0);
+    max-width: 50px;
+    border-radius: 100%;
+}
+
+/*Estilos tarjeta*/
+.btnBack:hover {
+    background-color: rgb(200, 0, 0);
+}
