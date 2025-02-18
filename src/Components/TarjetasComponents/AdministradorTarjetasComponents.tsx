@@ -81,7 +81,7 @@ const AdministradorTarjetas: React.FC = () => {
   return (
     <div className="agregarTarjeta">
       <div className="admin-tarjetas-container">
-        <h2 className="admin-title">Administrar Tarjetas</h2>
+        <h2 className="admin-title">Agregar Tarjeta</h2>
 
         <button className="btnBack" onClick={goBack}>
           <FontAwesomeIcon icon={faArrowLeft} />
@@ -100,15 +100,11 @@ const AdministradorTarjetas: React.FC = () => {
               </div>
               <div className="card-expiry"><br /> Valida hasta {cardExpiry}</div>
             </div>
-            {/* Botón de Eliminación */}
-            <div className="delete-button">
-              <i className="fas fa-trash-alt"></i> {/* Ícono de basura */}
-            </div>
           </div>
 
           {/* Formulario de Ingreso de Datos */}
           <div className="card-form">
-            <label>Número de tarjeta</label>
+            <label><strong>Número de tarjeta</strong></label>
             <input type="text" placeholder="•••• •••• •••• ••••" maxLength={19}
               required pattern="[0-9]" title="Digite su numero de tarjeta" onChange={handleCardNumberChange} />
 
@@ -120,11 +116,11 @@ const AdministradorTarjetas: React.FC = () => {
               </div>
               <div className="form-group">
                 <label>CVV</label>
-                <input type="password" placeholder="123" />
+                <input type="text" placeholder="123" />
               </div>
             </div>
 
-            <label>Nombre en la tarjeta</label>
+            <label><strong>Nombre en la tarjeta</strong></label>
             <input type="text" placeholder="Nombre Apellido" maxLength={19}
               pattern="[A-Z]" title="Digite su Nombre" required onChange={handleCardNameChange} />
 

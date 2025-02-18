@@ -30,3 +30,60 @@
 .btnBack:hover {
     background-color: rgb(200, 0, 0);
 }
+
+.admin-tarjetas-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.admin-title {
+    display: flex;
+    justify-content: center;
+}
+
+.card-form-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.credit-card {
+    border-radius: 10px;
+    padding: 7px 12px;
+    width: 320px;
+    height: 180px;
+    margin: 25px;
+    background-color: darkgrey;
+}
+
+.card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-form input {
+    margin: 5px 20px;
+    border: 1px solid #eeebeb;
+    border-radius: 10px;
+}
+
+.card-form label {
+    margin: 0 20px;
+}
+
+.save-button {
+    margin: 10px;
+    background-color: #f04e23;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 190px;
+}
+
+.info-text {
+    font-size: small;
+}
