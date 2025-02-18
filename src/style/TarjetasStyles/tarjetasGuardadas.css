@@ -11,16 +11,19 @@
     background-color: rgb(10, 158, 10);
 }
 
-/*Contenedor de la tarjeta*/
+/*Contenedor del boton añadir tarjeta*/
 
 .container-card {
     display: flex;
     justify-content: start;
+    margin-bottom: 20px;
+
 }
 
 /*para div que con tiene el alias*/
 .card-alias {
     display: flex;
+    justify-content: center;
     flex-direction: row;
     margin: 10px 0;
 }
@@ -32,15 +35,27 @@
     max-width: 40px;
     border-radius: 30px;
     margin: 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
+
+/*La transicion con opacity se pone el elemento sin hover*/
+
+
 
 .card-alias button:hover {
     background-color: rgb(146, 29, 0);
+    opacity: 1;
 }
+
+
 
 .card-alias input {
     background-color: rgb(193, 193, 193);
+    height: 50px;
 }
+
+
 
 
 .btn_EliminarCard {
@@ -58,21 +73,26 @@
     font-size: 14px;
     opacity: 0;
     transition: opacity 0.5s ease;
-    position: absolute;
-    right: 0px;
-    top: 0px;
+    position: relative;
+    left: 270px;
+    bottom: 170px;
     border-radius: 10px;
+}
+
+
+.credit-card {
+    border-radius: 10px;
+    padding: 7px 12px;
+    width: 320px;
+    height: 180px;
+    margin: 5px 15px;
 }
 
 .credit-card:hover>.btn_EliminarCard button {
     opacity: 1;
 }
 
-/*La transicion con opacity se pone el elemento sin hover*/
-.card-alias button {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
+
 
 /*Si son elementos hermanos en un div se puede usar un +*/
 /*
@@ -80,10 +100,6 @@ Ejemplo
 .card-alias input:hover+button {
   opacity: 1;
 }*/
-
-.card-alias:hover button {
-    opacity: 1;
-}
 
 
 
@@ -96,38 +112,54 @@ Ejemplo
     background-color: gold;
     border-radius: 4px;
     display: flex;
-    /* el display flex nos ayuda a orientar objetos dentro del div */
+
     align-items: center;
-    /* lo orienta en el centro verticalmente */
+
     justify-content: center;
-    /* lo orienta en el centro horizontalmente */
+
 }
 
 .card-logo {
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
+    display: flex;
+    justify-content: end;
     font-size: 24px;
     font-style: italic;
 }
 
+
 .card-number {
-    position: absolute;
-    bottom: 80px;
+    display: flex;
     font-size: 18px;
     letter-spacing: 2px;
 }
 
+
+
 .card-holder {
-    position: absolute;
-    bottom: 20px;
+    display: flex;
+    justify-content: center;
     font-size: 14px;
     font-weight: bold;
 }
 
+
+
 .card-expiry {
     font-size: 12px;
-    position: absolute;
-    right: 105px;
-    bottom: 50px;
+    display: flex;
+    justify-content: end;
+    margin-right: 10px;
+}
+
+.admin-tarjetas-container {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.card-form-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
 }

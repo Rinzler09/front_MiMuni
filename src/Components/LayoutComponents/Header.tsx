@@ -9,8 +9,8 @@ import {
   faEdit,
   faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
-// import "../../style/prueba.css"; // Asegúrate de que el archivo CSS esté bien referenciado
-import "../../style/dropDown.css";
+import "../../style/LayoutStyles/dropDown.css";
+import "../../style/LayoutStyles/header.css";
 
 const Header: React.FC = () => {
   const navigate = useNavigate(); /*Hook de navigate*/

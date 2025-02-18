@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import "../../style/prueba.css"; // Archivo de estilo para los componentes
-import "../../style/style.css"; //dededededed
-import "../../style/tazas.css"; //dededededed
-import "../../style/historialFacturas.css";
-import Municipalidad from "../Images/Municipalidad";
+import "../../style/UserInfoStyles/historialFacturas.css";
+import Municipalidad from "../ImagesComponents/Municipalidad";
 
 /* Se define la interface facturas con su tipo de dato */
 
@@ -105,15 +101,6 @@ const HistorialPagos: React.FC = () => {
   {
     /*Proceso de validacion de fechas` */
   }
-  const fechasRefreshClick = () => {
-    if (!startDate || !endDate) {
-      // Show modal if dates are not selected
-      setShowSelectionModal(true);
-    } else {
-      setShowTable(true); // Display the table if both dates are selected
-    }
-  };
-
   {
     /*Proceso de ventana modal de validacion desde */
   }
@@ -201,7 +188,6 @@ const HistorialPagos: React.FC = () => {
               className="icon-button export-button"
               aria-label="Export"
               title="Descargar PDF"
-              onClick={handlePayButtonClick}
             >
               📄
             </button>
@@ -266,56 +252,6 @@ const HistorialPagos: React.FC = () => {
 
       <br /><br />
 
-      {/* Billing History Table
-      <div className="historial-facturacion-containers">
-        {showTable ? (
-          <div className="billing-history-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Factura #</th>
-                  <th>Concepto</th>
-                  <th>Moneda Recibida</th>
-                  <th>Valor en HNL</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>2 oct 2024, 1:46 p.m.</td>
-                  <td style={{ color: "#FF6600" }}>008-001-01-00156431</td>
-                  <td>Bienes Inmuebles</td>
-                  <td>L</td>
-                  <td>12,703.52</td>
-                </tr>
-                <tr>
-                  <td>2 oct 2024, 2:22 p.m.</td>
-                  <td style={{ color: "#FF6600" }}>008-001-01-00156431</td>
-                  <td>Bienes Inmuebles</td>
-                  <td>L</td>
-                  <td>3,703.52</td>
-                </tr>
-                <tr>
-                  <td>2 oct 2024, 3:59 p.m.</td>
-                  <td style={{ color: "#FF6600" }}>008-001-01-00156431</td>
-                  <td>Bienes Inmuebles</td>
-                  <td>L</td>
-                  <td>7,703.52</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="no-invoices">
-            <img
-              src="img/facturasPendientes.png"
-              alt="No Invoices"
-              className="no-invoices-image"
-            />
-            <p>No se encontraron facturas en el rango de fechas solicitado.</p>
-          </div>
-        )}
-      </div> */}
       {/* Selection Required Modal */}
       {showSelectionModal && (
         <div className="modal-overlay">
@@ -369,11 +305,7 @@ const HistorialPagos: React.FC = () => {
               Procesando la factura en PDF
             </h3>
             <p className="modal-message">{confirmationMessage}</p>
-            {showOkButton && (
-              <Link to="/" className="modal-button">
-                OK
-              </Link>
-            )}
+
           </div>
         </div>
       )}

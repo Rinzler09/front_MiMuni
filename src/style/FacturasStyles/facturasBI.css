@@ -1,0 +1,474 @@
+.modalPago {
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    max-width: 700px;
+    max-height: 90%;
+    /*La altura maxima sera del 90% del dispositivo que la visualiza*/
+    overflow-y: auto;
+    /* Añade una barra lateral si el contenido en Y se sale de la modal*/
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pagoBotones {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.pagoBotones button {
+    margin: 0px 15px;
+}
+
+.detalles-impuesto-container {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* Alinea el contenido hacia la parte superior */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: -535px;
+    /* Ajusta este valor para mover el contenedor hacia arriba o abajo según sea necesario */
+    width: 77%;
+    /* Toma casi todo el ancho disponible, ajusta según sea necesario */
+    max-width: 950px;
+    /* Limita el ancho máximo */
+    height: 100%;
+    /* Ajusta la altura según el contenido */
+    margin-left: 27%;
+    /* Ajusta margen para centrar */
+    border: 1px solid #d3d3d3;
+    /* Borde gris claro */
+    margin-top: 50px;
+
+}
+
+
+.title {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+.title img {
+    position: relative;
+    right: 120px;
+}
+
+.titles {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: white;
+    text-align: center;
+    background-color: #adadad;
+    /* Color de fondo */
+    padding: 10px 350px;
+    /* Ajusta el espaciado interno */
+}
+
+.entity-identification {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.column {
+    width: 30%;
+    /*Toma el 30% del ancho de la pantalla*/
+}
+
+.column label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.column p {
+    margin: 0;
+    padding: 5px 0;
+    border-bottom: 1px dashed #ddd;
+    color: #333;
+}
+
+.details-table {
+    width: 101%;
+    max-width: 950px;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.details-table th,
+.details-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+}
+
+
+.details-table th {
+    background-color: #f04e23;
+    color: white;
+    text-align: center;
+}
+
+.details-table tr:hover {
+    background-color: #f0f0f0;
+}
+
+.details-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.credit-card-section {
+    margin-top: 15px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-right: 315px;
+}
+
+.credit-card-section h3 {
+    font-size: 13px;
+    color: #333;
+}
+
+.add-card {
+    display: flex;
+    align-items: center;
+    margin-top: 1px;
+}
+
+.card-icon {
+    font-size: 1em;
+    margin-right: 10px;
+}
+
+.add-card-link {
+    font-size: 14px;
+    color: #0073bb;
+    text-decoration: none;
+}
+
+.add-card-link:hover {
+    text-decoration: underline;
+}
+
+.card-info {
+    font-size: 11px;
+    color: #666;
+    margin-left: 80px;
+}
+
+.payment-summary {
+    display: flex;
+    align-items: center;
+    /* Centra el contenido */
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.payment-summary p {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    /* Espacio entre el texto y los botones */
+    text-align: center;
+    margin-right: 90px;
+    margin-top: 15px;
+}
+
+
+.button-cancel,
+.button-pay {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    /* Espacio entre los botones */
+    width: 180px;
+    /* Ajusta el ancho según lo necesario */
+
+}
+
+.button-cancel {
+    background-color: #ccc;
+    color: #333;
+}
+
+.button-pay {
+    background-color: #f04e23;
+    color: white;
+}
+
+.button-pay:hover {
+    background-color: #e53e10;
+}
+
+.button-cancel:hover {
+    background-color: #b3b3b3;
+}
+
+.button-links {
+    display: block;
+    background-color: #f04e23;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px;
+    /* Espacio entre los botones */
+    width: 180px;
+    /* Ajusta el ancho según lo necesario */
+}
+
+.button-links {
+    display: block;
+    background-color: #f04e23;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 5px;
+    /* Espacio entre los botones */
+    width: 180px;
+    /* Ajusta el ancho según lo necesario */
+}
+
+#btnFactura_Cons {
+    width: 280px;
+    font-size: 14px;
+}
+
+.button-links:hover {
+    background-color: #e53e10;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.modal-icon {
+    width: 50px;
+    margin-bottom: 15px;
+}
+
+.modal-title {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.modal-message {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.modal-button {
+    padding: 10px 20px;
+    background-color: #FF6600;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+
+}
+
+
+.modal-button:hover {
+    background-color: #f36405;
+}
+
+.button-continue {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f04e23;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 190px;
+    margin-left: 270px;
+}
+
+.button-back {
+    margin-top: -53px;
+    padding: 10px;
+    background-color: #666;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 190px;
+}
+
+/* MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+
+/* card-modal-content contiene la card-preview y la card-form */
+.card-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 900px;
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(41, 41, 41, 0.2);
+}
+
+.card-modal-content h3 {
+    color: #004e7e;
+    display: flex;
+    justify-content: center;
+}
+
+.card-modal-body {
+    display: flex;
+    gap: 20px;
+}
+
+
+.card-preview {
+    /* Se define que 50% sera para visualizar la tarjeta*/
+    width: 50%;
+    display: flex;
+    margin: 20px 15px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* la coma significa que aplica para cualquiera de las dos clases */
+.card-image,
+.card-back {
+    position: absolute;
+    background-color: #adadad;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 330px;
+    height: 200px;
+}
+
+.card-number {
+    position: relative;
+    top: 20%;
+}
+
+.card-name {
+    position: relative;
+    top: 25%;
+    right: 20%;
+}
+
+.card-expiry {
+    font-size: small;
+    position: relative;
+    top: 30%;
+}
+
+
+.card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-form .textoPrincial {
+    margin: 0 20px;
+}
+
+.card-form input {
+    margin: 5px 20px;
+    border: 1px solid #eeebeb;
+    border-radius: 10px;
+}
+
+.black-bar {
+    background-color: #000;
+    width: 98%;
+    height: 35px;
+}
+
+.cvv-box {
+    position: relative;
+    background-color: #ffffff;
+    top: 30%;
+    left: 40%;
+    width: 20%;
+    height: 35px;
+}
+
+/* TERMINA MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */

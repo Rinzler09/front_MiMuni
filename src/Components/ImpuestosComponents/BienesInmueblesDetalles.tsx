@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { clavesCatastrales } from "../../services/claveCatastral";
-import { useNavigate } from "react-router-dom"; // Importa Link
-import "../../style/prueba.css"; // Archivo de estilo para los componentes
-import "../../style/metodo.css";
-import "../../style/detalleBienInmueble.css";
-import Municipalidad from "../Images/Municipalidad";
-import ModalDetFacturacion from "../VentanasModales/ModalDetFacturacion";
+import { useNavigate } from "react-router-dom";
+import "../../style/ImpuestosStyles/detalleBienInmueble.css";
+import Municipalidad from "../ImagesComponents/Municipalidad";
+
 
 
 
@@ -15,8 +13,6 @@ interface Claves {
   id: number;
   nombre_contri: string;
   apellido_contri: string;
-  dni_contri: number;
-  rtn_contri: number;
   clave_catastrales: string;
 }
 
@@ -94,32 +90,37 @@ const DetallesImpuesto: React.FC = () => {
     <div className="detalles-impuesto-container">
       <h2 className="title">Municipalidad de Santa Lucía</h2>
       <Municipalidad />
+      <br />
       <h2 className="titlesss" style={{ background: "#FF6600" }}>
         Claves Catastrales de contribuyente
       </h2>
       <table className="details-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>NOMBRES</th>
-            <th>APELLIDOS</th>
-            <th>DNI</th>
-            <th>RTN</th>
-            <th>CLAVES CATASTRALES</th>
+            <th>Propietario</th>
+            <th>Clave Catastral</th>
+            <th>Valor Impuesto</th>
+            <th>Aldea</th>
+            <th>Barrio/Caserio</th>
+            <th>Naturaleza</th>
+            <th>Uso</th>
+            <th>Sub Uso</th>
             <th>Ver Facturas</th>
 
           </tr>
         </thead>
-        <tbody>
+        <tbody >
           {claves.map((clave) => (
             <tr key={clave.id}>
 
-              <td>{clave.id}</td>
-              <td>{clave.nombre_contri}</td>
-              <td>{clave.apellido_contri}</td>
-              <td>{clave.dni_contri}</td>
-              <td>{clave.rtn_contri}</td>
+              <td>{`${clave.nombre_contri} ${clave.apellido_contri}`}</td>
               <td>{clave.clave_catastrales}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
               <td><button className="btnFacturas" onClick={() => { navigate("/facturasBI") }
               }>Facturas</button></td>
 

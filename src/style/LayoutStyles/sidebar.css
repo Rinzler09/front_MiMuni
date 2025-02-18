@@ -1,0 +1,81 @@
+.sidebar-container {
+    position: fixed;
+    /* Fija la barra lateral */
+    top: 47px;
+    left: 0;
+    height: 100%;
+    /* Asegúrate de que ocupe toda la altura */
+    width: 325px;
+    /* Ajusta el ancho según tus necesidades */
+    background-color: #f0f0f0;
+    /* Fondo claro */
+    border-right: 3px solid #ddd;
+    overflow-y: auto;
+    /* Para manejar contenido desbordante */
+    z-index: 1000;
+    /* Asegúrate de que esté encima del contenido */
+}
+
+
+.sidebar {
+    padding: 15px;
+}
+
+.sidebar-section {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #f25a1f;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    display: none;
+    /* Ocultar inicialmente */
+    flex-direction: column;
+}
+
+
+.menu-list.show {
+    display: flex;
+    /* Muestra el submenú cuando está activo */
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    color: #797979;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.menu-item:hover {
+    background-color: #b9bfc5;
+    color: #f25a1f;
+}
+
+.menu-icon {
+    font-size: 1.2em;
+}
+
+.menu-icon:hover {
+    color: white;
+}
+
+#btnMunicipalidades {
+    color: #0056b3;
+}

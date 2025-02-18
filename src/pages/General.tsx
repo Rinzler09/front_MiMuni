@@ -2,7 +2,7 @@ import React, { FC, Suspense } from 'react'
 import { useParams } from 'react-router-dom';
 import Sidebar from '../Components/LayoutComponents/Sidebar'
 import Header from '../Components/LayoutComponents/Header'
-import '../style/generalPage.css'
+import '../style/PagesStyles/generalPage.css'
 
 // Definimos una interfaz para mapear los tipos de servicios a sus componentes correspondientes.
 interface Components {
@@ -12,7 +12,7 @@ interface Components {
 const Components: Components = {
 
     //Componentes de Pantallas Landing Dashboard
-    'dashboard': React.lazy(() => import('../Components/Dashboard/Dashboard')),
+    'dashboard': React.lazy(() => import('../Components/ImagesComponents/Dashboard')),
     //Componentes de Pantallas Landing de Impuestos
     'bienes-inmuebles': React.lazy(() => import('../Components/ImpuestosComponents/BienesInmueblesDetalles')),
     'impuesto-personal': React.lazy(() => import('../Components/ImpuestosComponents/ImpuestoPersonal')),

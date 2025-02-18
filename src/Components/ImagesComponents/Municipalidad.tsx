@@ -1,5 +1,5 @@
 import React from "react";
-import "../../style/imagenMunicipalidad.css";
+import "../../style/ImagesStyles/imagenMunicipalidad.css";
 
 const Municipalidad: React.FC = () => {
 

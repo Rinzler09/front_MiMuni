@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-
-import "../style/prueba.css";
-import "../style/tazas.css";
-import "../style/registroUser.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Municipalidad from '../Components/Images/Municipalidad';
+import "../style/PagesStyles/registroUser.css";
+import Municipalidad from '../Components/ImagesComponents/Municipalidad';
 
 
 
@@ -42,9 +38,12 @@ const RegistrarUsuario: React.FC = () => {
 
     return (
         <div className="container mt-5">
+            <br />
+
             <div className='logoMuni'>
                 <Municipalidad />
             </div>
+            <br />
 
             <div className='divTitle'>
                 <h2 className="mb-4" >Ingrese sus datos personales</h2>
@@ -231,25 +230,27 @@ const RegistrarUsuario: React.FC = () => {
             </form>
 
 
-            {showModalDatos && (
-                <div className="modal-overlay">
-                    <div className="modal-box">
-                        <img src="img/procesado.svg" alt="Exito" className="modal-icon" />
-                        <h3 className="modal-title" style={{ textAlign: "center" }}>
-                            Exito
-                        </h3>
-                        <p className="modal-message">
-                            El formulario ha sido enviado a la respectiva municipalidad
-                            para revision de datos.
-                        </p>
-                        <button onClick={handleSubmit} className="modal-button">
-                            Regresar
-                        </button>
+            {
+                showModalDatos && (
+                    <div className="modal-overlay">
+                        <div className="modal-box">
+                            <img src="img/procesado.svg" alt="Exito" className="modal-icon" />
+                            <h3 className="modal-title" style={{ textAlign: "center" }}>
+                                Exito
+                            </h3>
+                            <p className="modal-message">
+                                El formulario ha sido enviado a la respectiva municipalidad
+                                para revision de datos.
+                            </p>
+                            <button onClick={handleSubmit} className="modal-button">
+                                Regresar
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
-        </div>
+        </div >
 
     );
 };

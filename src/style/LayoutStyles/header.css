@@ -1,0 +1,41 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff8a04;
+
+    color: white;
+    padding: 5px 15px;
+    font-size: 16px;
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    z-index: 1000;
+
+}
+
+.header-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+.user-icon {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+
+.user-name {
+    font-size: 16px;
+    font-weight: 500;
+}

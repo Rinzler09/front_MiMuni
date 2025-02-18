@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../LayoutComponents/Sidebar";
-import Header from "../LayoutComponents/Header";
 
-import "../../style/style.css";
-import "../../style/prueba.css";
-import Municipalidad from "../../Components/Images/Municipalidad";
-import "../../style/dashboard.css";
+import "../../style/ImagesStyles/dashboard.css";
 
 const INACTIVITY_TIMEOUT = 120 * 60 * 1000; // 5 minutos de inactividad
 

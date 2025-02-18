@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import "../../style/prueba.css";
-import "../../style/tazas.css";
-import "../../style/tarjetas.css"
-import "../../style/modalEliminarTarjeta.css"
+import "../../style/TarjetasStyles/tarjetasGuardadas.css";
+import "../../style/ModalesStyles/modalEliminarTarjeta.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 
@@ -84,13 +82,12 @@ const TarjetasGuardadas: React.FC = () => {
 
 
         <div className="admin-tarjetas-container">
-            <h2 className="admin-title">Tarjetas Guardadas</h2>
+            <h2 className="admin-title"><br />Tarjetas Guardadas</h2>
 
             <div className='container-card'>
                 <button className='btnAddCard' lang='es' onClick={addNewCard}>
                     Añadir Tarjeta
                 </button>
-
             </div>
             <div className="card-form-container">
                 {/* Contenedor de Tarjetas Guardadas */}
@@ -108,7 +105,7 @@ const TarjetasGuardadas: React.FC = () => {
                             </button>
                         </div>
                         {/* Tarjeta de Crédito */}
-                        <div id="tarjetaAzul" className="credit-card" >
+                        <div id="tarjetaAzul" className="credit-card" style={{ backgroundColor: 'yellow' }} >
                             <div className="card-chip">
                                 ==(&nbsp;)== {/*Diseño del Chip*/}
                             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../style/login.css";
+import "../style/PagesStyles/login.css";
 import { login } from "../services/services"; // Importa el servicio para el enpoint
 
 const LoginForm: React.FC = () => {
@@ -42,11 +42,6 @@ const LoginForm: React.FC = () => {
       <div className="login-wrapper">
         <div className="left-section">
           <div className="top-image">
-            {/* <img
-              src="src/assets/LogoGeoRedesLetras.png"
-              alt="LogoGeoRedes"
-              className="BancoLinea"
-            /> */}
             <h2 className="titu">Mi Muni en Línea</h2>
           </div>
           <img

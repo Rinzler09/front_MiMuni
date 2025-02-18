@@ -13,13 +13,15 @@ import {
   faChevronDown,
   faRepeat,
 } from "@fortawesome/free-solid-svg-icons";
-import "../../style/metodo.css";
+import "../../style/LayoutStyles/sidebar.css"
+
 
 const Sidebar: React.FC = () => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     Pagos: true,
     Declaraciones: false,
     Servicios: false,
+    Municipalidades: false,
   });
 
   const toggleSection = (section: string) => {
@@ -32,6 +34,31 @@ const Sidebar: React.FC = () => {
   return (
     <div className="sidebar-container">
       <div className="sidebar">
+
+        <div className="sidebar-section">
+          <h3 id="btnMunicipalidades" className="section-title" onClick={() => toggleSection("Municipalidades")}>
+            Municipalidades <FontAwesomeIcon icon={faChevronDown} />
+          </h3>
+          <ul className={`menu-list ${openSections.Municipalidades ? "show" : ""}`}>
+            <li>
+              <Link to="/dashboard" className="menu-item">
+                Santa Lucía
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard" className="menu-item">
+                Valle de Angeles
+              </Link>
+            </li>
+            <li>
+              <Link to="/dashboard" className="menu-item">
+                Choluteca
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Pagos")}>
             Pagos <FontAwesomeIcon icon={faChevronDown} />

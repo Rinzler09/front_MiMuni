@@ -1,11 +1,11 @@
 import React from "react";
-import "../../style/editar.css";
 import {
   useEditarPerfilLogic,
   ActiveTab,
   ShowPasswordState,
 } from "../../models/validacionCambioContrasenia";
 import TarjetasGuardadas from "../TarjetasComponents/TarjetasGuardadas";
+import "../../style/UserInfoStyles/editar.css";
 
 const EditarPerfil: React.FC = () => {
   const { activeTab, handleTabClick, showPassword, togglePasswordVisibility } =

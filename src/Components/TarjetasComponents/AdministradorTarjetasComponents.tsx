@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import "../../style/prueba.css"; // Asegúrate de incluir estilos específicos en este archivo o en otro CSS
-import "../../style/tazas.css";
-import "../../style/agregarTarjeta.css";
+import "../../style/TarjetasStyles/agregarTarjeta.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import TarjetasGuardadas from "./TarjetasGuardadas";
 
 const AdministradorTarjetas: React.FC = () => {
 
@@ -14,10 +11,6 @@ const AdministradorTarjetas: React.FC = () => {
   const [cardExpiry, setCardExpiry] = useState<string>("MM / YY");
   const [cardCVV, setCardCVV] = useState<string>("888");
   const [cardName, setCardName] = useState<string>("SU NOMBRE AQUÍ");
-
-  // const [month, year] = cardExpiry.split('/').map(part => part.trim()); // Split and clean input
-  // const fullYear = parseInt(year, 10) > 50 ? `19${year}` : `20${year}`; // Determine century
-  // const formattedExpDate = new Date(fullYear, month - 1, 1).toISOString().split('T')[0];  // Convert to YYYY-MM-DD
 
   const goBack = () => {
     navigate("/editar-perfil")
