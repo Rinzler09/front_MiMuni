@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Municipalidad from "../ImagesComponents/Municipalidad";
 
 const ProceosFacturacion: React.FC = () => {

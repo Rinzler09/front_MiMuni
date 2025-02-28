@@ -18,15 +18,13 @@ const Header: React.FC = () => {
   const [userName, setUserName] = useState("admin_admin"); // Valor por defecto
 
   useEffect(() => {
-    // Recuperar los datos del usuario del localStorage
-    const user = localStorage.getItem("usuario");
-    if (user) {
-      const parsedUser = JSON.parse(user);
-      console.log("Datos parseados:", parsedUser); // Depuración
-      // setUserName(parsedUser.usuarioname || "admin_admin"); // Usa 'usuarioname' en lugar de 'username'
-      setUserName(parsedUser || "admin_admin");
+    // Recuperar el email del localStorage
+    const userEmail = localStorage.getItem("correo");
+    if (userEmail) {
+      console.log("Email recuperado de localStorage:", userEmail); // Depuración
+      setUserName(userEmail || "admin_admin"); // Usa el email directamente
     } else {
-      console.log("No se encontró el usuario en localStorage.");
+      console.log("No se encontró el email en localStorage.");
     }
   }, []);
 

@@ -5,6 +5,7 @@ import LoginForm from "../pages/LoginForm";
 import RegistrarUsuario from "../pages/RegistrarUsuario";
 
 import General from "../pages/General";
+import CambioContraseña from "../pages/CambioContraseña";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -15,15 +16,14 @@ const AppRoutes: React.FC = () => {
 
         {/* Ruta de Registrar User */}
         <Route path="/registrar-usuario" element={<RegistrarUsuario />} />
-
+        {/* Ruta de cambio de contraseña */}
+        <Route path="/cambio-contraseña" element={<CambioContraseña/>}/>
         {/* Ruta General con SideBar, Header y Div de Contenido */}
-        <Route
-          path="/:tipo"
-          element={<General />}
-        />
+        <Route path="/:tipo" element={<General />}/>
 
       </Routes>
     </Router>
+    
   );
 };
 

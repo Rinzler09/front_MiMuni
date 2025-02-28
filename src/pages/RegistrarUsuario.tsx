@@ -1,258 +1,138 @@
 import React, { useState } from 'react';
+import  { useForm } from 'react-hook-form';
+import "../style/PagesStyles/registrarUsuarioStyles.css";
 import { useNavigate } from "react-router-dom";
-import "../style/PagesStyles/registroUser.css";
+import type { registroSolicitud } from '../types/generalForm';
 import Municipalidad from '../Components/ImagesComponents/Municipalidad';
 
+//Nuevas Importaciones al proyecto
+import ErrorMessage from '../Components/ErrorMessage.tsx/MostrarMensajesError';
+import {registrarSolicitud} from '../services/RegistroUsuarioServices';
+import { Toaster,toast } from 'sonner';
+import Modal from '../Components/ModalComponents/modalComponent';
 
 
 const RegistrarUsuario: React.FC = () => {
     const [showModalDatos, setShowModalDatos] = useState(false);
-
-    // const closeModal = () => setShowModalDatos(false);
-
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        rememberMe: false,
-    });
-
     const navigate = useNavigate();
+    // Validacion de los campos del formulario
+    const initialValues: registroSolicitud = { nombrecompleto: "",identidad: "",rtn: "",correo: "",telefono: "",};
+    //
+    const { register, handleSubmit,formState: { errors } } = useForm({defaultValues: initialValues});
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prevState) => ({
-            ...prevState,
-            [name]: type === 'checkbox' ? checked : value,
-        }));
+    const [tempPwd, setTempPwd]= useState("");
+    //Funcion para enviar el registro de la solicitud
+    const handleRegistrar = async (formData: registroSolicitud) => {
+        try {
+            // Enviar datos al backend
+            const response = await registrarSolicitud(formData.nombrecompleto,formData.identidad,formData.rtn,formData.correo,formData.telefono);
+          if (typeof response === "object") {
+            toast.success(response.message);
+            setTimeout(() => setShowModalDatos(true), 5000);// Nos ayudara para cuando se termine la confirmacion de de registro registrado, pasara 5 segundo para abrir la ventana modal
+            console.log("Enviado correctamente:", response);
+            setTempPwd(response.pswdTemp);
+        } else {
+            toast.error(response.message);
+            console.log("Datos no enviados:", response);
+        }
+        } catch (error: any) {
+            console.error("Error en la solicitud:", error);
+            toast.error(error?.message ?? "Usuario no registrado.");
+        }
+
+        
     };
-
-    const handleSubmit = () => {
-        navigate('/')
-    };
-
-    const mostrarModalExito = (e: React.FormEvent) => {
-        e.preventDefault();
-        setShowModalDatos(true);
-    }
 
 
     return (
         <div className="container mt-5">
+            <Toaster position="top-right" /> {/* Para la visualizacion */}
             <br />
-
-            <div className='logoMuni'>
-                <Municipalidad />
-            </div>
+            <div className='logoMuni'><Municipalidad /></div>
             <br />
+            <div className='divTitle'><h2 className="mb-4" >Ingrese sus datos personales</h2></div>
 
-            <div className='divTitle'>
-                <h2 className="mb-4" >Ingrese sus datos personales</h2>
-            </div>
-
-            <form id='datosPersonales' onSubmit={mostrarModalExito}>
-
+            <form id='datosPersonales' onSubmit={handleSubmit(handleRegistrar)} >
                 <div className='form-container'>
                     <div className="row mb-3 linea">
                         <div className="col-md-6">
-                            <label htmlFor="firstName" className="form-label">
+                            <label htmlFor="nombrecompleto" className="form-label">
                                 Nombre
                             </label>
                             <input
-                                type="text"
-                                className="form-control"
-                                required
+                                type="text" className="form-control" placeholder='Ingrese su nombre'{...register('nombrecompleto', { required: "El Nombre es obligatorio" })}
                             />
+                            {errors.nombrecompleto && <ErrorMessage>{errors.nombrecompleto.message} </ErrorMessage>}
                         </div>
-                        <div className="col-md-6">
-                            <label htmlFor="lastName" className="form-label">
-                                Apellido
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                required
-                            />
-                        </div>
-                    </div>
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <label htmlFor="correo" className="form-label">
-                                Correo Electronico
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                required
-                            />
-                        </div>
+
                         <div className="col-md-6">
                             <label htmlFor="identidad" className="form-label">
-                                Numero de Identidad
+                                DNI
                             </label>
                             <input
-                                type="text"
-                                className="form-control"
-                                required
+                                type="text" className="form-control" maxLength={13} placeholder='Ingrese su numero de identidad' 
+                                {...register("identidad", {required: "La DNI es obligatoria",
+                                    minLength: {value: 13,message: "El DNI debe tener exactamente 13 caracteres",},
+                                    maxLength: {value: 13,message: "El DNI debe tener exactamente 13 caracteres",},
+                                    pattern: {value: /^[0-9]+$/,message: "El DNI solo debe contener números",}, })}
                             />
-                        </div>
+                             {errors.identidad && <ErrorMessage>{errors.identidad.message} </ErrorMessage>}
+                        </div>      
+                    </div>
 
-                        <div className="col-md-6">
-                            <label htmlFor="estadoCivil" className="form-label">
-                                Estado Civil
-                            </label>
-                            <select name='estadoCivil' form='datosPersonales' className="form-control">
-                                <option>Soltero</option>
-                                <option>Casado</option>
-                                <option>Union Libre</option>
-                                <option>Divorciado</option>
-                            </select>
-                        </div>
-
+                    <div className="row mb-3">
                         <div className="col-md-6">
                             <label htmlFor="rtn" className="form-label">
                                 RTN
                             </label>
                             <input
-                                type="text"
-                                className="form-control"
-                                required
+                                type="text" className="form-control" maxLength={14} placeholder='Ingrese su RTN' 
+                                {...register("rtn", {required: "El RTN es obligatorio",
+                                    minLength: {value: 14,message: "El RTN debe tener exactamente 14 caracteres",},
+                                    maxLength: {value: 14,message: "El RTN debe tener exactamente 14 caracteres",},
+                                    pattern: {value: /^[0-9]+$/,message: "El RTN solo debe contener números",},})}
                             />
-                        </div>
-
-
-                        <div className="col-md-6">
-                            <label htmlFor="sexo" className="form-label">
-                                Sexo
-                            </label>
-                            <select name='sexo' form='datosPersonales' className="form-control">
-                                <option>Masculino</option>
-                                <option>Femenino</option>
-                            </select>
+                          {errors.rtn && <ErrorMessage>{errors.rtn.message} </ErrorMessage>}
                         </div>
 
                         <div className="col-md-6">
-                            <label htmlFor="direccion" className="form-label">
-                                Direccion (Actual)
+                            <label htmlFor="correo" className="form-label">
+                                Correo Electronico
                             </label>
                             <input
-                                type="text"
-                                className="form-control"
-                                required
+                                type="text" className="form-control" placeholder='Ingrese su correo electronico'
+                                {...register('correo', { required: "El EMAIL es obligatorio", pattern: { value: /\S+@\S+\.\S+/, message: "El correo electronico es invalidado", },
+                                 })}
                             />
+                             {errors.correo && <ErrorMessage>{errors.correo.message} </ErrorMessage>}
                         </div>
-
-                        <div className="col-md-6">
-                            <label htmlFor="fechaNacimiento" className="form-label">
-                                Fecha de Nacimiento
-                            </label>
-                            <input
-                                type="date"
-                                className="form-control"
-                                required
-                            />
-                        </div>
-
-                        <div className="col-md-6">
-                            <label htmlFor="departamento" className="form-label">
-                                Departamento (Nacimiento)
-                            </label>
-                            <select name='departamento' form='datosPersonales' className="form-control">
-                                <option>Atlántida</option>
-                                <option>Choluteca</option>
-                                <option>Colón</option>
-                                <option>Comayagua</option>
-                                <option>Copán</option>
-                                <option>Cortés</option>
-                                <option>El Paraíso</option>
-                                <option>Francisco Morazán</option>
-                                <option>Gracias a Dios</option>
-                                <option>Intibucá</option>
-                                <option>Islas de la Bahía</option>
-                                <option>La Paz</option>
-                                <option>Lempira</option>
-                                <option>Ocotepeque</option>
-                                <option>Olancho</option>
-                                <option>Santa Bárbara</option>
-                                <option>Valle</option>
-                                <option>Yoro</option>
-                            </select>
-                        </div>
-
-                        <div className="col-md-6">
-                            <label htmlFor="municipio" className="form-label">
-                                Municipio (Nacimiento)
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                required
-                            />
-                        </div>
-
-                        <div className="col-md-6">
-                            <label htmlFor="aldea" className="form-label">
-                                Aldea (Nacimiento)
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                required
-                            />
-                        </div>
-
-                        <div className="col-md-6">
-                            <label htmlFor="caserio" className="form-label">
-                                Caserio (Nacimiento)
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                required
-                            />
-                        </div>
-
+                        
                         <div className="col-md-6">
                             <label htmlFor="telefono" className="form-label">
                                 Telefono
                             </label>
                             <input
-                                type="text"
-                                className="form-control"
-                                required
+                                type="number" className="form-control" placeholder='Ingrese su numero de telefono' maxLength={8}
+                                {...register("telefono", {
+                                    required: "El TELEFONO es obligatoria",
+                                    minLength: {value: 8,message: "El TELEFONO debe tener exactamente 8 caracteres",},
+                                    maxLength: {value: 8,message: "El TELEFONO debe tener exactamente 8 caracteres",},})}
                             />
+                            {errors.telefono && <ErrorMessage>{errors.telefono.message} </ErrorMessage>}
                         </div>
-
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary">
-                    Enviar Formulario
-                </button>
+                <button type="submit" className="btn btn-primary" onClick={handleSubmit(handleRegistrar)} >Enviar Solicitud</button>
             </form>
 
-
-            {
-                showModalDatos && (
-                    <div className="modal-overlay">
-                        <div className="modal-box">
-                            <img src="img/procesado.svg" alt="Exito" className="modal-icon" />
-                            <h3 className="modal-title" style={{ textAlign: "center" }}>
-                                Exito
-                            </h3>
-                            <p className="modal-message">
-                                El formulario ha sido enviado a la respectiva municipalidad
-                                para revision de datos.
-                            </p>
-                            <button onClick={handleSubmit} className="modal-button">
-                                Regresar
-                            </button>
-                        </div>
-                    </div>
-                )
-            }
-
+            {/*Reutilizacion de la ventana modal*/}
+            <Modal
+                isVisible={showModalDatos}
+                title="Éxito"
+                message={`Contraseña temporal enviada exitosamente: ${tempPwd}`}
+                onClose={() => navigate('/')}
+            />
         </div >
-
     );
 };
-
 export default RegistrarUsuario;

@@ -2,7 +2,7 @@ import React, { FC, Suspense } from 'react'
 import { useParams } from 'react-router-dom';
 import Sidebar from '../Components/LayoutComponents/Sidebar'
 import Header from '../Components/LayoutComponents/Header'
-import '../style/PagesStyles/generalPage.css'
+import '../style/PagesStyles/generalStyles.css'
 
 // Definimos una interfaz para mapear los tipos de servicios a sus componentes correspondientes.
 interface Components {
