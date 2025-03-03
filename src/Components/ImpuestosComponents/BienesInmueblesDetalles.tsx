@@ -14,6 +14,7 @@ interface Claves {
   nombre_contri: string;
   apellido_contri: string;
   clave_catastrales: string;
+  
 }
 
 const DetallesImpuesto: React.FC = () => {
@@ -108,23 +109,20 @@ const DetallesImpuesto: React.FC = () => {
           </tr>
         </thead>
         <tbody >
-          {claves.map((clave) => (
-            <tr key={clave.id}>
+            <tr >
 
-              <td>{`${clave.nombre_contri} ${clave.apellido_contri}`}</td>
-              <td>{clave.clave_catastrales}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><button className="btnFacturas" onClick={() => { navigate("/facturasBI") }
+              <td>Santos Alberto Lopez </td>
+              <td>82918819190</td>
+              <td>6,420.00 LPS</td>
+              <td>Monjarás</td>
+              <td>El Porvenir</td>
+              <td>Urbano</td>
+              <td>Familiar</td>
+              <td>Domestico</td>
+              <td><button className="btnFacturas" onClick={() => { navigate("/facturas-BI") }
               }>Facturas</button></td>
 
             </tr>
-
-          ))}
         </tbody>
       </table>
 

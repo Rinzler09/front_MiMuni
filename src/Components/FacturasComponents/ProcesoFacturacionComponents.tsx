@@ -236,7 +236,7 @@ const ProceosFacturacion: React.FC = () => {
           <tr>
             <td id="tdClaveCatastral" style={{ textAlign: "center" }} >8291881919020</td>
             <td id="tdClaveCatastral" style={{ textAlign: "center" }}>0801-2001-03973</td>
-            <td id="tdClaveCatastral" style={{textAlign: "center"}}>Villa San Franciscos</td>
+            <td id="tdClaveCatastral" style={{textAlign: "center"}}>El Porvenir, Monjaras, Choluteca</td>
           </tr>
         </tbody>
       </table>
@@ -265,21 +265,21 @@ const ProceosFacturacion: React.FC = () => {
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
           {
-            facturas.map((factura) => (
+            
 
-              <tr key={factura.id}>
+              <tr >
                 <td><input type="checkbox" /></td>
-                <td id="tdFACTURA_ID">{factura.factura_id}</td>
-                <td id="tdFECHA_VENCE"></td>
-                <td id="tdDESCRIPCION"></td>
-                <td id="tdCLAVE_CATASTRAL"></td>
-                <td id="tdSubtotal">LPS.</td>
-                <td id="tdDESCUENTO_PRONTO_PAGO"> {factura.descuentoprontopago} LPS.</td>
-                <td id="tdDESCUENTO_AM">LPS.</td>
-                <td id="tdAMNISTIA">LPS.</td>
-                <td id="tdTotal">LPS.</td>
+                <td id="tdFACTURA_ID">90120</td>
+                <td id="tdFECHA_VENCE">21/11/2025</td>
+                <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
+                <td id="tdCLAVE_CATASTRAL">8291881919020</td>
+                <td id="tdSubtotal">6,420.00 LPS.</td>
+                <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
+                <td id="tdDESCUENTO_AM">250.00 LPS.</td>
+                <td id="tdAMNISTIA">0 LPS.</td>
+                <td id="tdTotal">5,528.00 LPS.</td>
               </tr>
-            ))
+           
 
           }
         </tbody>
@@ -451,7 +451,7 @@ const ProceosFacturacion: React.FC = () => {
               <tbody>
                 <tr>
                   <td><strong>Subtotal</strong></td>
-                  <td>140.00 LPS.</td>
+                  <td>5,528.00 LPS.</td>
                 </tr>
                 <tr>
                   <td><strong>Comisión por Servicio Web</strong></td>
@@ -459,7 +459,7 @@ const ProceosFacturacion: React.FC = () => {
                 </tr>
                 <tr>
                   <td><strong>Valor Neto</strong></td>
-                  <td>170.00 LPS.</td>
+                  <td>5,558.00 LPS.</td>
                 </tr>
               </tbody>
             </table>
