@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
+import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import Municipalidad from "../ImagesComponents/Municipalidad";
 import { facturasBI } from "../../services/facturasBI";
+import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
 
 interface Facturas {
   id: number;

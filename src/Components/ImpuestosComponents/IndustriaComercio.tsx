@@ -6,8 +6,8 @@ const ProceosFacturacion: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
-      <h2 className="title">Industria, Comercio y Servicios</h2>
-      <Municipalidad />
+      <div className="title"><Municipalidad />ESTADO DE CUENTA DE INDUSTRIAS, CS</div>   
+      
       <br />
       <p> <strong>EN PROCESO DE MANTENIMIENTO</strong></p>
     </div>

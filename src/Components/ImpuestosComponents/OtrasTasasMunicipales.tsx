@@ -5,8 +5,8 @@ const TasasMunicipales: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
-      <h2 className="title">Tasa por Servicio a la Propiedad</h2>
-      <Municipalidad />
+      <div className="title"><Municipalidad />ESTADO DE CUENTA DE TASA POR SERVICIOS A LA PROPIEDAD</div>   
+    
       <br />
       <p><strong>EN PROCESO DE MANTENIMIENTO</strong></p>
     </div>

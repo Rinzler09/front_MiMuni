@@ -25,7 +25,7 @@ const Components: Components = {
     'ambientales': React.lazy(() => import('../Components/ServiciosComponents/Ambientes')),
 
     //Componentes de Pantalla Periodos de Facturas
-    'facturasBI': React.lazy(() => import('../Components/FacturasComponents/ProcesoFacturacionComponents')),
+    'facturas-BI': React.lazy(() => import('../Components/FacturasComponents/ProcesoFacturacionComponents')),
 
     //Componentes de tarjetas
     'tarjetas-guardadas': React.lazy(() => import('../Components/TarjetasComponents/TarjetasGuardadas')),
