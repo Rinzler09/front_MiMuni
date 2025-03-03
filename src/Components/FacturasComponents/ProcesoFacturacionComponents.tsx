@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
-import "../../style/ModalesStyles/modalAddTarjeta.css"
+import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import Municipalidad from "../ImagesComponents/Municipalidad";
 import { facturasBI } from "../../services/facturasBI";
 
@@ -221,7 +221,27 @@ const ProceosFacturacion: React.FC = () => {
       <h2 className="titles" style={{ background: "#FF6600" }}>
         Datos del Inmueble
       </h2>
-      <div className="entity-identification">
+
+      <table className="details-table">
+        <thead>
+          <tr>
+            <th>Clave Catastral</th>
+            <th>DNI</th>
+            <th>Direccion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
+          <tr>
+            <td id="tdClaveCatastral">9283927328920</td>
+            <td id="tdDNI">0802198787965</td>
+            <td id="tdDireccion">Loma de Toncontin, Tegucigalpa</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+      {/* <div className="entity-identification">
         <div className="row">
           <div className="column">
             <label>Clave Catastral</label>
@@ -236,9 +256,8 @@ const ProceosFacturacion: React.FC = () => {
             <p>Lomas de Toncontin, Tegucigalpa</p>
           </div>
         </div>
-
-      </div>
-
+      </div> */}
+      <br /><br />
       {/* Datos de las Tablas*/}
       <table className="details-table">
         <thead>

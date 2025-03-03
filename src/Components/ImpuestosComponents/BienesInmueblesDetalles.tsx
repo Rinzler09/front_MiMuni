@@ -88,13 +88,9 @@ const DetallesImpuesto: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
-      <h2 className="title">Municipalidad de Santa Lucía</h2>
-      <Municipalidad />
+      <h2 className="title"><Municipalidad />ESTADO DE CUENTA BIENES INMUEBLES</h2>
       <br />
-      <h2 className="titlesss" style={{ background: "#FF6600" }}>
-        Claves Catastrales de contribuyente
-      </h2>
-      <table className="details-table">
+      <table className="details-table table-bordered">
         <thead>
           <tr>
             <th>Propietario</th>
