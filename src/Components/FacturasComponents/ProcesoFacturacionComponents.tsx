@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
+<<<<<<< Updated upstream
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
+=======
+>>>>>>> Stashed changes
 import Municipalidad from "../ImagesComponents/Municipalidad";
 import { facturasBI } from "../../services/facturasBI";
 import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
@@ -220,15 +223,24 @@ const ProceosFacturacion: React.FC = () => {
 
       <div className="title"><Municipalidad /> ESTADO DE CUENTA BIENES INMUEBLES</div>
 
+<<<<<<< Updated upstream
       <h2 className="titles" style={{ background: "#FF6600" }}>
         Datos del Inmueble
       </h2>
 
+=======
+      <h2 className="subTitles">Datos del Inmueble</h2>
+
+      
+
+      
+>>>>>>> Stashed changes
       <table className="details-table">
         <thead>
           <tr>
             <th>Clave Catastral</th>
             <th>DNI</th>
+<<<<<<< Updated upstream
             <th>Direccion</th>
           </tr>
         </thead>
@@ -238,10 +250,21 @@ const ProceosFacturacion: React.FC = () => {
             <td id="tdClaveCatastral">9283927328920</td>
             <td id="tdDNI">0802198787965</td>
             <td id="tdDireccion">Loma de Toncontin, Tegucigalpa</td>
+=======
+            <th>Dirección</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="tdClaveCatastral" style={{ textAlign: "center" }} >8291881919020</td>
+            <td id="tdClaveCatastral" style={{ textAlign: "center" }}>0801-2001-03973</td>
+            <td id="tdClaveCatastral" style={{textAlign: "center"}}>Villa San Franciscos</td>
+>>>>>>> Stashed changes
           </tr>
         </tbody>
       </table>
 
+<<<<<<< Updated upstream
 
       {/* <div className="entity-identification">
         <div className="row">
@@ -260,6 +283,13 @@ const ProceosFacturacion: React.FC = () => {
         </div>
       </div> */}
       <br /><br />
+=======
+      <br/>
+
+      
+      <br/>
+
+>>>>>>> Stashed changes
       {/* Datos de las Tablas*/}
       <table className="details-table">
         <thead>
