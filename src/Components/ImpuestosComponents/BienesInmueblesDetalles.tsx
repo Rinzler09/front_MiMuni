@@ -88,17 +88,11 @@ const DetallesImpuesto: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
-<<<<<<< Updated upstream
-      <h2 className="title"><Municipalidad />ESTADO DE CUENTA BIENES INMUEBLES</h2>
-      <br />
-      <table className="details-table table-bordered">
-=======
       <h2 className="title"><Municipalidad />ESTADO DE CUENTA DE BIENES INMUEBLES</h2>
 
       <h2 className="subTitles" >Claves Catastrales de contribuyente</h2>
 
       <table className="details-table">
->>>>>>> Stashed changes
         <thead>
           <tr>
             <th>Propietario</th>

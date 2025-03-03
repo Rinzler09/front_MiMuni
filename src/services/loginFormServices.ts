@@ -10,28 +10,35 @@ export const login = async (email: string, password: string) => {
     console.log("Full Response Data:", response.data);
     const { status, message } = response.data;
 
-    // Verifica si la contraseña es temporal basándose en el mensaje del backend
-    if (message.toLowerCase().includes("contraseña temporal")) {
-      toast.info("Contraseña temporal correcta."); // Muestra un mensaje indicando que la contraseña es temporal
+    // Verifica si el mensaje indica credenciales incorrectas
+    if (message.toLowerCase().includes("credenciales incorrectas")) {
+      toast.error(message);
       return {
-        success: true,
-        isTemporaryPassword: true, // Marca como contraseña temporal
+        success: false,
         message,
       };
     }
 
-    // Si no es una contraseña temporal, muestra un mensaje de éxito
+    // Verifica si la contraseña es temporal basándose en el mensaje del backend
+    if (message.toLowerCase().includes("contraseña temporal")) {
+      toast.info("Contraseña temporal correcta.");
+      return {
+        success: true,
+        isTemporaryPassword: true,
+        message,
+      };
+    }
+
+    // Si la respuesta es de éxito y no es una contraseña temporal
     toast.success(message);
     return {
       success: true,
-      isTemporaryPassword: false, // No es una contraseña temporal
+      isTemporaryPassword: false,
       message,
     };
   } catch (error: any) {
     console.error("Login Error:", error);
-    // Extrae el mensaje del backend o usa un mensaje por defecto
     const errorMessage = error.response?.data?.message || "Credenciales incorrectas";
-    // Muestra el mensaje de error
     toast.error(errorMessage);
     return {
       success: false,
@@ -39,3 +46,4 @@ export const login = async (email: string, password: string) => {
     };
   }
 };
+;

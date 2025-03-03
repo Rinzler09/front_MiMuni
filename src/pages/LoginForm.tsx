@@ -24,7 +24,7 @@ const LoginForm: React.FC = () => {
           setTimeout(() => {navigate("/cambio-contraseña");}, 4000); // 3000 ms = 3 segundos
         } else {
           // Si es una contraseña establecida, redirige al Dashboard
-          setTimeout(() => {navigate("/dashboard");}, 9000); // 8000 ms = 3 segundos
+          setTimeout(() => {navigate("/dashboard");}, 4000); // 8000 ms = 3 segundos
         }
       }
     } catch (err: any) {
