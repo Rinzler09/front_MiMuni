@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { clavesCatastrales } from "../../services/claveCatastral";
 import { useNavigate } from "react-router-dom";
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
+import"../../style/PagesStyles/titulo_TablasStyle.css";
 import Municipalidad from "../ImagesComponents/Municipalidad";
 
 
@@ -89,9 +90,9 @@ const DetallesImpuesto: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
-      <h2 className="title"><Municipalidad />ESTADO DE CUENTA DE BIENES INMUEBLES</h2>
+      <h2 className="title">ESTADO DE CUENTA DE BIENES INMUEBLES</h2>
 
-      <h2 className="subTitles" >Claves Catastrales de contribuyente</h2>
+      
 
       <table className="details-table">
         <thead>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
+import "../../style/PagesStyles/titulo_TablasStyle.css"
 import Municipalidad from "../ImagesComponents/Municipalidad";
 import { facturasBI } from "../../services/facturasBI";
 import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
@@ -217,13 +218,10 @@ const ProceosFacturacion: React.FC = () => {
   return (
     <div className="detalles-impuesto-container">
 
-      <div className="title"><Municipalidad /> ESTADO DE CUENTA BIENES INMUEBLES</div>
+      <div className="title"> ESTADO DE CUENTA BIENES INMUEBLES</div>
 
       <h2 className="subTitles">Datos del Inmueble</h2>
-
-      
-
-      
+     
       <table className="details-table">
         <thead>
           <tr>
@@ -258,6 +256,7 @@ const ProceosFacturacion: React.FC = () => {
             <th>Subtotal</th>
             <th>Desc. P.P</th>
             <th>D.A.M</th>
+            <th>Ajustes</th>
             <th>Amnistia</th>
             <th>Total</th>
           </tr>
@@ -265,7 +264,6 @@ const ProceosFacturacion: React.FC = () => {
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
           {
-            
 
               <tr >
                 <td><input type="checkbox" /></td>
@@ -276,12 +274,59 @@ const ProceosFacturacion: React.FC = () => {
                 <td id="tdSubtotal">6,420.00 LPS.</td>
                 <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
                 <td id="tdDESCUENTO_AM">250.00 LPS.</td>
+                <td id="tdAJUSTES">0.00 LPS.</td>
                 <td id="tdAMNISTIA">0 LPS.</td>
                 <td id="tdTotal">5,528.00 LPS.</td>
               </tr>
-           
-
           }
+          {
+
+<tr >
+  <td><input type="checkbox" /></td>
+  <td id="tdFACTURA_ID">90120</td>
+  <td id="tdFECHA_VENCE">21/11/2025</td>
+  <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
+  <td id="tdCLAVE_CATASTRAL">8291881919020</td>
+  <td id="tdSubtotal">6,420.00 LPS.</td>
+  <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
+  <td id="tdDESCUENTO_AM">250.00 LPS.</td>
+  <td id="tdAJUSTES">0.00 LPS.</td>
+  <td id="tdAMNISTIA">0 LPS.</td>
+  <td id="tdTotal">5,528.00 LPS.</td>
+</tr>
+}
+{
+
+<tr >
+  <td><input type="checkbox" /></td>
+  <td id="tdFACTURA_ID">90120</td>
+  <td id="tdFECHA_VENCE">21/11/2025</td>
+  <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
+  <td id="tdCLAVE_CATASTRAL">8291881919020</td>
+  <td id="tdSubtotal">6,420.00 LPS.</td>
+  <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
+  <td id="tdDESCUENTO_AM">250.00 LPS.</td>
+  <td id="tdAJUSTES">0.00 LPS.</td>
+  <td id="tdAMNISTIA">0 LPS.</td>
+  <td id="tdTotal">5,528.00 LPS.</td>
+</tr>
+}
+{
+
+<tr >
+  <td><input type="checkbox" /></td>
+  <td id="tdFACTURA_ID">90120</td>
+  <td id="tdFECHA_VENCE">21/11/2025</td>
+  <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
+  <td id="tdCLAVE_CATASTRAL">8291881919020</td>
+  <td id="tdSubtotal">6,420.00 LPS.</td>
+  <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
+  <td id="tdDESCUENTO_AM">250.00 LPS.</td>
+  <td id="tdAJUSTES">0.00 LPS.</td>
+  <td id="tdAMNISTIA">0 LPS.</td>
+  <td id="tdTotal">5,528.00 LPS.</td>
+</tr>
+}
         </tbody>
       </table>
 

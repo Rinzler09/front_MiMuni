@@ -15,8 +15,10 @@ const LoginForm: React.FC = () => {
     try {
       const data = await login(email, password);
       // Guarda el correo en localStorage
-      localStorage.setItem("correo", email);
-      localStorage.setItem("cotraseñ temporal", password);
+      localStorage.setItem('token', JSON.stringify(data.auth_token));
+      localStorage.setItem('user', JSON.stringify(data.correo));
+      console.log("Token desde el frontend:", data.auth_token);
+      console.log("Usuario desde el frontend:", data.correo);
 
       if (data.success) {
         if (data.isTemporaryPassword) {
@@ -68,9 +70,10 @@ const LoginForm: React.FC = () => {
               <input
                 type="password" placeholder="Ingrese su contraseña" value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onBlur={(e) => setPassword(e.target.value.trim())}
                 required
               />
-              <a href="/recuperar-contrasena" className="forgot-password">¿Olvidó su contraseña?</a>
+              <a href="" className="forgot-password">¿Olvidó su contraseña?</a>
             </div>
 
             <div className="remember-me">
@@ -78,8 +81,9 @@ const LoginForm: React.FC = () => {
               <label htmlFor="remember">Recordar credenciales</label>
             </div>
             <div className="loginBotones">
+            <button className="login-btns" onClick={handleRegister}>Activar Cuenta</button>
               <button type="submit" className="login-btn"> Iniciar sesión </button>
-              <button className="login-btn" onClick={handleRegister}>Activar Cuenta</button>
+             
             </div>
           </form>
         </div>

@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'Prometo';
+    src: url(assets/fuentes/prometo/Prometo.ttf);
+}
+
+* {
+    font-family: 'Prometo', sans-serif;
+}

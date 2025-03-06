@@ -19,7 +19,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     // Recuperar el email del localStorage
-    const userEmail = localStorage.getItem("correo");
+    const userEmail = localStorage.getItem("user");
     if (userEmail) {
       console.log("Email recuperado de localStorage:", userEmail); // Depuración
       setUserName(userEmail || "admin_admin"); // Usa el email directamente

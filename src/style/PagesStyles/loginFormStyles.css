@@ -137,7 +137,21 @@
   transition: background-color 0.3s;
 }
 
-.login-btn:hover {
+.login-btns {
+  margin: 10px;
+  background-color: #873702;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.login-btn,
+.login-btns:hover {
   background-color: #e55d00;
 }
 
