@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 
-const API_URL = "http://10.169.101.83:3000/api/v1/login/usuario";
+const API_URL = "http://174.138.48.197:3000/api/v1/login/usuario";
 
 // Función para iniciar sesión
 export const login = async (email: string, password: string) => {
