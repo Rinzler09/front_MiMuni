@@ -37,7 +37,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="header">
+    <header className="header d-flex justify-content-between align-items-center p-1 ">
       <div className="header-left">
         <h1 className="header-title tituloHeader" onClick={gotoMenu}>
           Mi Muni en Línea
@@ -51,11 +51,11 @@ const Header: React.FC = () => {
           <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
           {/* Menú desplegable */}
           {isOpen && (
-            <div className="dropdown-menu">
-              <ul>
-                <li className="dropdown-menu-list">
+            <div className="dropdown-menu ">
+              <ul className="dropdown-menu-end show">
+                <li >
                   <FontAwesomeIcon icon={faEdit} className="menu-icon" />
-                  <a href="/editar-perfil" className="menu-link">
+                  <a href="/editar-perfil" className="dropdown-menu-item">
                     Editar Perfil
                   </a>
                 </li>

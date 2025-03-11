@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
 import"../../style/PagesStyles/titulo_TablasStyle.css";
 import Municipalidad from "../ImagesComponents/Municipalidad";
-
+import { Toaster, toast } from "sonner";
 
 
 
@@ -39,6 +39,11 @@ const DetallesImpuesto: React.FC = () => {
 
         //le mandamos el usuario como parametro
         const respuesta = await clavesCatastrales(user);
+        if (typeof respuesta === "object") {
+          toast.success(respuesta.message);
+        }else{
+          toast.error("Ocurrio un problema");
+        }
 
         if (respuesta && Array.isArray(respuesta)) {
           setClaves(respuesta);
@@ -46,8 +51,9 @@ const DetallesImpuesto: React.FC = () => {
         } else {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
         }
-      } catch (error) {
+      } catch (error: any) {  
         console.error("Error obteniendo registros:", error);
+        toast.error(error?.message ?? "Error al obtener registros");
       }
     };
 
@@ -90,10 +96,8 @@ const DetallesImpuesto: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
+      <Toaster position="top-right"/>
       <h2 className="title">ESTADO DE CUENTA DE BIENES INMUEBLES</h2>
-
-      
-
       <table className="details-table">
         <thead>
           <tr>

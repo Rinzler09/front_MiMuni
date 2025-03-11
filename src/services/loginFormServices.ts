@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 
-const API_URL = "http://174.138.48.197:3000/api/v1/login/usuario";
+const API_URL = "http://localhost:3000/api/v1/login/usuario";
 
 // Función para iniciar sesión
 export const login = async (email: string, password: string) => {
@@ -9,8 +9,8 @@ export const login = async (email: string, password: string) => {
     const response = await axios.post(API_URL, { email, password });
     console.log("Full Response Data:", response.data);
 
-    // Desestructuramos 'status', 'message' y 'token' (asumiendo que el backend lo envía)
-    const { status, message, access_token, user } = response.data;
+    // Desestructuramos 'message' y 'token' (asumiendo que el backend lo envía)
+    const { message, access_token, user } = response.data;
 
     // Muestra el token completo en consola
     console.log("Usuario:", user);
@@ -30,7 +30,6 @@ export const login = async (email: string, password: string) => {
       return {
         success: true,
         isTemporaryPassword: true,
-        auth_token: access_token, // Retornamos el token real
         correo: user,
         message,
       };

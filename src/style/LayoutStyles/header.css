@@ -6,7 +6,7 @@
 
     color: white;
     padding: 5px 15px;
-    font-size: 16px;
+    font-size: 15px;
     position: fixed;
 
     top: 0;
@@ -18,8 +18,9 @@
 }
 
 .header-title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
+    padding-top: 5px;
 }
 
 .user-profile {
@@ -31,11 +32,16 @@
 
 .user-icon {
     font-size: 20px;
-    margin-right: 8px;
+    margin-right: 10px;
 }
 
 
 .user-name {
     font-size: 16px;
     font-weight: 500;
+    margin-right: 10px;
+}
+
+.chevron-icon {
+    padding-right: 10px;
 }
