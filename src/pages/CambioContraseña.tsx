@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import "../style/PagesStyles/cambioContraseñaStyles.css";
 import Municipalidad from "../Components/ImagesComponents/Municipalidad";
 
-// importación nuevas al proyectos
+// Importación nuevas al proyecto
 import type { cambioContraseña } from "../types/generalForm";
 import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import { cambiarContra } from "../services/CambioControseñaServices";
 import { Toaster, toast } from "sonner";
-import Modal from '../Components/ModalComponents/modalComponent';
+import Modal from "../Components/ModalComponents/modalComponent";
 
 // Importar estilos de bootstrap icons (si no lo has hecho globalmente)
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -20,10 +20,9 @@ const CambioContraseña: React.FC = () => {
   // Estados para mostrar/ocultar cada contraseña
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [showModalDatos, setShowModalDatos] = useState(false);
 
-  // Validación de los campos del formulario
+  // Valores iniciales para el formulario
   const initialValues: cambioContraseña = {
     contraseña: "",
     confirmaContra: "",
@@ -36,7 +35,7 @@ const CambioContraseña: React.FC = () => {
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
-  // Validación de contraseña
+  // Observa el valor de la contraseña para poder compararla con la confirmación
   const password = watch("contraseña");
 
   const handleContra = async (formData: cambioContraseña) => {
@@ -51,7 +50,8 @@ const CambioContraseña: React.FC = () => {
       }
     } catch (error: any) {
       toast.error(
-        error?.message ?? "Error al actualizar la contraseña. Intente nuevamente."
+        error?.message ??
+          "Error al actualizar la contraseña. Intente nuevamente."
       );
     }
   };
@@ -84,9 +84,12 @@ const CambioContraseña: React.FC = () => {
                 {...register("contraseña", {
                   required: "La Nueva Contraseña es necesaria",
                   minLength: {
-                    value: 12,
-                    message:
-                      "La contraseña debe contener un mínimo de 8 caracteres, incluyendo al menos una letra mayúscula y un carácter especial.",
+                    value: 8,
+                    message: "La contraseña debe contener al menos 8 caracteres.",
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: "La contraseña no debe superar los 50 caracteres.",
                   },
                 })}
               />
@@ -115,6 +118,14 @@ const CambioContraseña: React.FC = () => {
                 placeholder="Repita su nueva contraseña"
                 {...register("confirmaContra", {
                   required: "Es necesario que repita la Contraseña",
+                  minLength: {
+                    value: 8,
+                    message: "La contraseña debe contener al menos 8 caracteres.",
+                  },
+                  maxLength: {
+                    value: 50,
+                    message: "La contraseña no debe superar los 50 caracteres.",
+                  },
                   validate: (value) =>
                     value === password || "Las contraseñas no son iguales",
                 })}
@@ -125,9 +136,7 @@ const CambioContraseña: React.FC = () => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <i
-                  className={`bi ${
-                    showConfirmPassword ? "bi-eye-slash" : "bi-eye"
-                  }`}
+                  className={`bi ${showConfirmPassword ? "bi-eye-slash" : "bi-eye"}`}
                 ></i>
               </span>
             </div>
@@ -141,7 +150,7 @@ const CambioContraseña: React.FC = () => {
         </button>
       </form>
 
-      {/* Reutilizacion de la ventana modal */}
+      {/* Reutilización de la ventana modal */}
       <Modal
         isVisible={showModalDatos}
         title="Éxito"

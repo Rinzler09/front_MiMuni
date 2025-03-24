@@ -78,7 +78,7 @@ const DetallesImpuesto: React.FC = () => {
   // Función para enviar parámetros a la API de facturación y navegar a la siguiente pantalla
   const handleVerFacturas = async (claveCat: string, direccion: string) => {
     if (!selectedMunicipality) {
-      toast.error("Debe seleccionar una municipalidad para continuar.");
+      //toast.error("Debe seleccionar una municipalidad para continuar.");
       return;
     }
     if (!user?.token) {

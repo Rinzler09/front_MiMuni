@@ -1,10 +1,10 @@
-import axios from "axios";
+import auth from "../Auth/auth";
 
-const API_URL = "http://localhost:3000/api/v1/bienesInmuebles/BIxUser";
+const API_URL = "/bienesInmuebles/BIxUser";
 
 export const clavesCatastrales = async (municipalidad: string, token: string) => {
   try {
-    const response = await axios.post(
+    const response = await auth.post(
       API_URL,
       { municipalidad }, // body
       {

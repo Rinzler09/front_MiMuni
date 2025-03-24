@@ -25,10 +25,8 @@ const LoginForm: React.FC = () => {
 
   // Configuración de react-hook-form
   const initialValues: confirmacionLogin = { email: "", contra: "" };
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
+  const {register,handleSubmit,
+  formState: { errors },
   } = useForm({
     defaultValues: initialValues,
   });
@@ -82,7 +80,7 @@ const LoginForm: React.FC = () => {
 
       // Si es un login exitoso (sin contraseña temporal)
       if (data.success) {
-        toast.success(data.message);
+      //  toast.success(data.message);
 
         setUser({
           email: data.correo,
@@ -146,6 +144,7 @@ const LoginForm: React.FC = () => {
               <form onSubmit={handleLogin} className="w-100">
                 <div className="mb-3 input-group">
                   <span className="input-group-text">👤</span>
+                 
                   <input
                     type="text"
                     className="form-control"

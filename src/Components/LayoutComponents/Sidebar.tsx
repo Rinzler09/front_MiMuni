@@ -21,11 +21,11 @@ import { Toaster, toast } from "sonner";
 const Sidebar: React.FC = () => {
   // Controla la apertura/cierre de las secciones del sidebar
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
-    EstadoCuenta: true,
+    EstadoCuenta: false,
     Declaraciones: false,
     Servicios: false,
     Ambientales: false,
-    Municipalidades: false,
+    Municipalidades: true,
     Publicos: false,
     Varios: false,
   });
@@ -59,14 +59,12 @@ const Sidebar: React.FC = () => {
   const handleRestrictedClick = (e: React.MouseEvent) => {
     if (!selectedMunicipality) {
       e.preventDefault();
-      toast.error("Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
     }
   };
 
   // Helper para asignar propiedades a los enlaces restringidos
   const restrictedLinkProps = !selectedMunicipality
-    ? { onClick: handleRestrictedClick, className: "menu-item disabled" }
-    : { className: "menu-item" };
+    ? { onClick: handleRestrictedClick, className: "menu-item disabled" } : { className: "menu-item" };
 
   // Al iniciar sesión, si el usuario no ha seleccionado una municipalidad se notifica
   useEffect(() => {

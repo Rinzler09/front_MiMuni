@@ -110,9 +110,10 @@ const RegistrarUsuario: React.FC = () => {
                         <div className="col-md-6">
                             <label htmlFor="telefono" className="form-label">
                                 Telefono
+                                
                             </label>
                             <input
-                                type="number" className="form-control" placeholder='Ingrese su numero de telefono' maxLength={8}
+                                type="tel" className="form-control" placeholder='Ingrese su numero de telefono' maxLength={8}
                                 {...register("telefono", {
                                     required: "El TELEFONO es obligatoria",
                                     minLength: {value: 8,message: "El TELEFONO debe tener exactamente 8 caracteres",},

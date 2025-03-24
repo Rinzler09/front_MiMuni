@@ -1,7 +1,7 @@
-import axios from "axios";
+import auth from "../Auth/auth";
 
 // URL de la API
-const API_URL = "http://localhost:3000/api/v1/login/changePassword";
+const API_URL = "/login/changePassword";
 
 // Función para cambiar contraseña
 export const cambiarContra = async (n_psswd: string) => {
@@ -25,7 +25,7 @@ export const cambiarContra = async (n_psswd: string) => {
     };
 
     // Realiza la petición al backend con los headers que incluyan el token
-    const response = await axios.post(API_URL, payload, {
+    const response = await auth.post(API_URL, payload, {
       headers: {
         // Ajusta si tu backend requiere otro tipo de encabezado
         Authorization: `Bearer ${token}`,

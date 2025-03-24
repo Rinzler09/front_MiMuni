@@ -1,6 +1,6 @@
-import axios from "axios";
+import auth from "../Auth/auth";
 
-const API_URL = "http://localhost:3000/api/v1/facturasBI/consulta";
+const API_URL = "/facturasBI/consulta";
 
 export const facturaBienesInmueble = async (
   municipalidad: string,
@@ -9,7 +9,7 @@ export const facturaBienesInmueble = async (
   token: string
 ) => {
   try {
-    const response = await axios.post(
+    const response = await auth.post(
       API_URL,
       { municipalidad, claveCat },
       {
