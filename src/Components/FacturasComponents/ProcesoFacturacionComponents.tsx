@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import "../../style/PagesStyles/titulo_TablasStyle.css"
-import Municipalidad from "../ImagesComponents/Municipalidad";
-import { facturasBI } from "../../services/facturasBI";
-import { faAlignCenter } from "@fortawesome/free-solid-svg-icons";
+
+import { facturaBienesInmueble } from "../../services/facturasBI";
+import { useAuth } from "../../Auth/AuthContex";
 
 interface Facturas {
-  id: number;
-  factura_id: number;
-  preciounitario: number;
-  descuentoprontopago: number;
+  numFactura: number;
+  fechaVence: string;
+  descripcion: string;
+  subtotal: number;
+  descPP: number;
+  descADM: number;
+  descAMN: number;
   ajuste: number;
-  estado: string;
+  valorPagado: number;
+  total: number;
+}
+
+//Interfaz recibie informacion de Bienes Inmuebles
+interface LocationState {
+  claveCat:string;
+  direccion:string;
 }
 
 const ProceosFacturacion: React.FC = () => {
@@ -23,73 +33,9 @@ const ProceosFacturacion: React.FC = () => {
   const closeModalDetPago = () => {
     setModalDetPago(false);
   };
-  const hacerCobro = () => {
+  const { state } = useLocation() as { state: LocationState };
+  const {claveCat, direccion} = state;
 
-    fetch('https://apex.oracle.com/pls/apex/mapea_hn/apiFacturas/postFacturas/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(
-        {
-          "descripcion": descripcion,
-          "tipopago": tipoPago,
-          "subtotal": montoSubtotal,
-          "valortotal": montoTotal,
-          "fechapago": fecha,
-          "estado": estado,
-          "periodo": periodo
-        }
-      ),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error en la peticion HTTP: ${response.status}`);
-        }
-        return response.text();
-      })
-      .then(text => {
-        console.log('Raw response:', text);
-        try {
-          const data = JSON.parse(text);
-          console.log('Parsed JSON:', data);
-        } catch (error) {
-          console.log('La respuesta no es un JSON valido:', text);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
-    setShowConfirmationModal(true);
-    setShowConfirmationIcon(false);
-    setShowOkButton(false);
-    setConfirmationMessage("Procesando...");
-
-    setTimeout(() => {
-      setShowConfirmationIcon(true);
-      setConfirmationMessage("Pago facturado");
-      setShowOkButton(true);
-    }, 3000);
-  };
-
-  /*HOOKS PARA PAGOS A DB INICIAL*/
-  const [montoSubtotal, setMontoSubtotal] = useState(6000);
-  const [montoTotal, setMontoTotal] = useState(0);
-  const [descripcion, setDescripcion] = useState("IMPUESTO MUNICIPAL A LA PROPIEDAD DE BIENES INMUEBLES");
-  const [tipoPago, setTipoPago] = useState("Tarjeta Credito");
-  const [estado, setEstado] = useState("PAGADO");
-  const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
-  //new Date() convierte la fecha en un objeto Date, toISOString convierte la fecha en formato YYYY-MM-DDTHH:mm:ss.sssZ y split corta todo lo que sigue despues
-  const [periodo, setPeriodo] = useState(1949);
-
-  const calcTotal = (montoSubtotal: number) => {
-    setMontoTotal(montoSubtotal + (montoSubtotal * 0.15));
-  }
-
-  useEffect(() => {
-    calcTotal(montoSubtotal)
-  }, [])
 
 
 
@@ -135,26 +81,32 @@ const ProceosFacturacion: React.FC = () => {
 
   /*HOOKS PARA PAGOS A DB GEOREDES*/
   const [facturas, setFacturas] = useState<Facturas[]>([]);
-  // const [idfact, setIdfact] = useState(0);
-  // const [factura_id, setFactura_id] = useState(0);
-  // const [precio_unitario, setPrecio_unitario] = useState(0);
-  // const [desc_PP, setDesc_PP] = useState(0);
-  // const [ajuste, setAjuste] = useState(0);
-  // const [estadofact, setEstadofact] = useState("A");
 
+   // Paginación
+    const [paginaActual, setPaginaActual] = useState(1);
+    const registrosPorPagina = 5;
+
+
+     // Cálculo de los índices para la paginación
+  const indUltimoReg = paginaActual * registrosPorPagina;
+  const indPrimerReg = indUltimoReg - registrosPorPagina;
+  const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
+ 
+
+  const { user, selectedMunicipality } = useAuth();
+
+  // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
+  //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo
+  
   useEffect(() => {
     const fetchFacturas = async () => {
       try {
-        //verificamos que usuario se esta usando
-        const user = JSON.parse(localStorage.getItem('usuario') || '{}');
-        console.log("Usuario para clave", user);
-
-        //le mandamos el usuario como parametro
-        const respuesta = await facturasBI(user);
-
+        if (!selectedMunicipality || !user?.token) return;
+  
+        const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, user.token);
+  
         if (respuesta && Array.isArray(respuesta)) {
           setFacturas(respuesta);
-          console.log(respuesta);
         } else {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
         }
@@ -162,10 +114,9 @@ const ProceosFacturacion: React.FC = () => {
         console.error("Error obteniendo registros:", error);
       }
     };
-
+  
     fetchFacturas();
-  }, [facturas]);
-
+  }, [claveCat, selectedMunicipality, user]);
 
   //Cuando se clickea el boton pagar se ejecuta el metodo handlePayButtonClick
   //el cual mediante fetch usa un post para enviar el json conteniendo la estrucutar del pago de factura  
@@ -218,7 +169,7 @@ const ProceosFacturacion: React.FC = () => {
   return (
     <div className="detalles-impuesto-container">
 
-      <div className="title"> ESTADO DE CUENTA BIENES INMUEBLES</div>
+      <div className="title" style={{textAlign:"center"}}> ESTADO DE CUENTA BIENES INMUEBLES</div>
 
       <h2 className="subTitles">Datos del Inmueble</h2>
      
@@ -232,10 +183,12 @@ const ProceosFacturacion: React.FC = () => {
         </thead>
         <tbody>
           <tr>
-            <td id="tdClaveCatastral" style={{ textAlign: "center" }} >8291881919020</td>
-            <td id="tdClaveCatastral" style={{ textAlign: "center" }}>0801-2001-03973</td>
-            <td id="tdClaveCatastral" style={{textAlign: "center"}}>El Porvenir, Monjaras, Choluteca</td>
+            <td style={{ textAlign: "center" }} >{claveCat}</td>
+            <td style={{ textAlign: "center" }}>0801-2001-03973</td>
+            <td  style={{textAlign: "center"}}>{direccion}</td>
           </tr>
+        
+         
         </tbody>
       </table>
 
@@ -249,84 +202,36 @@ const ProceosFacturacion: React.FC = () => {
         <thead>
           <tr>
             <th><input type="checkbox" /></th>
-            <th># Factura</th>
-            <th>Fecha Vence</th>
-            <th>Descripcion</th>
-            <th>Clave Catastral</th>
-            <th>Subtotal</th>
-            <th>Desc. P.P</th>
-            <th>D.A.M</th>
-            <th>Ajustes</th>
-            <th>Amnistia</th>
-            <th>Total</th>
+            <th>N° Factura</th>
+                <th>Fecha Vence</th>
+                <th>Descripción</th>
+                <th>Subtotal</th>
+                <th>Desc. P.P</th>
+                <th>Desc. ADM</th>
+                <th>Desc. AMN</th>
+                <th>Ajuste</th>
+                <th>Valor Pagado</th>
+                <th>Total</th>
           </tr>
         </thead>
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
-          {
-
-              <tr >
-                <td><input type="checkbox" /></td>
-                <td id="tdFACTURA_ID">90120</td>
-                <td id="tdFECHA_VENCE">21/11/2025</td>
-                <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
-                <td id="tdCLAVE_CATASTRAL">8291881919020</td>
-                <td id="tdSubtotal">6,420.00 LPS.</td>
-                <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
-                <td id="tdDESCUENTO_AM">250.00 LPS.</td>
-                <td id="tdAJUSTES">0.00 LPS.</td>
-                <td id="tdAMNISTIA">0 LPS.</td>
-                <td id="tdTotal">5,528.00 LPS.</td>
-              </tr>
-          }
-          {
-
-<tr >
-  <td><input type="checkbox" /></td>
-  <td id="tdFACTURA_ID">90120</td>
-  <td id="tdFECHA_VENCE">21/11/2025</td>
-  <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
-  <td id="tdCLAVE_CATASTRAL">8291881919020</td>
-  <td id="tdSubtotal">6,420.00 LPS.</td>
-  <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
-  <td id="tdDESCUENTO_AM">250.00 LPS.</td>
-  <td id="tdAJUSTES">0.00 LPS.</td>
-  <td id="tdAMNISTIA">0 LPS.</td>
-  <td id="tdTotal">5,528.00 LPS.</td>
-</tr>
-}
-{
-
-<tr >
-  <td><input type="checkbox" /></td>
-  <td id="tdFACTURA_ID">90120</td>
-  <td id="tdFECHA_VENCE">21/11/2025</td>
-  <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
-  <td id="tdCLAVE_CATASTRAL">8291881919020</td>
-  <td id="tdSubtotal">6,420.00 LPS.</td>
-  <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
-  <td id="tdDESCUENTO_AM">250.00 LPS.</td>
-  <td id="tdAJUSTES">0.00 LPS.</td>
-  <td id="tdAMNISTIA">0 LPS.</td>
-  <td id="tdTotal">5,528.00 LPS.</td>
-</tr>
-}
-{
-
-<tr >
-  <td><input type="checkbox" /></td>
-  <td id="tdFACTURA_ID">90120</td>
-  <td id="tdFECHA_VENCE">21/11/2025</td>
-  <td id="tdDESCRIPCION">Factura por Impuesto Personal</td>
-  <td id="tdCLAVE_CATASTRAL">8291881919020</td>
-  <td id="tdSubtotal">6,420.00 LPS.</td>
-  <td id="tdDESCUENTO_PRONTO_PAGO">642.00 LPS.</td>
-  <td id="tdDESCUENTO_AM">250.00 LPS.</td>
-  <td id="tdAJUSTES">0.00 LPS.</td>
-  <td id="tdAMNISTIA">0 LPS.</td>
-  <td id="tdTotal">5,528.00 LPS.</td>
-</tr>
-}
+          
+          {facturasActuales.map((item, index) =>(
+            <tr key={index}>
+            <td style={{textAlign:"center"}}><input type="checkbox" /></td>
+            <td style={{textAlign:"center"}}>{item.numFactura}</td>
+            <td style={{textAlign:"center"}}>{item.fechaVence}</td>
+            <td style={{textAlign:"center"}}>{item.descripcion}</td>
+            <td style={{textAlign:"center"}}>{item.descPP}</td>
+            <td style={{textAlign:"center"}}>{item.subtotal}</td>
+            <td style={{textAlign:"center"}}>{item.descADM}</td>
+            <td style={{textAlign:"center"}} >{item.descAMN}</td>
+            <td style={{textAlign:"center"}}>{item.ajuste}</td>
+            <td style={{textAlign:"center"}}>{item.valorPagado}</td>
+            <td style={{textAlign:"center"}}>{item.total}</td>
+          </tr>
+          )) }
         </tbody>
       </table>
 
@@ -526,7 +431,7 @@ const ProceosFacturacion: React.FC = () => {
               <button
                 onClick={() => {
                   closeModalDetPago();
-                  hacerCobro();
+                  //hacerCobro();
                 }}
                 className="modal-button"
               >
@@ -609,20 +514,17 @@ const ProceosFacturacion: React.FC = () => {
                   type="text"
                   placeholder="Nombre completo"
                   onChange={handleCardNameChange}
-                  onFocus={() => setIsBackView(false)}
-                />
+                  onFocus={() => setIsBackView(false)}/>
                 <button
                   type="button"
                   className="button-continue"
-                  onClick={handleSaveCard}
-                >
+                  onClick={handleSaveCard}>
                   Agregar
                 </button>
                 <button
                   type="button"
                   className="button-back"
-                  onClick={closeCardModal}
-                >
+                  onClick={closeCardModal}>
                   Atrás
                 </button>
               </form>

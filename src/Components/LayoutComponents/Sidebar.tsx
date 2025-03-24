@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,11 +12,14 @@ import {
   faLeaf,
   faChevronDown,
   faRepeat,
-  faBars, // Ícono de hamburguesa
+  faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import "../../style/LayoutStyles/sidebar.css";
+import { useAuth } from "../../Auth/AuthContex";
+import { Toaster, toast } from "sonner";
 
 const Sidebar: React.FC = () => {
+  // Controla la apertura/cierre de las secciones del sidebar
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     EstadoCuenta: true,
     Declaraciones: false,
@@ -27,9 +30,11 @@ const Sidebar: React.FC = () => {
     Varios: false,
   });
   
-  // Estado para controlar la visibilidad de la sidebar en móviles
+  // Control de visibilidad para dispositivos móviles
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();
 
+ 
   const toggleSection = (section: string) => {
     setOpenSections((prevState) => ({
       ...prevState,
@@ -37,21 +42,51 @@ const Sidebar: React.FC = () => {
     }));
   };
 
-  // Método para alternar la visibilidad de la sidebar (para el ícono de hamburguesa)
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
 
+  // Lista de municipalidades del usuario (si existe)
+  const municipalidades = user?.municipalidades || [];
+
+  // Al seleccionar una municipalidad, se actualiza el estado y se notifica con un toast.
+  const handleMunicipalitySelect = (municipality: string) => {
+    setSelectedMunicipality(municipality);
+    toast.success(`Municipalidad ${municipality} seleccionada.`);
+  };
+
+  // Función para impedir la navegación en enlaces restringidos si no se ha seleccionado una municipalidad
+  const handleRestrictedClick = (e: React.MouseEvent) => {
+    if (!selectedMunicipality) {
+      e.preventDefault();
+      toast.error("Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
+    }
+  };
+
+  // Helper para asignar propiedades a los enlaces restringidos
+  const restrictedLinkProps = !selectedMunicipality
+    ? { onClick: handleRestrictedClick, className: "menu-item disabled" }
+    : { className: "menu-item" };
+
+  // Al iniciar sesión, si el usuario no ha seleccionado una municipalidad se notifica
+  useEffect(() => {
+    if (user && !selectedMunicipality) {
+      toast.info("Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
+    }
+  }, [user]);
+
   return (
     <div>
-      {/* Ícono de hamburguesa visible en dispositivos móviles */}
+      <Toaster position="top-right" />
+      {/* Ícono de hamburguesa para móviles */}
       <div className="hamburger-icon" onClick={toggleSidebar}>
         <FontAwesomeIcon icon={faBars} />
       </div>
 
-      {/* Contenedor de la barra lateral con clase condicional */}
+      {/* Contenedor del sidebar */}
       <div className={`sidebar-container ${isSidebarOpen ? "active" : ""}`}>
         <div className="sidebar">
+          {/* Sección de Municipalidades */}
           <div className="sidebar-section">
             <h3
               id="btnMunicipalidades"
@@ -61,61 +96,61 @@ const Sidebar: React.FC = () => {
               Municipalidades <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.Municipalidades ? "show" : ""}`}>
-              <li>
-                <Link to="/dashboard" className="menu-item">
-                  Santa Lucía
-                </Link>
-              </li>
-              <li>
-                <Link to="/dashboard" className="menu-item">
-                  Valle de Angeles
-                </Link>
-              </li>
-              <li>
-                <Link to="/dashboard" className="menu-item">
-                  Choluteca
-                </Link>
-              </li>
+              {municipalidades.map((mun: string, index: number) => (
+                <li key={index}>
+                  <button
+                  className={`menu-item ${selectedMunicipality === mun ? "selected" : ""}`}
+                  disabled={selectedMunicipality === mun}
+                  onClick={() => handleMunicipalitySelect(mun)}
+                >
+                  {mun}
+                </button>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Sección Estado de Cuenta */}
           <div className="sidebar-section">
-            <h3 className="section-title" onClick={() => toggleSection("EstadoCuenta")}>
+            <h3
+              className={`section-title ${openSections.EstadoCuenta ? "active" : ""}`}
+              onClick={() => toggleSection("EstadoCuenta")}
+            >
               Estado de Cuenta <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}>
               <li>
-                <Link to="/bienes-inmuebles" className="menu-item">
-                  <FontAwesomeIcon icon={faHome} className="menu-icon" />
+                <Link to="/bienes-inmuebles" {...restrictedLinkProps}>
+                  <FontAwesomeIcon icon={faHome} className="menu-icon"/>
                   Bienes Inmuebles
                 </Link>
               </li>
               <li>
-                <Link to="/impuesto-personal" className="menu-item">
+                <Link to="/impuesto-personal" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faUser} className="menu-icon" />
                   Impuesto Vecinal
                 </Link>
               </li>
               <li>
-                <Link to="/servicios-publicos" className="menu-item">
+                <Link to="/servicios-publicos" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faBuilding} className="menu-icon" />
                   Servicios Públicos
                 </Link>
               </li>
               <li>
-                <Link to="/industria-comercio" className="menu-item">
+                <Link to="/industria-comercio" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faIndustry} className="menu-icon" />
                   Impuesto Negocios
                 </Link>
               </li>
               <li>
-                <Link to="/otras-tasas" className="menu-item">
+                <Link to="/otras-tasas" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faTrash} className="menu-icon" />
                   Multas Municipales
                 </Link>
               </li>
               <li>
-                <Link to="/otras-tasas" className="menu-item">
+                <Link to="/otras-tasas" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faTrash} className="menu-icon" />
                   Servicios Varios
                 </Link>
@@ -123,49 +158,50 @@ const Sidebar: React.FC = () => {
             </ul>
           </div>
 
+          {/* Sección Servicios Tributarios */}
           <div className="sidebar-section">
             <h3 className="section-title" onClick={() => toggleSection("Declaraciones")}>
               Servicios Tributarios <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.Declaraciones ? "show" : ""}`}>
               <li>
-                <Link to="/volumen-ventas" className="menu-item">
+                <Link to="/volumen-ventas" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faFileAlt} className="menu-icon" />
                   Solvencia Vecinal
                 </Link>
               </li>
               <li>
-                <Link to="/renovaciones" className="menu-item">
+                <Link to="/renovaciones" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                   Permiso operación negocios
                 </Link>
               </li>
               <li>
-                <Link to="/renovaciones" className="menu-item">
+                <Link to="/renovaciones" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                   Impuesto volumen ventas
                 </Link>
               </li>
               <li>
-                <Link to="/renovaciones" className="menu-item">
+                <Link to="/renovaciones" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                   Cambio de propietario
                 </Link>
               </li>
               <li>
-                <Link to="/renovaciones" className="menu-item">
+                <Link to="/renovaciones" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                   Cambio de giro negocio
                 </Link>
               </li>
               <li>
-                <Link to="/renovaciones" className="menu-item">
+                <Link to="/renovaciones" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                   Cambio de negocio
                 </Link>
               </li>
               <li>
-                <Link to="/renovaciones" className="menu-item">
+                <Link to="/renovaciones" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                   Planes de Pago
                 </Link>
@@ -173,31 +209,32 @@ const Sidebar: React.FC = () => {
             </ul>
           </div>
 
+          {/* Sección Servicios Catastrales */}
           <div className="sidebar-section">
             <h3 className="section-title" onClick={() => toggleSection("Servicios")}>
               Servicios Catastrales <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.Servicios ? "show" : ""}`}>
               <li>
-                <Link to="/solicitud-inspeccion" className="menu-item">
+                <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faSearch} className="menu-icon" />
                   Solicitud de Permiso de Construccion
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Constancias Catastrales
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Solicitud de Inspecciones
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Planos Catastrales
                 </Link>
@@ -205,25 +242,26 @@ const Sidebar: React.FC = () => {
             </ul>
           </div>
 
+          {/* Sección Servicios Ambientales */}
           <div className="sidebar-section">
             <h3 className="section-title" onClick={() => toggleSection("Ambientales")}>
               Servicios Ambientales <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.Ambientales ? "show" : ""}`}>
               <li>
-                <Link to="/solicitud-inspeccion" className="menu-item">
+                <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faSearch} className="menu-icon" />
                   Inspecciones Ambientales
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Constancias Ambientales
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Permisos Ambientales
                 </Link>
@@ -231,37 +269,38 @@ const Sidebar: React.FC = () => {
             </ul>
           </div>
 
+          {/* Sección Servicios Públicos */}
           <div className="sidebar-section">
             <h3 className="section-title" onClick={() => toggleSection("Publicos")}>
               Servicios Públicos <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.Publicos ? "show" : ""}`}>
               <li>
-                <Link to="/solicitud-inspeccion" className="menu-item">
+                <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faSearch} className="menu-icon" />
                   Cambio de Propietario
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Cambio de Domicilio
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Libro de Quejas
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Planes de Pago
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Solicitud de Servicio
                 </Link>
@@ -269,49 +308,50 @@ const Sidebar: React.FC = () => {
             </ul>
           </div>
 
+          {/* Sección Servicios Varios */}
           <div className="sidebar-section">
             <h3 className="section-title" onClick={() => toggleSection("Varios")}>
               Servicios Varios <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.Varios ? "show" : ""}`}>
               <li>
-                <Link to="/solicitud-inspeccion" className="menu-item">
+                <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faSearch} className="menu-icon" />
                   Constancias Municipales
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Certificaciones
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Licencias
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Permisos de Explotación
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Vistos Buenos
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Cartas de Ventas
                 </Link>
               </li>
               <li>
-                <Link to="/ambientales" className="menu-item">
+                <Link to="/ambientales" {...restrictedLinkProps}>
                   <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
                   Guías de Transporte
                 </Link>

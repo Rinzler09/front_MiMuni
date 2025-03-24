@@ -69,6 +69,11 @@
     font-size: 14px;
     border-radius: 5px;
     margin-bottom: 5px;
+
+    opacity: 1;
+    filter: brightness(1);
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 .menu-item:hover {
@@ -87,6 +92,23 @@
 #btnMunicipalidades {
     color: #4a3b2f;
 }
+
+/*Agregacion de inactivo y activo*/
+.menu-item.disabled {
+    opacity: 0.5;          /* Reduce la opacidad para dar efecto deshabilitado */
+    filter: brightness(0.7); /* Aplica un filtro para que se vea más oscuro */
+    cursor: not-allowed;   /* Cambia el cursor para indicar que no es clickeable */
+    pointer-events: none;  /* Impide la interacción del usuario */
+  }
+  
+  /* Opcional: Para que los enlaces activos tengan su apariencia normal */
+
+  .menu-item.selected {
+    background-color: #b1b1b1; /* Ejemplo: color azul */
+    color: #fff;
+    cursor: default;
+  }
+
 
 /* Estilo para la sidebar en móviles */
 @media screen and (max-width: 780px) {

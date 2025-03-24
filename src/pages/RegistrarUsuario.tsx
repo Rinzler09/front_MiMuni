@@ -129,7 +129,7 @@ const RegistrarUsuario: React.FC = () => {
             <Modal
                 isVisible={showModalDatos}
                 title="Éxito"
-                message={`Contraseña temporal enviada exitosamente: ${tempPwd}`}
+                message={`Contraseña temporal enviada exitosamente, verifique su correo `}
                 onClose={() => navigate('/')}
             />
         </div >

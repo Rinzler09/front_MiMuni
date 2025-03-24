@@ -1,21 +1,37 @@
-import axios from "axios";
 import { toast } from "sonner";
+import auth from "../Auth/auth";
 
-const API_URL = "http://localhost:3000/api/v1/login/usuario";
+const API_URL = "/login/usuario";
 
-// Función para iniciar sesión
-export const login = async (email: string, password: string) => {
+interface LoginResponse {
+  message: string;
+  user: any;
+  access_token?: string;
+  municipalidades?: string;
+ 
+}
+
+interface LoginResult {
+  success: boolean;
+  message: string;
+  isTemporaryPassword?: boolean;
+  correo?: any;
+  access_token?: string;
+  municipalidades?: string;
+  
+}
+
+export const login = async (email: string, password: string): Promise<LoginResult> => {
   try {
-    const response = await axios.post(API_URL, { email, password });
+    const response = await auth.post<LoginResponse>(API_URL, { email, password });
     console.log("Full Response Data:", response.data);
 
-    // Desestructuramos 'message' y 'token' (asumiendo que el backend lo envía)
-    const { message, access_token, user } = response.data;
-
-    // Muestra el token completo en consola
+    const { message, user, access_token, municipalidades } = response.data;
+    console.log("token:", access_token);
+    console.log("MUNICIPALIDAD:", municipalidades);
     console.log("Usuario:", user);
+  
 
-    // Verifica si el mensaje indica credenciales incorrectas
     if (message.toLowerCase().includes("credenciales incorrectas")) {
       toast.error(message);
       return {
@@ -24,7 +40,6 @@ export const login = async (email: string, password: string) => {
       };
     }
 
-    // Verifica si la contraseña es temporal
     if (message.toLowerCase().includes("contraseña temporal")) {
       toast.info("Contraseña temporal correcta.");
       return {
@@ -32,17 +47,20 @@ export const login = async (email: string, password: string) => {
         isTemporaryPassword: true,
         correo: user,
         message,
+        access_token,
+        
       };
     }
 
-    // Si la respuesta es de éxito y no es contraseña temporal
     toast.success(message);
+
     return {
       success: true,
       isTemporaryPassword: false,
-      auth_token: access_token, // Retornamos el token real
       correo: user,
       message,
+      municipalidades,
+      access_token,
     };
   } catch (error: any) {
     console.error("Login Error:", error);
@@ -54,4 +72,3 @@ export const login = async (email: string, password: string) => {
     };
   }
 };
-;

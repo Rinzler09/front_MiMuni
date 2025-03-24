@@ -1,136 +1,154 @@
 import React, { useState, useEffect } from "react";
-import { clavesCatastrales } from "../../services/claveCatastral";
 import { useNavigate } from "react-router-dom";
-import "../../style/ImpuestosStyles/detalleBienInmueble.css";
-import"../../style/PagesStyles/titulo_TablasStyle.css";
-import Municipalidad from "../ImagesComponents/Municipalidad";
 import { Toaster, toast } from "sonner";
 
+import { clavesCatastrales } from "../../services/claveCatastral";
+import { facturaBienesInmueble } from "../../services/facturasBI";
+import { useAuth } from "../../Auth/AuthContex";
 
+import "../../style/ImpuestosStyles/detalleBienInmueble.css";
+import "../../style/PagesStyles/titulo_TablasStyle.css";
 
-/* Se define la interface Claves con su tipo de dato */
-
+/* Interfaz de los datos que tu API retorna */
 interface Claves {
-  id: number;
-  nombre_contri: string;
-  apellido_contri: string;
-  clave_catastrales: string;
-  
+  prop: string;
+  claveCat: string;
+  valorImp: string;
+  uso: string;
+  subUso: string;
+  aldea: string;
+  barrio: string;
+  direccion: string;
 }
 
 const DetallesImpuesto: React.FC = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(
-    "Procesando confirmación sobre su facturación."
-  );
+  const navigate = useNavigate();
 
-  /*Se use el hook de useState para el arreglo de Claves catastrales*/
+  // Estado para almacenar la lista de bienes inmuebles
   const [claves, setClaves] = useState<Claves[]>([]);
 
-  const navigate = useNavigate(); /*Hook de navigate*/
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const registrosPorPagina = 5;
+
+  // Obtenemos la municipalidad seleccionada y el usuario 
+  const { user, selectedMunicipality } = useAuth();
 
   useEffect(() => {
     const fetchClaves = async () => {
+      // Si no hay municipalidad o token, no hacemos la petición
+      if (!selectedMunicipality) return;
+      if (!user?.token) {
+        toast.error("No hay token. Por favor inicie sesión.");
+        return;
+      }
       try {
-        //verificamos que usuario se esta usando
-        const user = JSON.parse(localStorage.getItem('usuario') || '{}');
-        console.log("Usuario para clave", user);
+        // Llamamos al servicio enviando la municipalidad y el token
+        const respuesta = await clavesCatastrales(selectedMunicipality, user.token);
 
-        //le mandamos el usuario como parametro
-        const respuesta = await clavesCatastrales(user);
-        if (typeof respuesta === "object") {
+        // Si la API retorna un "message" dentro del objeto, lo mostramos con toast
+        if (respuesta && typeof respuesta === "object" && respuesta.message) {
           toast.success(respuesta.message);
-        }else{
-          toast.error("Ocurrio un problema");
         }
-
-        if (respuesta && Array.isArray(respuesta)) {
+        // Si la respuesta es un arreglo, lo guardamos en el estado
+        if (Array.isArray(respuesta)) {
           setClaves(respuesta);
-          console.log(respuesta);
+          console.log("Respuesta de la API:", respuesta);
         } else {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
         }
-      } catch (error: any) {  
+      } catch (error: any) {
         console.error("Error obteniendo registros:", error);
         toast.error(error?.message ?? "Error al obtener registros");
       }
     };
 
     fetchClaves();
-  }, [claves]);
+  }, [selectedMunicipality, user]);
 
-  const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 5;
-
-  //se calculan los indices para las paginas actuales
+  // Cálculo de los índices para la paginación
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const registrosActuales = claves.slice(indPrimerReg, indUltimoReg);
-
-  // Manejador de paginacion
   const pagsTotales = Math.ceil(claves.length / registrosPorPagina);
   const handleCambioPag = (numPag: number) => {
     setPaginaActual(numPag);
-  }
-
-
-
-  // Función para abrir el modal
-  const handleOpenModal = () => {
-    setModalOpen(true);
-    setLoading(true); // Inicia el estado de carga
-    setLoading(true); // Reinicia el estado de carga al abrir el modal
-    setMessage("Procesando confirmación sobre su facturación."); // Mensaje inicial
-    // Simula un tiempo de carga (por ejemplo, 3 segundos)
-    setTimeout(() => {
-      setLoading(false);
-      setMessage("Puede proceder con su facturación."); // Cambia el mensaje al finalizar la carga
-    }, 3000);
   };
 
-  // Función para cerrar el modal
-  const handleCloseModal = () => {
-    setModalOpen(false);
+  // Función para enviar parámetros a la API de facturación y navegar a la siguiente pantalla
+  const handleVerFacturas = async (claveCat: string, direccion: string) => {
+    if (!selectedMunicipality) {
+      toast.error("Debe seleccionar una municipalidad para continuar.");
+      return;
+    }
+    if (!user?.token) {
+      toast.error("No hay token. Por favor, inicie sesión nuevamente.");
+      return;
+    }
+    try {
+      // municipalidad, clave catastral y el token
+      const facturaResponse = await facturaBienesInmueble(selectedMunicipality, claveCat, user.token);
+      toast.success("Factura generada para proceso de pago");
+      navigate("/facturas-BI", {// Navegacion a la siguiente pantalla 
+        state: { 
+          municipalidad: selectedMunicipality,claveCat,direccion,facturaData: facturaResponse 
+        } 
+      });
+    } catch (error: any) {
+      console.error("Error al generar factura:", error);
+      toast.error(error.message || "Error al generar factura");
+    }
   };
 
   return (
-    <div className="detalles-impuesto-container">
-      <Toaster position="top-right"/>
-      <h2 className="title">ESTADO DE CUENTA DE BIENES INMUEBLES</h2>
+    <div className="detalles-impuesto-container" >
+      <Toaster position="top-right" />
+      <h2 className="title" style={{textAlign:"center"}}>LISTADO DE BIENES INMUEBLES</h2>
+
       <table className="details-table">
         <thead>
           <tr>
             <th>Propietario</th>
-            <th>Clave Catastral</th>
+            <th>Clave Ctaastral</th>
             <th>Valor Impuesto</th>
-            <th>Aldea</th>
-            <th>Barrio/Caserio</th>
-            <th>Naturaleza</th>
             <th>Uso</th>
             <th>Sub Uso</th>
+            <th>Aldea</th>
+            <th>Barrio/Caserio</th>
+            <th>Dirección</th>
             <th>Ver Facturas</th>
-
           </tr>
         </thead>
-        <tbody >
-            <tr >
-
-              <td>Santos Alberto Lopez </td>
-              <td>82918819190</td>
-              <td>6,420.00 LPS</td>
-              <td>Monjarás</td>
-              <td>El Porvenir</td>
-              <td>Urbano</td>
-              <td>Familiar</td>
-              <td>Domestico</td>
-              <td><button className="btnFacturas" onClick={() => { navigate("/facturas-BI") }
-              }>Facturas</button></td>
-
+        <tbody>
+          {registrosActuales.map((item, index) => (
+            <tr key={index}>
+              <td style={{textAlign:"center"}}>{item.prop}</td>
+              <td style={{textAlign:"center"}}>{item.claveCat}</td>
+              <td style={{textAlign:"center"}}>{item.valorImp}</td>
+              <td style={{textAlign:"center"}}>{item.uso}</td>
+              <td style={{textAlign:"center"}}>{item.subUso}</td>
+              <td style={{textAlign:"center"}}>{item.aldea}</td>
+              <td style={{textAlign:"center"}}>{item.barrio}</td>
+              <td style={{textAlign:"center"}}>{item.direccion}</td>
+              <td>
+                <button className="btnFacturas" onClick={() => handleVerFacturas(item.claveCat, item.direccion)}>
+                  Facturas
+                </button>
+              </td>
             </tr>
+          ))}
         </tbody>
       </table>
 
+      {pagsTotales > 1 && (
+        <div className="pagination">
+          {Array.from({ length: pagsTotales }, (_, i) => (
+            <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
