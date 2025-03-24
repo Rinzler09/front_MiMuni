@@ -7,7 +7,7 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig{
 }
 
 const auth: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:3000/api/v1',
+    baseURL: (import.meta.env.VITE_API_URL),
     withCredentials: true, //Esto nos ayudara que permite el envio y recepcion de cookies (Incluye el refresh token)
 
 });
