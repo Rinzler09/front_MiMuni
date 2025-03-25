@@ -18,7 +18,7 @@ const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Obtenemos el usuario desde el AuthContext (sin usar localStorage)
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   // Si tienes la propiedad "email" en el objeto user, úsala;
   // de lo contrario, se usa "nombre" o un valor por defecto.
@@ -31,6 +31,12 @@ const Header: React.FC = () => {
   const gotoMenu = () => {
     navigate("/dashboard");
   };
+
+  //Funcion para manejar el logout
+  const handleLogout = () =>{
+    logout();
+    navigate("/");
+  }
 
   return (
     <header className="header d-flex justify-content-between align-items-center p-1">
@@ -67,11 +73,9 @@ const Header: React.FC = () => {
                     Historial de Pagos
                   </a>
                 </li>
-                <li >
+                <li onClick={handleLogout} style={{ cursor: "pointer" }}>
                   <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" />
-                  <a href="/" className="menu-link">
-                    Salir
-                  </a>
+                  <span className="menu-link">Salir</span>
                 </li>
               </ul>
             </div>

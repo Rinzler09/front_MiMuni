@@ -52,7 +52,7 @@ const Sidebar: React.FC = () => {
   // Al seleccionar una municipalidad, se actualiza el estado y se notifica con un toast.
   const handleMunicipalitySelect = (municipality: string) => {
     setSelectedMunicipality(municipality);
-    toast.success(`Municipalidad ${municipality} seleccionada.`);
+    toast.success(`${municipality} seleccionada.`);
   };
 
   // Función para impedir la navegación en enlaces restringidos si no se ha seleccionado una municipalidad
@@ -75,7 +75,8 @@ const Sidebar: React.FC = () => {
 
   return (
     <div>
-      <Toaster position="top-right" />
+      <Toaster richColors position="top-right" />
+      
       {/* Ícono de hamburguesa para móviles */}
       <div className="hamburger-icon" onClick={toggleSidebar}>
         <FontAwesomeIcon icon={faBars} />
