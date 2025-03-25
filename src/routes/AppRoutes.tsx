@@ -14,9 +14,11 @@ const AppRoutes: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* Rutas públicas */}
+        {/* Ruta de Login */}
         <Route path="/" element={<LoginForm />} />
+         {/* Ruta de Registrar Usuario */}
         <Route path="/registrar-usuario" element={<RegistrarUsuario />} />
+        {/* Ruta de Cambio de Contraseña */}
         <Route path="/cambio-contraseña" element={<CambioContraseña />} />
 
         {/* Ruta protegida: :tipo */}

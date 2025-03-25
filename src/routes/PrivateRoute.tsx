@@ -10,7 +10,7 @@ const PrivateRoute: React.FC = () => {
     return <Navigate to="/"  replace/>
   }
 
- // return <Outlet/>
+  return <Outlet/>
 }
 
 
