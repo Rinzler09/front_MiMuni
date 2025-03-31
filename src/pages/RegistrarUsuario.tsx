@@ -10,7 +10,22 @@ import ErrorMessage from '../Components/ErrorMessage.tsx/MostrarMensajesError';
 import {registrarSolicitud} from '../services/RegistroUsuarioServices';
 import { Toaster,toast } from 'sonner';
 import Modal from '../Components/ModalComponents/modalComponent';
+import { mensajes } from '../util/message';
 
+
+const interpretarMensaje = (
+    mensajeBackend: string
+  ): { mensaje: string; tipo: "success" | "error" | "info" | "post" } => {
+    const mensaje = mensajeBackend.toLowerCase();
+    for (const key in mensajes) {
+      if (mensaje.includes(key)) {
+        return mensajes[key];
+      }
+    }
+    // Si no coincide con ningún mapeo, se retorna el mensaje original como éxito
+    return { mensaje: mensajeBackend, tipo: "success" };
+  };
+  
 
 const RegistrarUsuario: React.FC = () => {
     const [showModalDatos, setShowModalDatos] = useState(false);
@@ -29,15 +44,13 @@ const RegistrarUsuario: React.FC = () => {
           if (typeof response === "object") {
             toast.success(response.message);
             setTimeout(() => setShowModalDatos(true), 5000);// Nos ayudara para cuando se termine la confirmacion de de registro registrado, pasara 5 segundo para abrir la ventana modal
-            console.log("Enviado correctamente:", response);
             setTempPwd(response.pswdTemp);
         } else {
             toast.error(response.message);
-            console.log("Datos no enviados:", response);
         }
         } catch (error: any) {
-            console.error("Error en la solicitud:", error);
-            toast.error(error?.message ?? "Usuario no registrado.");
+            //toast.error(error?.message ?? "Usuario no registrado.");
+            toast.error(mensajes["credenciales incorrectas"].mensaje);
         }
 
         

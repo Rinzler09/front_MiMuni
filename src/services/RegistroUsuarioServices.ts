@@ -1,7 +1,6 @@
 import auth from "../Auth/auth";
 
 const API_URL = "/activacion/activarUser";
-//const API_URL = "https://apex.oracle.com/pls/apex/pruebauni/apiSolicitud/postSolicitud/";
 
 // Función para registrar un usuario
 export const registrarSolicitud = async (nombre: string, identidad: string, registrotributario: string, email: string, telefono: string) => {

@@ -66,20 +66,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     setSelectedMunicipality(null);
     sessionStorage.clear();
+    //faCookie.clear();
+    
   };
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-        selectedMunicipality,
-        setSelectedMunicipality,
-        logout,
-        isLoading,
-        
-      }}
-    >
+      value={{user,setUser,selectedMunicipality,setSelectedMunicipality,logout,isLoading,}}>
       {children}
     </AuthContext.Provider>
   );

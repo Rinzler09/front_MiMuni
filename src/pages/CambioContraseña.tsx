@@ -98,7 +98,7 @@ const CambioContraseña: React.FC = () => {
                 style={{ cursor: "pointer" }}
                 onClick={() => setShowPassword(!showPassword)}
               >
-                <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
               </span>
             </div>
             {errors.contraseña && (
@@ -136,7 +136,7 @@ const CambioContraseña: React.FC = () => {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <i
-                  className={`bi ${showConfirmPassword ? "bi-eye-slash" : "bi-eye"}`}
+                  className={`bi ${showConfirmPassword ? "bi-eye" : "bi-eye-slash"}`}
                 ></i>
               </span>
             </div>

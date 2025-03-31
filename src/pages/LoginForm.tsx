@@ -45,7 +45,7 @@ const LoginForm: React.FC = () => {
       // data = { success, message, isTemporaryPassword, correo, access_token, municipalidades }
 
       if (data.message.toLowerCase().includes("credenciales incorrectas")) {
-        toast.error(data.message);
+       // toast.error(data.message);
         setIsSubmitting(false);
         return;
       }
@@ -60,7 +60,7 @@ const LoginForm: React.FC = () => {
 
       // Si el login indica contraseña temporal
       if (data.isTemporaryPassword) {
-        toast.info("Contraseña temporal correcta.");
+       // toast.info("Contraseña temporal correcta.");
 
         setUser({
           email: data.correo,  // Almacenas el correo como string
@@ -147,8 +147,10 @@ const LoginForm: React.FC = () => {
                  
                   <input
                     type="text"
+                    id="email"
                     className="form-control"
                     placeholder="Ingrese su email"
+                    required title="Campo obligatorio"
                     {...register("email", { required: "Email obligatorio." })}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -160,7 +162,7 @@ const LoginForm: React.FC = () => {
                   <span className="input-group-text">🔒</span>
                   <label htmlFor="contra" className="form-label"></label>
                   <input
-                    type={showPassword ? "text" : "password"} className="form-control" placeholder="Ingrese su password"
+                    type={showPassword ? "text" : "password"} className="form-control" placeholder="Ingrese su password" required
                     {...register("contra", { required: "Password obligatoria." })}
                     value={password} onChange={(e) => setPassword(e.target.value)} onBlur={(e) => setPassword(e.target.value.trim())}
                   />
@@ -168,7 +170,7 @@ const LoginForm: React.FC = () => {
                   <span
                     className="input-group-text" style={{ cursor: "pointer" }} onClick={() => setShowPassword(!showPassword)}
                   >
-                    <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                    <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
                   </span>
                 </div>
 

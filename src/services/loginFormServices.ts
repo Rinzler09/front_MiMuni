@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import auth from "../Auth/auth";
+import { mensajes } from "../util/message";
 
 const API_URL = "/login/usuario";
 
@@ -21,6 +22,21 @@ interface LoginResult {
   
 }
 
+// Función para interpretar el mensaje del backend y devolver un mensaje amigable y el tipo (success, error o info)
+const interpretarMensaje = (
+  mensajeBackend: string
+): { mensaje: string; tipo: "success" | "error" | "info" | "post" } => {
+  const mensaje = mensajeBackend.toLowerCase();
+  for (const key in mensajes) {
+    if (mensaje.includes(key)) {
+      return mensajes[key];
+    }
+  }
+  // Si no coincide con ningún mapeo, se retorna el mensaje original como éxito
+  return { mensaje: mensajeBackend, tipo: "success" };
+};
+
+
 export const login = async (email: string, password: string): Promise<LoginResult> => {
   try {
     
@@ -32,30 +48,29 @@ export const login = async (email: string, password: string): Promise<LoginResul
 
     // Si el servidor respondió con 401, lo manejamos como "credenciales inválidas"
     if (response.status === 401) {
-      toast.error("Credenciales incorrectas");
+      toast.error(mensajes["credenciales incorrectas"].mensaje);
       return {
         success: false,
-        message: "Credenciales incorrectas",
+        message: mensajes["credenciales incorrectas"].mensaje,
       };
     }
-
-    // Opcional: logs de depuración
-    console.log("Full Response Data:", response.data);
-    console.log("Response Data:", auth);
+    
 
     const { message, user, access_token, municipalidades } = response.data;
-
+    const {mensaje, tipo} = interpretarMensaje(message.toLowerCase());
     // Manejo de mensajes específicos devueltos por el backend
-    if (message.toLowerCase().includes("credenciales incorrectas")) {
-    //  toast.error(message);
+    if (tipo === "error") {
+    //  toast.error(mensajes[message].mensaje);
+     toast.error(mensaje);
       return {
         success: false,
         message,
       };
     }
 
-    if (message.toLowerCase().includes("contraseña temporal")) {
-      toast.info("Contraseña temporal correcta.");
+    if (tipo === "info") {
+     // toast.info("Contraseña temporal correcta.");
+     toast.info(mensaje);
       return {
         success: true,
         isTemporaryPassword: true,
@@ -77,7 +92,7 @@ export const login = async (email: string, password: string): Promise<LoginResul
     };
 
   } catch (error: any) {
-    // Aquí solo entrarías si ocurre un error de red, 500, etc. (≥ 500)
+   
     console.error("Login Error:", error);
     const errorMessage = error.response?.data?.message || "Credenciales Incorrectas";
     // Si prefieres, puedes mostrar un toast aquí:
