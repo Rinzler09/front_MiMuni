@@ -160,19 +160,13 @@ const LoginForm: React.FC = () => {
                   <span className="input-group-text">🔒</span>
                   <label htmlFor="contra" className="form-label"></label>
                   <input
-                    type={showPassword ? "text" : "password"}
-                    className="form-control"
-                    placeholder="Ingrese su password"
+                    type={showPassword ? "text" : "password"} className="form-control" placeholder="Ingrese su password"
                     {...register("contra", { required: "Password obligatoria." })}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onBlur={(e) => setPassword(e.target.value.trim())}
+                    value={password} onChange={(e) => setPassword(e.target.value)} onBlur={(e) => setPassword(e.target.value.trim())}
                   />
                   {/* Ícono de ojo para mostrar/ocultar contraseña */}
                   <span
-                    className="input-group-text"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setShowPassword(!showPassword)}
+                    className="input-group-text" style={{ cursor: "pointer" }} onClick={() => setShowPassword(!showPassword)}
                   >
                     <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
                   </span>
@@ -186,15 +180,11 @@ const LoginForm: React.FC = () => {
                 </div>
 
                 <div className="mb-3">
-                  <a href="#" className="forgot-password">
-                    ¿Olvidó su contraseña?
-                  </a>
+                  <a href="#" className="forgot-password"> ¿Olvidó su contraseña? </a>
                 </div>
 
                 <div className="d-flex justify-content-around">
-                  <button className="login-btns" onClick={handleRegister}>
-                    Activar Cuenta
-                  </button>
+                  <button className="login-btns" onClick={handleRegister}> Activar Cuenta </button>
                   <button type="submit" className="login-btn" disabled={isSubmitting}>
                     {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
                   </button>

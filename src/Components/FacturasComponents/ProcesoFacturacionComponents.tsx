@@ -6,6 +6,7 @@ import "../../style/PagesStyles/titulo_TablasStyle.css"
 
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContex";
+import { toast } from "sonner";
 
 interface Facturas {
   numFactura: number;
@@ -111,7 +112,8 @@ const ProceosFacturacion: React.FC = () => {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
         }
       } catch (error) {
-        console.error("Error obteniendo registros:", error);
+       //console.error("Error obteniendo registros:", error);
+      
       }
     };
   
@@ -223,13 +225,13 @@ const ProceosFacturacion: React.FC = () => {
             <td style={{textAlign:"center"}}>{item.numFactura}</td>
             <td style={{textAlign:"center"}}>{item.fechaVence}</td>
             <td style={{textAlign:"center"}}>{item.descripcion}</td>
-            <td style={{textAlign:"center"}}>{item.descPP}</td>
-            <td style={{textAlign:"center"}}>{item.subtotal}</td>
-            <td style={{textAlign:"center"}}>{item.descADM}</td>
-            <td style={{textAlign:"center"}} >{item.descAMN}</td>
-            <td style={{textAlign:"center"}}>{item.ajuste}</td>
-            <td style={{textAlign:"center"}}>{item.valorPagado}</td>
-            <td style={{textAlign:"center"}}>{item.total}</td>
+            <td style={{textAlign:"center"}}>L{item.descPP}</td>
+            <td style={{textAlign:"center"}}>L{item.subtotal} </td>
+            <td style={{textAlign:"center"}}>L{item.descADM}</td>
+            <td style={{textAlign:"center"}} >L{item.descAMN}</td>
+            <td style={{textAlign:"center"}}>L{item.ajuste}</td>
+            <td style={{textAlign:"center"}}>L{item.valorPagado}</td>
+            <td style={{textAlign:"center"}}>L{item.total}</td>
           </tr>
           )) }
         </tbody>
@@ -238,7 +240,7 @@ const ProceosFacturacion: React.FC = () => {
 
 
       {/* Sección de "Mis tarjetas de crédito y débito" */}
-      <div className="credit-card-section">
+      <div className="credit-card-section"> {/*Cambiar la logica a un componente reutilizable*/}
         <h3>Mis tarjetas de crédito y débito</h3>
         <div className="add-card">
           <span className="card-icon">💳</span>
@@ -284,6 +286,7 @@ const ProceosFacturacion: React.FC = () => {
       </div>
 
       {/* Modal de advertencia */}
+      {/*Cambiar la logica a un componente reutilizable*/}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -302,6 +305,7 @@ const ProceosFacturacion: React.FC = () => {
       )}
 
       {/* Modal de advertencia de selección de checkbox */}
+      {/*Cambiar la logica a un componente reutilizable*/}
       {showCheckboxModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -321,6 +325,7 @@ const ProceosFacturacion: React.FC = () => {
         </div>
       )}
       {/* Modal de advertencia para agregar tarjeta de crédito */}
+      {/*Cambiar la logica a un componente reutilizable*/}
       {showCardRequiredModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -346,6 +351,7 @@ const ProceosFacturacion: React.FC = () => {
       )}
 
       {/* Modal de confirmación */}
+      {/*Cambiar la logica a un componente reutilizable*/}
       {showConfirmationModal && (
         <div className="modal-overlay">
           <div className="modal-box">
@@ -374,6 +380,7 @@ const ProceosFacturacion: React.FC = () => {
       )}
 
       {/* Modal desglose de cobro durante transaccion (donde se cobran los 30 lps)*/}
+      {/*Cambiar la logica a un componente reutilizable*/}
       {modalDetPago && (
         <div className="modal-overlay ">
           <div className="modalPago">
@@ -451,6 +458,7 @@ const ProceosFacturacion: React.FC = () => {
       )}
 
       {/* Modal para agregar tarjeta */}
+      {/*Cambiar la logica a un componente reutilizable*/}
       {showCardModal && (
         <div className="modal">
           <div className="card-modal-content">
@@ -475,6 +483,7 @@ const ProceosFacturacion: React.FC = () => {
               </div>
 
               {/* Formulario de entrada de datos de tarjeta */}
+              {/*Cambiar la logica a un componente reutilizable*/}
               <form className="card-form">
                 <label className="textoPrincial">Número de tarjeta</label>
                 <input

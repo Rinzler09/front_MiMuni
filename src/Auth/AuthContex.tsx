@@ -1,17 +1,13 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, {createContext,useContext,useState,ReactNode,useEffect,} from "react";
 
+//Interface de usuario
 interface User {
   nombre?: string;
   municipalidades?: string[];
   token?: string;
   email?: string;
   temporaryPassword?: string;
+  tokenExpiry?: number; // Timestamp de expiración del token
 }
 
 interface AuthContextProps {
@@ -20,6 +16,8 @@ interface AuthContextProps {
   selectedMunicipality: string | null;
   setSelectedMunicipality: (municipality: string | null) => void;
   logout: () => void;
+  isLoading: boolean;
+ 
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -27,8 +25,9 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [selectedMunicipality, setSelectedMunicipality] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Al montar, leemos de sessionStorage
+  // Al montar, leemos de sessionStorage y rehidratamos el estado
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
     const storedMunicipality = sessionStorage.getItem("selectedMunicipality");
@@ -39,9 +38,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (storedMunicipality) {
       setSelectedMunicipality(storedMunicipality);
     }
+
+    // Finaliza la carga una vez leídos los datos
+    setIsLoading(false);
   }, []);
 
-  // Cada vez que 'user' cambie, lo guardamos o eliminamos de sessionStorage
+  // Persistencia del usuario en sessionStorage
   useEffect(() => {
     if (user) {
       sessionStorage.setItem("user", JSON.stringify(user));
@@ -50,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [user]);
 
-  // Cada vez que 'selectedMunicipality' cambie, lo guardamos o eliminamos de sessionStorage
+  // Persistencia de la municipalidad seleccionada en sessionStorage
   useEffect(() => {
     if (selectedMunicipality) {
       sessionStorage.setItem("selectedMunicipality", selectedMunicipality);
@@ -59,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [selectedMunicipality]);
 
-  // Función de logout para borrar el estado y el sessionStorage
+  // Función para cerrar sesión: limpia el estado y el sessionStorage
   const logout = () => {
     setUser(null);
     setSelectedMunicipality(null);
@@ -74,6 +76,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         selectedMunicipality,
         setSelectedMunicipality,
         logout,
+        isLoading,
+        
       }}
     >
       {children}

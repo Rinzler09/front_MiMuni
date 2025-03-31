@@ -11,7 +11,7 @@ export const cambiarContra = async (n_psswd: string) => {
     const o_psswd = localStorage.getItem("password");
 
     // Obtén el token (si tu backend lo requiere)
-    const token = localStorage.getItem("token");
+    //const token = localStorage.getItem("token");
 
     if (!email) {
       throw new Error("No se encontró un correo electrónico en localStorage.");
@@ -25,11 +25,12 @@ export const cambiarContra = async (n_psswd: string) => {
     };
 
     // Realiza la petición al backend con los headers que incluyan el token
+    //Posiblemente error.
     const response = await auth.post(API_URL, payload, {
-      headers: {
-        // Ajusta si tu backend requiere otro tipo de encabezado
-        Authorization: `Bearer ${token}`,
-      },
+      // headers: {
+      //   // Ajusta si tu backend requiere otro tipo de encabezado
+      //   Authorization: `Bearer ${token}`,
+      // },
     });
 
     return response.data; // Devuelve la respuesta del backend

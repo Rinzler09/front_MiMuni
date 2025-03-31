@@ -64,7 +64,7 @@ export const login = async (email: string, password: string): Promise<LoginResul
     };
   } catch (error: any) {
     console.error("Login Error:", error);
-    const errorMessage = error.response?.data?.message || "Credenciales incorrectas";
+    const errorMessage = error.response?.data?.message || "Credenciales Incorrectas";
     //toast.error(errorMessage);
     return {
       success: false,

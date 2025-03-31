@@ -16,7 +16,7 @@ export const clavesCatastrales = async (municipalidad: string, token: string) =>
     return response.data;
   } catch (error: any) {
     throw new Error(
-      error.response?.data?.message || "Error al importar datos de tabla"
+      error.response?.data?.message || "Facturas no encontradas para este Bien Inmueble"
     );
   }
 };

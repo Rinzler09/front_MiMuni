@@ -58,9 +58,11 @@ const DetallesImpuesto: React.FC = () => {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
         }
       } catch (error: any) {
-        console.error("Error obteniendo registros:", error);
-        toast.error(error?.message ?? "Error al obtener registros");
+        const { message } = error.response?.data || {};
+        console.error("Facturas no encontradas para este Bien Inmueble:", error);
+        toast.error(message || "Facturas no encontradas para este Bien Inmueble");
       }
+      
     };
 
     fetchClaves();
@@ -95,8 +97,8 @@ const DetallesImpuesto: React.FC = () => {
         } 
       });
     } catch (error: any) {
-      console.error("Error al generar factura:", error);
-      toast.error(error.message || "Error al generar factura");
+     // console.error("Error al generar factura:", error);
+      toast.error(error.message || "Facturas no encontradas para este Bien Inmueble");
     }
   };
 
@@ -109,7 +111,7 @@ const DetallesImpuesto: React.FC = () => {
         <thead>
           <tr>
             <th>Propietario</th>
-            <th>Clave Ctaastral</th>
+            <th>Clave Catastral</th>
             <th>Valor Impuesto</th>
             <th>Uso</th>
             <th>Sub Uso</th>
@@ -124,7 +126,7 @@ const DetallesImpuesto: React.FC = () => {
             <tr key={index}>
               <td style={{textAlign:"center"}}>{item.prop}</td>
               <td style={{textAlign:"center"}}>{item.claveCat}</td>
-              <td style={{textAlign:"center"}}>{item.valorImp}</td>
+              <td style={{textAlign:"center"}}>L{item.valorImp}</td>
               <td style={{textAlign:"center"}}>{item.uso}</td>
               <td style={{textAlign:"center"}}>{item.subUso}</td>
               <td style={{textAlign:"center"}}>{item.aldea}</td>

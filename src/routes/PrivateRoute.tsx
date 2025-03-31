@@ -1,17 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContex";
 
 const PrivateRoute: React.FC = () => {
-  const {user} = useAuth();
+  const { user, isLoading, logout } = useAuth();
+  const [isTokenValid, setIsTokenValid] = useState(true);
 
-  //En este caso si el usuario token no le permitira mandarlo a otras rutas
-  if (!user || !user.token) {
-    return <Navigate to="/"  replace/>
+  // Función para validar el token sin usar librerías externas
+  const isTokenValidFunction = (token: string): boolean => {
+    // Verificar que el token tenga tres partes
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      return false;
+    }
+    try {
+      // Decodificar el payload (la segunda parte)
+      const payloadJson = atob(parts[1]);
+      const payload = JSON.parse(payloadJson);
+      
+      // Verificar que exista el campo "exp" y que no haya expirado
+      if (!payload.exp) return false;
+      const now = Math.floor(Date.now() / 1000);
+      return payload.exp > now;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  // Validación inmediata al montar la ruta protegida
+  useEffect(() => {
+    if (!isLoading && user && user.token) {
+      const valid = isTokenValidFunction(user.token);
+      if (!valid) {
+        setIsTokenValid(false);
+        logout();
+      }
+    }
+  }, [isLoading, user, logout]);
+
+  // Mientras se carga la sesión se muestra un mensaje de carga
+  if (isLoading) {
+    return <div>Cargando...</div>;
   }
 
-  return <Outlet/>
-}
+  // Si no existe usuario, token o el token es inválido, redirige al login
+  if (!user || !user.token || !isTokenValid) {
+    return <Navigate to="/" replace />;
+  }
 
+  // Si el usuario está autenticado y el token es válido, se renderiza el contenido protegido
+  return <Outlet />;
+};
 
 export default PrivateRoute;
