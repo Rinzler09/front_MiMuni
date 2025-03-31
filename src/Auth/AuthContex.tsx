@@ -7,7 +7,7 @@ interface User {
   token?: string;
   email?: string;
   temporaryPassword?: string;
-  tokenExpiry?: number; // Timestamp de expiración del token
+  //tokenExpiry?: number; 
 }
 
 interface AuthContextProps {
