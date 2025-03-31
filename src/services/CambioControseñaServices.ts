@@ -7,8 +7,8 @@ const API_URL = "/login/changePassword";
 export const cambiarContra = async (n_psswd: string) => {
   try {
     // Obtén el correo electrónico y la contraseña vieja desde localStorage
-    const email = localStorage.getItem("email");
-    const o_psswd = localStorage.getItem("password");
+    const email = sessionStorage.getItem("email");
+    const o_psswd = sessionStorage.getItem("password");
 
     // Obtén el token (si tu backend lo requiere)
     //const token = localStorage.getItem("token");

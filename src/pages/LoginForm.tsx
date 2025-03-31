@@ -69,8 +69,8 @@ const LoginForm: React.FC = () => {
         });
 
         // Guardar email y contraseña en localStorage
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", password);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("password", password);
 
         setTimeout(() => {
           navigate("/cambio-contraseña");
@@ -89,8 +89,8 @@ const LoginForm: React.FC = () => {
         });
 
         // Guardar email y contraseña en localStorage
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", password);
+        //localStorage.setItem("email", email);
+        //localStorage.setItem("password", password);
 
         setTimeout(() => {
           navigate("/dashboard");
