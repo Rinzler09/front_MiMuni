@@ -10,9 +10,6 @@ export const cambiarContra = async (n_psswd: string) => {
     const email = sessionStorage.getItem("email");
     const o_psswd = sessionStorage.getItem("password");
 
-    // Obtén el token (si tu backend lo requiere)
-    //const token = localStorage.getItem("token");
-
     if (!email) {
       throw new Error("No se encontró un correo electrónico en localStorage.");
     }

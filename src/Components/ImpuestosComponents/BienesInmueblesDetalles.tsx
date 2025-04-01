@@ -8,6 +8,7 @@ import { useAuth } from "../../Auth/AuthContex";
 
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
 import "../../style/PagesStyles/titulo_TablasStyle.css";
+import { mensajes } from "../../util/message";
 
 /* Interfaz de los datos que tu API retorna */
 interface Claves {
@@ -53,14 +54,14 @@ const DetallesImpuesto: React.FC = () => {
         // Si la respuesta es un arreglo, lo guardamos en el estado
         if (Array.isArray(respuesta)) {
           setClaves(respuesta);
-          console.log("Respuesta de la API:", respuesta);
-        } else {
-          console.error("La respuesta de la API no contiene un arreglo:", respuesta);
-        }
+         // console.log("Respuesta de la API:", respuesta);
+        } 
       } catch (error: any) {
-        const { message } = error.response?.data || {};
-        console.error("Facturas no encontradas para este Bien Inmueble:", error);
-        toast.error(message || "Facturas no encontradas para este Bien Inmueble");
+        //const { message } = error.response?.data || {};
+        
+        //console.error("Facturas no encontradas para este Bien Inmueble:", error);
+        //toast.error(message || "Facturas no encontradas para este Bien Inmueble");
+        toast.error(mensajes["Error al obtener facturas para este bien inmueble"].mensaje);
       }
       
     };
@@ -80,7 +81,7 @@ const DetallesImpuesto: React.FC = () => {
   // Función para enviar parámetros a la API de facturación y navegar a la siguiente pantalla
   const handleVerFacturas = async (claveCat: string, direccion: string) => {
     if (!selectedMunicipality) {
-      //toast.error("Debe seleccionar una municipalidad para continuar.");
+      toast.error("Debe seleccionar una municipalidad para continuar.");
       return;
     }
     if (!user?.token) {
@@ -97,14 +98,13 @@ const DetallesImpuesto: React.FC = () => {
         } 
       });
     } catch (error: any) {
-     // console.error("Error al generar factura:", error);
-      toast.error(error.message || "Facturas no encontradas para este Bien Inmueble");
+       toast.error(mensajes["Error al obtener facturas para este bien inmueble"].mensaje);
     }
   };
 
   return (
     <div className="detalles-impuesto-container" >
-      <Toaster position="top-right" />
+      <Toaster richColors position="top-right" />
       <h2 className="title" style={{textAlign:"center"}}>LISTADO DE BIENES INMUEBLES</h2>
 
       <table className="details-table">

@@ -16,5 +16,9 @@ export const mensajes: { [key: string]: { mensaje: string; tipo: "success" | "er
         mensaje: "Tus credenciales son correctas.",
         tipo: "success",
     },
+    "Error al obtener facturas para este bien inmueble":{
+      mensaje: "No se han encontrado facturas para este bien inmueble.",
+      tipo: "error",
+    },
   };
   
