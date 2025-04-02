@@ -54,13 +54,8 @@ const DetallesImpuesto: React.FC = () => {
         // Si la respuesta es un arreglo, lo guardamos en el estado
         if (Array.isArray(respuesta)) {
           setClaves(respuesta);
-         // console.log("Respuesta de la API:", respuesta);
         } 
       } catch (error: any) {
-        //const { message } = error.response?.data || {};
-        
-        //console.error("Facturas no encontradas para este Bien Inmueble:", error);
-        //toast.error(message || "Facturas no encontradas para este Bien Inmueble");
         toast.error(mensajes["Error al obtener facturas para este bien inmueble"].mensaje);
       }
       

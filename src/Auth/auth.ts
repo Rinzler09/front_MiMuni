@@ -30,7 +30,7 @@ auth.interceptors.response.use(
     // Si el error es 401 y no es la petición de login, intenta refrescar el token
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      console.log("Token expirado, intentando reintentar petición para refrescar el token...");
+      //console.log("Token expirado, intentando reintentar petición para refrescar el token...");
 
       try {
         const response = await auth(originalRequest);//actualiza el httpOnly cookie 

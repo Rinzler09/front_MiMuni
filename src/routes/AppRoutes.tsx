@@ -9,6 +9,7 @@ import CambioContraseña from "../pages/CambioContraseña";
 
 // Importamos nuestro PrivateRoute
 import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -21,11 +22,17 @@ const AppRoutes: React.FC = () => {
         {/* Ruta de Cambio de Contraseña */}
         <Route path="/cambio-contraseña" element={<CambioContraseña />} />
 
+         {/* Ruta Publicas */}
+         {/* <Route element={<PublicRoute />}>
+        <Route path="/cambio-contraseña" element={<CambioContraseña />} />
+        </Route> */}
+
         {/* Ruta protegida: :tipo */}
-        <Route element={<PrivateRoute />}>
-         <Route path="/cambio-contraseña" element={<CambioContraseña />} />
+        <Route element={<PrivateRoute/>}>
+         <Route path="/" element={<General/>} />
           <Route path="/:tipo" element={<General />} />
         </Route>
+               
       </Routes>
     </Router>
   );

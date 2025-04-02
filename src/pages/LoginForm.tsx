@@ -186,10 +186,8 @@ const LoginForm: React.FC = () => {
                 </div>
 
                 <div className="d-flex justify-content-around">
-                  <button className="login-btns" onClick={handleRegister}> Activar Cuenta </button>
-                  <button type="submit" className="login-btn" disabled={isSubmitting}>
-                    {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
-                  </button>
+                  <button className="login-btns" type="button" onClick={handleRegister}> Activar Cuenta </button>
+                  <button type="submit" className="login-btn" disabled={isSubmitting}>{isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}</button>
                 </div>
               </form>
             </div>

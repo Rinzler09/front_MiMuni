@@ -34,6 +34,7 @@ const Components: Components = {
     //Compoenentes de Dropdown
     'editar-perfil': React.lazy(() => import('../Components/UserComponents/EditarPerfil')),
     'historial-pagos': React.lazy(() => import('../Components/UserComponents/HistorialPagosComponents')),
+    //'cambio-contraseña': React.lazy(() => import('../pages/CambioContraseña')),
 
 
 

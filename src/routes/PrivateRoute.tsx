@@ -18,7 +18,7 @@ const PrivateRoute: React.FC = () => {
       const payloadJson = atob(parts[1]);
       const payload = JSON.parse(payloadJson);
       
-      // Verificar que exista el campo "exp" y que no haya expirado
+      // Verificar que exista 
       if (!payload.exp) return false;
       const now = Math.floor(Date.now() / 1000);
       return payload.exp > now;
