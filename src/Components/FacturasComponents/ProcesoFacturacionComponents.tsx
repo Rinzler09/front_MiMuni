@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import "../../style/PagesStyles/titulo_TablasStyle.css"
 
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContex";
-import { toast } from "sonner";
+
 
 interface Facturas {
   numFactura: number;
@@ -36,6 +36,8 @@ const ProceosFacturacion: React.FC = () => {
   };
   const { state } = useLocation() as { state: LocationState };
   const {claveCat, direccion} = state;
+  const location = useLocation();
+  const navigate = useNavigate();
 
 
 
@@ -98,7 +100,7 @@ const ProceosFacturacion: React.FC = () => {
 
   // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
   //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo
-  
+
   useEffect(() => {
     const fetchFacturas = async () => {
       try {
@@ -167,6 +169,42 @@ const ProceosFacturacion: React.FC = () => {
     });
     closeCardModal();
   };
+  
+  //Implementacion para la seleccion de checkbox en la facturas
+  const [selectItems, setSelectedItems] = useState<number[]>([]);
+  //vereficacion si se han seleccionado todas la facturas
+  const allSelected = facturasActuales.length > 0 && selectItems.length === facturasActuales.length;
+
+  //Seleccion global de todas las facturas
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+        const allIndices = facturasActuales.map((_, index) => index);
+        setSelectedItems(allIndices);
+
+        // Calcular el total de las facturas seleccionadas
+        const totalSum = facturasActuales.reduce((acc, item) => {
+          return acc + Number(item.total);
+        }, 0);
+        setSelectedAmount(totalSum);
+      } else {
+        setSelectedItems([]);
+        setSelectedAmount(0);
+      }
+    };
+
+  //Seleccion individual de cada factura
+  const handleRowSelect = (index: number) => {
+    //se utiliza el array de facturasActuales
+    const factura = facturasActuales[index];
+    const valorNumerico = Number(factura.total);
+    if (selectItems.includes(index)) {
+      setSelectedItems(prev => prev.filter(i => i !== index));
+      setSelectedAmount(prev => prev - valorNumerico);
+    }else{
+      setSelectedItems(prev => [...prev, index]);
+      setSelectedAmount(prev => prev + valorNumerico);
+    }
+  }
 
   return (
     <div className="detalles-impuesto-container">
@@ -203,7 +241,7 @@ const ProceosFacturacion: React.FC = () => {
       <table className="details-table">
         <thead>
           <tr>
-            <th><input type="checkbox" /></th>
+            <th><input type="checkbox" checked={allSelected} onChange={handleSelectAll}  /></th>
             <th>N° Factura</th>
                 <th>Fecha Vence</th>
                 <th>Descripción</th>
@@ -221,7 +259,7 @@ const ProceosFacturacion: React.FC = () => {
           
           {facturasActuales.map((item, index) =>(
             <tr key={index}>
-            <td style={{textAlign:"center"}}><input type="checkbox" /></td>
+            <td style={{textAlign:"center"}}><input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
             <td style={{textAlign:"center"}}>{item.numFactura}</td>
             <td style={{textAlign:"center"}}>{item.fechaVence}</td>
             <td style={{textAlign:"center"}}>{item.descripcion}</td>
@@ -241,7 +279,7 @@ const ProceosFacturacion: React.FC = () => {
 
       {/* Sección de "Mis tarjetas de crédito y débito" */}
       <div className="credit-card-section"> {/*Cambiar la logica a un componente reutilizable*/}
-        <h3>Mis tarjetas de crédito y débito</h3>
+        <h3>Mis tarjetas de credito y debito</h3>
         <div className="add-card">
           <span className="card-icon">💳</span>
           {savedCard ? (
@@ -261,11 +299,11 @@ const ProceosFacturacion: React.FC = () => {
                 openCardModal();
               }}
             >
-              Agregar una tarjeta de crédito o débito
+              Agregar una tarjeta de credito o debito
             </a>
           )}
           <p className="card-info">
-            Aceptamos las principales tarjetas de crédito
+            Aceptamos las principales tarjetas de credito
           </p>
         </div>
       </div>

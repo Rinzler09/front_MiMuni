@@ -9,7 +9,7 @@ import Municipalidad from '../Components/ImagesComponents/Municipalidad';
 import ErrorMessage from '../Components/ErrorMessage.tsx/MostrarMensajesError';
 import {registrarSolicitud} from '../services/RegistroUsuarioServices';
 import { Toaster,toast } from 'sonner';
-import Modal from '../Components/ModalComponents/modalComponent';
+import Modal from '../Components/attributeComponents/ModalComponents/modalComponent';
 import { mensajes } from '../util/message';
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import "../../style/ModalesStyles/PageModal/modalConfir.css";
+import "../../../style/ModalesStyles/PageModal/modalConfir.css";
 
 interface ModalProps {
   isVisible: boolean;

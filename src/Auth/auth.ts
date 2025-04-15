@@ -13,8 +13,7 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 
 const auth: AxiosInstance = axios.create({
   baseURL: (`${import.meta.env.VITE_API_URL}`), 
-  withCredentials: true, // Permite el envío y recepción de cookies 
-
+  withCredentials: true, // Permite el envío y recepcion de cookies 
 });
 
 auth.interceptors.response.use(
@@ -31,6 +30,7 @@ auth.interceptors.response.use(
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       //console.log("Token expirado, intentando reintentar petición para refrescar el token...");
+      
 
       try {
         const response = await auth(originalRequest);//actualiza el httpOnly cookie 
@@ -42,6 +42,8 @@ auth.interceptors.response.use(
 
     return Promise.reject(error);
   }
+
+  
 );
 
 

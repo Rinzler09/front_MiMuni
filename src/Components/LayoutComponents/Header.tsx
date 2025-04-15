@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -17,7 +17,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate(); // Hook para navegación
   const [isOpen, setIsOpen] = useState(false);
 
-  // Obtenemos el usuario desde el AuthContext (sin usar localStorage)
+  // Obtenemos el usuario desde el AuthContext
   const { user, logout } = useAuth();
 
   // Si tienes la propiedad "email" en el objeto user, úsala;
@@ -57,21 +57,15 @@ const Header: React.FC = () => {
               <ul className="dropdown-menu-end show">
                 <li>
                   <FontAwesomeIcon icon={faEdit} className="menu-icon" />
-                  <a href="/editar-perfil" className="menu-link">
-                    Editar Perfil
-                  </a>
+                 <Link to={"/editar-perfil"} className="menu-link">Editar Perfil</Link>
                 </li>
                 <li >
                   <FontAwesomeIcon icon={faCog} className="menu-icon" />
-                  <a href="/soporte-tecnico" className="menu-link">
-                    Soporte Técnico
-                  </a>
+                  <Link to={"/soporte-tecnico"} className="menu-link">Soporte Técnico</Link>
                 </li>
                 <li >
                   <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
-                  <a href="/historial-pagos" className="menu-link">
-                    Historial de Pagos
-                  </a>
+                  <Link to={"/historial-pagos"} className="menu-link">Historial Pagos</Link>
                 </li>
                 <li onClick={handleLogout} style={{ cursor: "pointer" }}>
                   <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" />

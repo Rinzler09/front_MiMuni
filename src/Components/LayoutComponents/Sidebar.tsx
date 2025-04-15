@@ -34,7 +34,6 @@ const Sidebar: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();
 
- 
   const toggleSection = (section: string) => {
     setOpenSections((prevState) => ({
       ...prevState,
@@ -50,11 +49,12 @@ const Sidebar: React.FC = () => {
   const municipalidades = user?.municipalidades || [];
 
   // Al seleccionar una municipalidad, se actualiza el estado y se notifica con un toast.
-  const handleMunicipalitySelect = (municipality: string) => {
+  const handleMunicipalitySelect = (municipality: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     setSelectedMunicipality(municipality);
     toast.success(`${municipality} seleccionada.`);
   };
-
   // Función para impedir la navegación en enlaces restringidos si no se ha seleccionado una municipalidad
   const handleRestrictedClick = (e: React.MouseEvent) => {
     if (!selectedMunicipality) {
@@ -64,12 +64,15 @@ const Sidebar: React.FC = () => {
 
   // Helper para asignar propiedades a los enlaces restringidos
   const restrictedLinkProps = !selectedMunicipality
-    ? { onClick: handleRestrictedClick, className: "menu-item disabled" } : { className: "menu-item" };
+    ? { onClick: handleRestrictedClick, className: "menu-item disabled" }
+    : { className: "menu-item" };
 
   // Al iniciar sesión, si el usuario no ha seleccionado una municipalidad se notifica
   useEffect(() => {
     if (user && !selectedMunicipality) {
-      toast.info("Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
+      setTimeout(() => {
+        toast.info("Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
+      }, 3000);
     }
   }, [user]);
 
@@ -95,17 +98,18 @@ const Sidebar: React.FC = () => {
               Municipalidades <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.Municipalidades ? "show" : ""}`}>
-              {municipalidades.map((mun: string, index: number) => (
-                <li key={index}>
-                  <button
+            {municipalidades.map((mun: string, index: number) => (
+              <li key={index}>
+                <button
+                  type="button"
                   className={`menu-item ${selectedMunicipality === mun ? "selected" : ""}`}
                   disabled={selectedMunicipality === mun}
-                  onClick={() => handleMunicipalitySelect(mun)}
+                  onClick={(e) => handleMunicipalitySelect(mun, e)}
                 >
                   {mun}
                 </button>
-                </li>
-              ))}
+              </li>
+            ))}
             </ul>
           </div>
 
@@ -120,7 +124,7 @@ const Sidebar: React.FC = () => {
             <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}>
               <li>
                 <Link to="/bienes-inmuebles" {...restrictedLinkProps}>
-                  <FontAwesomeIcon icon={faHome} className="menu-icon"/>
+                  <FontAwesomeIcon icon={faHome} className="menu-icon" />
                   Bienes Inmuebles
                 </Link>
               </li>
@@ -234,7 +238,7 @@ const Sidebar: React.FC = () => {
               </li>
               <li>
                 <Link to="/ambientales" {...restrictedLinkProps}>
-                  <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
+                  <FontAwesomeIcon icon={faLeaf} className="menu-icon"/>
                   Planos Catastrales
                 </Link>
               </li>

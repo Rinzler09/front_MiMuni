@@ -7,11 +7,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const App: React.FC = () => {
   return (
-        <div className="App">
-          <AppRoutes />
-        </div>
+    <div className="App">
+      <AppRoutes />
+    </div>
   );
 };
 
 export default App;
-

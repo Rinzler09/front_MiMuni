@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -30,20 +30,32 @@ const LoginForm: React.FC = () => {
   } = useForm({
     defaultValues: initialValues,
   });
+  // Con este useEffect se monitorea el error en el campo email y se muestra el toast.
+  useEffect(() => {
+    if (errors.email) {
+      toast.error(errors.email.message);
+    }
+  }, [errors.email]);
+
 
   // Obtenemos setUser desde el AuthContext
   const { setUser } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (e: React.FormEvent) => { e.preventDefault();
+    //Validacion de la contraseña mayor de 8 caracteres
+    const regexNumero: RegExp = /\d/;
+    const refexSimbolo: RegExp = /[!@#$%^&*(),.?":{}|<>]/;
+    if (password.length < 8 || password.length > 50 || !regexNumero.test(password) || !refexSimbolo.test(password)) {
+      toast.error("La contraseña debe tener al menos 8 caracteres o mas, incluyendo una letra mayúscula, un número y un símbolo especial..");
+      return;
+    }
+    
     if (isSubmitting || hasLoggedIn) return;
     setIsSubmitting(true);
 
     try {
       // Llamada al servicio de login
       const data = await login(email, password);
-      // data = { success, message, isTemporaryPassword, correo, access_token, municipalidades }
-
       if (data.message.toLowerCase().includes("credenciales incorrectas")) {
        // toast.error(data.message);
         setIsSubmitting(false);
@@ -60,8 +72,6 @@ const LoginForm: React.FC = () => {
 
       // Si el login indica contraseña temporal
       if (data.isTemporaryPassword) {
-       // toast.info("Contraseña temporal correcta.");
-
         setUser({
           email: data.correo,  // Almacenas el correo como string
           token: data.access_token || "",
@@ -80,18 +90,11 @@ const LoginForm: React.FC = () => {
 
       // Si es un login exitoso (sin contraseña temporal)
       if (data.success) {
-      //  toast.success(data.message);
-
         setUser({
           email: data.correo,
           token: data.access_token || "",
           municipalidades: municipalidadesArray,
         });
-
-        // Guardar email y contraseña en localStorage
-        //localStorage.setItem("email", email);
-        //localStorage.setItem("password", password);
-
         setTimeout(() => {
           navigate("/dashboard");
         }, 2000);
@@ -151,7 +154,7 @@ const LoginForm: React.FC = () => {
                     className="form-control"
                     placeholder="Ingrese su email"
                     required title="Campo obligatorio"
-                    {...register("email", { required: "Email obligatorio." })}
+                    {...register("email", { required: "Email obligatorio.", pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: "Email electronico invalido." } })}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -168,8 +171,7 @@ const LoginForm: React.FC = () => {
                   />
                   {/* Ícono de ojo para mostrar/ocultar contraseña */}
                   <span
-                    className="input-group-text" style={{ cursor: "pointer" }} onClick={() => setShowPassword(!showPassword)}
-                  >
+                    className="input-group-text" style={{ cursor: "pointer" }} onClick={() => setShowPassword(!showPassword)}>
                     <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
                   </span>
                 </div>

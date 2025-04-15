@@ -4,14 +4,14 @@
     flex-direction: column;
     /*Estandar para manipular el max-width*/
     max-width: 500px;
-    margin-top: 90px;
+    margin-top: 50px;
     color: #044d40;
     
 }
 
 .main-content {
     background-color: transparent;
-    margin-left: 240px;
+    margin-left: 260px;
     background-color: #fff;
 }
 .center-content {

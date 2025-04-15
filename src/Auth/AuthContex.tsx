@@ -1,13 +1,18 @@
-import React, {createContext,useContext,useState,ReactNode,useEffect,} from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
-//Interface de usuario
+// Interface de usuario
 interface User {
   nombre?: string;
   municipalidades?: string[];
   token?: string;
   email?: string;
   temporaryPassword?: string;
-  //tokenExpiry?: number; 
 }
 
 interface AuthContextProps {
@@ -17,7 +22,6 @@ interface AuthContextProps {
   setSelectedMunicipality: (municipality: string | null) => void;
   logout: () => void;
   isLoading: boolean;
- 
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -39,14 +43,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSelectedMunicipality(storedMunicipality);
     }
 
-    // Finaliza la carga una vez leídos los datos
     setIsLoading(false);
   }, []);
 
-  // Persistencia del usuario en sessionStorage
+  // Persistencia del usuario en sessionStorage (solo email y municipalidades)
   useEffect(() => {
     if (user) {
-      sessionStorage.setItem("user", JSON.stringify(user));
+      // Extraemos únicamente los campos que nos interesan: email y municipalidades
+      const { email, municipalidades } = user;
+      const userDataToStore = { email, municipalidades };
+      sessionStorage.setItem("user", JSON.stringify(userDataToStore));
     } else {
       sessionStorage.removeItem("user");
     }
@@ -66,13 +72,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     setSelectedMunicipality(null);
     sessionStorage.clear();
-    //faCookie.clear();
-    
   };
 
   return (
     <AuthContext.Provider
-      value={{user,setUser,selectedMunicipality,setSelectedMunicipality,logout,isLoading,}}>
+      value={{
+        user,
+        setUser,
+        selectedMunicipality,
+        setSelectedMunicipality,
+        logout,
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

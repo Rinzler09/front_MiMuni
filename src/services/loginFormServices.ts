@@ -22,7 +22,7 @@ interface LoginResult {
   
 }
 
-// Función para interpretar el mensaje del backend y devolver un mensaje amigable y el tipo (success, error o info)
+// Función para interpretar el mensaje del backend y devolver un mensaje 
 const interpretarMensaje = (
   mensajeBackend: string
 ): { mensaje: string; tipo: "success" | "error" | "info" | "post" } => {

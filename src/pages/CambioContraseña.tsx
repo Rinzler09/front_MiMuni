@@ -9,7 +9,7 @@ import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import { cambiarContra } from "../services/CambioControseñaServices";
 import { Toaster, toast } from "sonner";
-import Modal from "../Components/ModalComponents/modalComponent";
+import Modal from "../Components/attributeComponents/ModalComponents/modalComponent";
 
 // Importar estilos de bootstrap icons (si no lo has hecho globalmente)
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -18,9 +18,9 @@ const CambioContraseña: React.FC = () => {
   const navigate = useNavigate();
 
   // Estados para mostrar/ocultar cada contraseña
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showModalDatos, setShowModalDatos] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [showModalDatos, setShowModalDatos] = useState<boolean>(false);
 
   // Valores iniciales para el formulario
   const initialValues: cambioContraseña = {
@@ -33,9 +33,9 @@ const CambioContraseña: React.FC = () => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: initialValues });
+  } = useForm<cambioContraseña>({ defaultValues: initialValues });
 
-  // Observa el valor de la contraseña para poder compararla con la confirmación
+  // Observa el valor de la contraseña para compararla con la confirmación
   const password = watch("contraseña");
 
   const handleContra = async (formData: cambioContraseña) => {
@@ -90,6 +90,30 @@ const CambioContraseña: React.FC = () => {
                   maxLength: {
                     value: 50,
                     message: "La contraseña no debe superar los 50 caracteres.",
+                  },
+                  validate: {
+                    // Valida que contenga al menos un dígito (acepta más)
+                    hasAtLeastOneDigit: (value: string) => {
+                      const digitCount = (value.match(/\d/g) || []).length;
+                      return (
+                        digitCount >= 1 ||
+                        "La contraseña debe contener al menos un número."
+                      );
+                    },
+                    // Valida que contenga EXACTAMENTE un carácter especial
+                    hasOneSpecial: (value: string) => {
+                      const specialCount = (value.match(
+                        /[!@#$%^&*(),.?":{}|<>]/g
+                      ) || []).length;
+                      return (
+                        specialCount === 1 ||
+                        "La contraseña debe contener exactamente un carácter especial."
+                      );
+                    },
+                    // Valida que contenga al menos una letra mayúscula
+                    hasUppercase: (value: string) =>
+                      /[A-Z]/.test(value) ||
+                      "La contraseña debe contener al menos una letra mayúscula.",
                   },
                 })}
               />
