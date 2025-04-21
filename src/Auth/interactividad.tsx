@@ -10,7 +10,7 @@ interface InactivityHandlerProps {
   const InactivityHandler: React.FC<InactivityHandlerProps> = ({ children }) => {
     const [inactive, setInactive] = useState(false);
     const timerRef = useRef<number | null>(null);
-    const { logout } = useAuth(); // Obtenemos la función logout desde el contexto
+    //const { logout } = useAuth(); // Obtenemos la función logout desde el contexto
   
     // Función que reinicia el temporizador
     const resetTimer = () => {

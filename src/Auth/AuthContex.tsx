@@ -46,12 +46,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
-  // Persistencia del usuario en sessionStorage (solo email y municipalidades)
+  // Persistencia del usuario en sessionStorage (solo email)
   useEffect(() => {
     if (user) {
-      // Extraemos únicamente los campos que nos interesan: email y municipalidades
-      const { email, municipalidades } = user;
-      const userDataToStore = { email, municipalidades };
+      // Extraemos únicamente los campos que nos interesan: email
+      const { email } = user;
+      const userDataToStore = { email };
       sessionStorage.setItem("user", JSON.stringify(userDataToStore));
     } else {
       sessionStorage.removeItem("user");

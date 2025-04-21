@@ -1,12 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import fs from 'fs'
+import path from 'path'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  //En este espacio solo se descomenta para el servidor en la nube
-  //server: {
-    //host: '0.0.0.0',
-    //port: 5174,
-  //},
+  server: {
+    https: {
+      // Aquí es donde apuntamos a esos archivos que acabamos de verificar
+      cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.pem')),
+      key:  fs.readFileSync(path.resolve(__dirname, 'ssl/key.pem'))
+    },
+    host: '0.0.0.0',
+    port: 5173,
+    // ...tu proxy o más ajustes si los necesitas
+  }
 })
