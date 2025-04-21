@@ -24,21 +24,21 @@ const PrivateRoute: React.FC = () => {
 const validacionToken = (token: string): boolean => {
   const parts: string[] = token.split(".");
   if (parts.length !== 3) {
-    console.error("Token no tiene 3 partes:", token);
+   // console.error("Token no tiene 3 partes:", token);
     return false;
   }
   try {
     const payloadJson: string = atob(parts[1]);
     const payload: tokenPayload = JSON.parse(payloadJson);
     if (!payload.exp) {
-      console.error("El token no tiene 'exp'", payload);
+     // console.error("El token no tiene 'exp'", payload);
       return false;
     }
     const now: number = Math.floor(Date.now() / 1000);
     console.log("Token expira en:", payload.exp, "ahora es:", now);
     return payload.exp > now;
   } catch (error) {
-    console.error("Error decodificando el token:", error);
+   // console.error("Error decodificando el token:", error);
     return false;
   }
 };
