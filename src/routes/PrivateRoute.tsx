@@ -15,7 +15,7 @@ interface User{
 }
 
 const PrivateRoute: React.FC = () => {
-  const {user, isLoading, logout} = useAuth();
+  const {user, isLoading} = useAuth();
   const [isTokenValid, setIsTokenValid] = useState<boolean>(true);
 /*
   @param token - Token JWT en formato string
@@ -24,7 +24,7 @@ const PrivateRoute: React.FC = () => {
 const validacionToken = (token: string): boolean => {
   const parts: string[] = token.split(".");
   if (parts.length !== 3) {
-   // console.error("Token no tiene 3 partes:", token);
+    //console.error("Token no tiene 3 partes:", token);
     return false;
   }
   try {
@@ -35,10 +35,10 @@ const validacionToken = (token: string): boolean => {
       return false;
     }
     const now: number = Math.floor(Date.now() / 1000);
-    console.log("Token expira en:", payload.exp, "ahora es:", now);
+   // console.log("Token expira en:", payload.exp, "ahora es:", now);
     return payload.exp > now;
   } catch (error) {
-   // console.error("Error decodificando el token:", error);
+    //console.error("Error decodificando el token:", error);
     return false;
   }
 };
@@ -50,10 +50,10 @@ useEffect(() => {
     const valid: boolean = validacionToken((user as User).token);
     if (!valid) {
       setIsTokenValid(false);
-      logout();
+      //logout();
     }
   }
-}, [isLoading, user, logout]);
+}, [isLoading, user]);
 //Mientras se carga la sesion, se muestra un mensaje 
 if (isLoading) {
   return <div>Cargando...</div>;

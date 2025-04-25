@@ -6,21 +6,21 @@ import React, {
   useEffect,
 } from "react";
 
+
 // Interface de usuario
-interface User {
+type User = {
   nombre?: string;
   municipalidades?: string[];
   token?: string;
   email?: string;
   temporaryPassword?: string;
-}
+};
 
 interface AuthContextProps {
   user: User | null;
   setUser: (user: User | null) => void;
   selectedMunicipality: string | null;
   setSelectedMunicipality: (municipality: string | null) => void;
-  logout: () => void;
   isLoading: boolean;
 }
 
@@ -67,13 +67,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [selectedMunicipality]);
 
-  // Función para cerrar sesión: limpia el estado y el sessionStorage
-  const logout = () => {
-    setUser(null);
-    setSelectedMunicipality(null);
-    sessionStorage.clear();
-  };
-
   return (
     <AuthContext.Provider
       value={{
@@ -81,7 +74,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser,
         selectedMunicipality,
         setSelectedMunicipality,
-        logout,
         isLoading,
       }}
     >
@@ -90,10 +82,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextProps => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth debe ser usado dentro de un AuthProvider");
+    throw new Error("useAuth debe usarse dentro de AuthProvider");
   }
   return context;
 };

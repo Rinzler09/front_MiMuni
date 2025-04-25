@@ -5,7 +5,6 @@ const API_URL = "/facturasBI/consulta";
 export const facturaBienesInmueble = async (
   municipalidad: string,
   claveCat: string,
-  //direccion: string,
   token: string
 ) => {
   try {

@@ -5,47 +5,47 @@ import axios, {
   AxiosError,
 } from "axios";
 
-// Extendemos la configuración de Axios para incluir una bandera
+// Extendemos la configuración de Axios para incluir nuestra bandera de retry
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
-  iat: number;
 }
 
 const auth: AxiosInstance = axios.create({
-  baseURL: (`${import.meta.env.VITE_API_URL}`), 
-  withCredentials: true, // Permite el envío y recepcion de cookies 
-  
+  baseURL: import.meta.env.VITE_API_URL, 
+  withCredentials: true,                  
 });
 
+// Interceptor de respuestas
 auth.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => response,
-  async (error: AxiosError): Promise<any> => {
+  // 1) En caso de éxito, simplemente devolvemos la respuesta
+  (response: AxiosResponse) => response,
+
+  // 2) En caso de error, manejamos 401 y hacemos retry una sola vez
+  async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
 
+    // a) No intentamos retry sobre el login para evitar bucles
     if (originalRequest.url?.includes("/login/usuario")) {
-      // Puedes manejar el error en el catch de la función login sin loggear
       return Promise.reject(error);
     }
 
-    // Si el error es 401 y no es la petición de login, intenta refrescar el token
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    // b) Si recibimos 401 y aún no hemos hecho retry
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      //console.log("Token, intentando reintentar petición para refrescar el token...");
-      
+      originalRequest.withCredentials = true;
 
       try {
-        const response = await auth(originalRequest);
-        return response;
-      } catch (refreshError) {
-        return Promise.reject(refreshError);
+        // Reintentamos la misma petición; el backend debe auto-refrescar el token
+        return await auth.request(originalRequest);
+      } catch (err) {
+        // Si vuelve a fallar, simplemente propaga el error
+        return Promise.reject(err);
       }
     }
 
+    // c) Para cualquier otro error, lo propagamos
     return Promise.reject(error);
   }
-
-  
 );
-
 
 export default auth;

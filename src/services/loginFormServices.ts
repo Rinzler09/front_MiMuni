@@ -9,7 +9,6 @@ interface LoginResponse {
   user: any;
   access_token?: string;
   municipalidades?: string;
- 
 }
 
 interface LoginResult {
@@ -19,7 +18,6 @@ interface LoginResult {
   correo?: any;
   access_token?: string
   municipalidades?: string;
-  
 }
 
 // Función para interpretar el mensaje del backend y devolver un mensaje 

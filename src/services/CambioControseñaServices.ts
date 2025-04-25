@@ -11,7 +11,7 @@ export const cambiarContra = async (n_psswd: string) => {
     const o_psswd = sessionStorage.getItem("password");
 
     if (!email) {
-      throw new Error("No se encontró un correo electrónico en localStorage.");
+      throw new Error("No se encontra correo.");
     }
 
     // Construimos el payload a enviar

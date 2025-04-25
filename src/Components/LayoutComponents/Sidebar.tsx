@@ -17,9 +17,9 @@ import {
 import "../../style/LayoutStyles/sidebar.css";
 import { useAuth } from "../../Auth/AuthContex";
 import { Toaster, toast } from "sonner";
+import { clavesCatastrales } from "../../services/claveCatastral";
 
 const Sidebar: React.FC = () => {
-  // Controla la apertura/cierre de las secciones del sidebar
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     EstadoCuenta: false,
     Declaraciones: false,
@@ -29,53 +29,79 @@ const Sidebar: React.FC = () => {
     Publicos: false,
     Varios: false,
   });
-  
-  // Control de visibilidad para dispositivos móviles
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();
 
   const toggleSection = (section: string) => {
-    setOpenSections((prevState) => ({
-      ...prevState,
-      [section]: !prevState[section],
-    }));
+    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
   const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
+    setIsSidebarOpen(prev => !prev);
   };
 
-  // Lista de municipalidades del usuario (si existe)
   const municipalidades = user?.municipalidades || [];
 
-  // Al seleccionar una municipalidad, se actualiza el estado y se notifica con un toast.
-  const handleMunicipalitySelect = (municipality: string, e: React.MouseEvent<HTMLButtonElement>) => {
+  // Keep-alive inmediato al cambiar de municipio
+  useEffect(() => {
+    if (!user?.token || !selectedMunicipality) return;
+    const token = user.token;
+    const municipality = selectedMunicipality;
+    (async () => {
+      try {
+        await clavesCatastrales(municipality, token);
+      } catch (err) {
+        console.warn("Keep-alive fallido:", err);
+      }
+    })();
+  }, [user?.token, selectedMunicipality]);
+
+  // Heartbeat periódico cada 4 minutos
+  useEffect(() => {
+    if (!user?.token || !selectedMunicipality) return;
+    const token = user.token;
+    const municipality = selectedMunicipality;
+    const intervalId = setInterval(() => {
+      clavesCatastrales(municipality, token).catch(err =>
+        console.warn("Heartbeat fallido:", err)
+      );
+    }, 4 * 60 * 1000);
+    return () => clearInterval(intervalId);
+  }, [user?.token, selectedMunicipality]);
+
+  // Selección de municipalidad con toast
+  const handleMunicipalitySelect = (
+    municipality: string,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     setSelectedMunicipality(municipality);
     toast.success(`${municipality} seleccionada.`);
   };
-  // Función para impedir la navegación en enlaces restringidos si no se ha seleccionado una municipalidad
+
   const handleRestrictedClick = (e: React.MouseEvent) => {
     if (!selectedMunicipality) {
       e.preventDefault();
     }
   };
 
-  // Helper para asignar propiedades a los enlaces restringidos
   const restrictedLinkProps = !selectedMunicipality
     ? { onClick: handleRestrictedClick, className: "menu-item disabled" }
     : { className: "menu-item" };
 
-  // Al iniciar sesión, si el usuario no ha seleccionado una municipalidad se notifica
+  // Notifica si no hay municipio tras login
   useEffect(() => {
     if (user && !selectedMunicipality) {
       setTimeout(() => {
-        toast.info("Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
+        toast.info(
+          "Por favor, seleccione una municipalidad para continuar con el proceso de pago."
+        );
       }, 3000);
     }
-  }, [user]);
+  }, [user, selectedMunicipality]);
 
+  
   return (
     <div>
       <Toaster richColors position="top-right" />
