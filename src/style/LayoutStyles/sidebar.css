@@ -1,135 +1,134 @@
 .sidebar-container {
-    position: fixed;
-    /* Fija la barra lateral */
-    top: 47px;
-    left: 0;
-    height: 100%;
-    /* Asegúrate de que ocupe toda la altura */
-    width: 290px;
-    /* Ajusta el ancho según tus necesidades */
-    background-color:#F9EBE0;
-    /* Fondo claro */
-    border-right: 3px solid #ddd;
-    overflow-y: auto;
-    /* Para manejar contenido desbordante */
-    z-index: 1000;
-    /* Asegúrate de que esté encima del contenido */
+  position: fixed;
+  /* Fija la barra lateral */
+  top: 47px;
+  left: 0;
+  height: 100%;
+  /* Asegúrate de que ocupe toda la altura */
+  width: 290px;
+  /* Ajusta el ancho según tus necesidades */
+  background-color:#F9EBE0;
+  /* Fondo claro */
+  border-right: 3px solid #ddd;
+  overflow-y: auto;
+  /* Para manejar contenido desbordante */
+  z-index: 1000;
+  /* Asegúrate de que esté encima del contenido */
 }
 
 
 .sidebar {
-    padding: 12px;
+  padding: 12px;
 }
 
 .sidebar-section {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .section-title {
-    font-size: 16px;
-    padding-left: -25%;
-   
-  
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #4a3b2f;
-    transition: background-color 0.3s ease;
+  font-size: 16px;
+  padding-left: -25%;
+ 
+
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #4a3b2f;
+  transition: background-color 0.3s ease;
 }
 
 .section-title.active {
-    /* color y estilos cuando está activo al momento de darle clik en municipalidad*/
-    background-color: #ffe698;  
-               
-  }
+  /* color y estilos cuando está activo al momento de darle clik en municipalidad*/
+  background-color: #ffe698;  
+             
+}
 
 .menu-list {
-    list-style: none;
-    padding: 0;
-    margin: 5px 0 0 0;
-    display: none;
-    /* Ocultar inicialmente */
-    flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0 0;
+  display: none;
+  /* Ocultar inicialmente */
+  flex-direction: column;
 }
 
 
 .menu-list.show {
-    display: flex;
-    /* Muestra el submenú cuando está activo */
+  display: flex;
+  /* Muestra el submenú cuando está activo */
 }
 
 .menu-item {
-    display: flex;
-    align-items: center;
-    padding: 5px 13px;
-    color: #4a3b2f;
-    text-decoration: none;
-    transition: background-color 0.3s;
-    font-size: 14px;
-    border-radius: 5px;
-    margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  padding: 5px 13px;
+  color: #4a3b2f;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  border-radius: 5px;
+  margin-bottom: 5px;
 
-    opacity: 1;
-    filter: brightness(1);
-    cursor: pointer;
-    pointer-events: auto;
+  opacity: 1;
+  filter: brightness(1);
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .menu-item:hover {
-    background-color: #ffe698;
-    color: #4a3b2f;
+  background-color: #ffe698;
+  color: #4a3b2f;
 }
 
 .menu-icon {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 .menu-icon:hover {
-    color: white;
+  color: white;
 }
 
 #btnMunicipalidades {
-    color: #4a3b2f;
+  color: #4a3b2f;
 }
 
 /*Agregacion de inactivo y activo*/
 .menu-item.disabled {
-    opacity: 0.5;          /* Reduce la opacidad para dar efecto deshabilitado */
-    filter: brightness(0.7); /* Aplica un filtro para que se vea más oscuro */
-    cursor: not-allowed;   /* Cambia el cursor para indicar que no es clickeable */
-    pointer-events: none;  /* Impide la interacción del usuario */
-  }
-  
-  /* Opcional: Para que los enlaces activos tengan su apariencia normal */
+  opacity: 0.5;          /* Reduce la opacidad para dar efecto deshabilitado */
+  filter: brightness(0.7); /* Aplica un filtro para que se vea más oscuro */
+  cursor: not-allowed;   /* Cambia el cursor para indicar que no es clickeable */
+  pointer-events: none;  /* Impide la interacción del usuario */
+}
 
-  .menu-item.selected {
-    background-color: #b1b1b1; /* Ejemplo: color azul */
-    color: #fff;
-    cursor: default;
-  }
+/* Opcional: Para que los enlaces activos tengan su apariencia normal */
+
+.menu-item.selected {
+  background-color: #b1b1b1; /* Ejemplo: color azul */
+  color: #fff;
+  cursor: default;
+}
 
 
 /* Estilo para la sidebar en móviles */
 @media screen and (max-width: 780px) {
-    .sidebar-container {
-      width: 70%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 60%;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-    }
-    .sidebar-container.active {
-      transform: translateX(0);
-    }
-    .hamburger-icon {
-      display: block;
-      position: fixed;
-      top: 50px;
-      left: 10px;
-      z-index: 1100;
-    }
+  .sidebar-container {
+    width: 70%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 60%;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
-  
+  .sidebar-container.active {
+    transform: translateX(0);
+  }
+  .hamburger-icon {
+    display: block;
+    position: fixed;
+    top: 50px;
+    left: 10px;
+    z-index: 1100;
+  }
+}

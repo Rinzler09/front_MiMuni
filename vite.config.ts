@@ -6,13 +6,14 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    https: {
-      // Aquí es donde apuntamos a esos archivos que acabamos de verificar
-      cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.pem')),
-      key:  fs.readFileSync(path.resolve(__dirname, 'ssl/key.pem'))
-    },
+    // https: {
+    //   // Aquí es donde apuntamos a esos archivos que acabamos de verificar
+    //  // cert: fs.readFileSync(path.resolve(__dirname, 'ssl/cert.pem')),
+    //   //key:  fs.readFileSync(path.resolve(__dirname, 'ssl/key.pem'))
+    // },
     host: '0.0.0.0',
     port: 5173,
+    //allowedHosts: ['cumplerafael.info', 'mimunilinea.linkpc.net'],
     
     
   }

@@ -7,6 +7,7 @@ import App from './App.tsx';
 //import InactivityHandler from '../src/Auth/interactividad.tsx';
 import * as Sentry from '@sentry/react';
 
+
 // Inicialización de Sentry
 Sentry.init({
   dsn: "https://4219a2cd802d70977e303430971dea3b@o4509112803065856.ingest.us.sentry.io/4509112924307456",
