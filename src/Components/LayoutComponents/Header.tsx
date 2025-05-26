@@ -1,10 +1,12 @@
+// src/components/Header.tsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faUser,
+  faBars,
+  faBell,
   faCog,
-  faSignOutAlt,
+  faRightFromBracket ,
   faChevronDown,
   faEdit,
   faMoneyCheckDollar,
@@ -12,79 +14,98 @@ import {
 import "../../style/LayoutStyles/dropDown.css";
 import "../../style/LayoutStyles/header.css";
 import { useAuth } from "../../Auth/AuthContex";
+import { logoutUsuario } from "../../services/EliminacionCookie";
 
-const Header: React.FC = () => {
+// Props para controlar el collapse del sidebar
+interface HeaderProps {
+  onToggleSidebar: () => void;
+  collapsed: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const { user, token, setUser, setToken, setSelectedMunicipality } = useAuth();
 
-  // Obtenemos del contexto no solo user, sino también los setters
-  const { user, setUser, setSelectedMunicipality } = useAuth();
+  const userEmail = user?.email ?? user?.nombre ?? "Inicia Sesion";
+  const toggleDropdown = () => setIsOpen((o) => !o);
 
-  // Elegimos el email o el nombre, o un valor por defecto
-  const userEmail = user?.email ?? user?.nombre ?? "admin_admin";
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const gotoMenu = () => {
-    navigate("/dashboard");
-  };
-
-  const handleLogout = () => {
-    //Limpiar estado
-    setUser(null);
-    setSelectedMunicipality(null);
-    // limpiar sessionStorage
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("selectedMunicipality");
-    // En este caso se dirigir al login
-    navigate("/");
-    // Opcional: recargar toda la app para resetear hooks
-    // window.location.reload();
+  const handleLogout = async () => {
+    try {
+      await logoutUsuario(token as string);
+    } catch (err) {
+      console.error("Error al hacer logout:", err);
+    } finally {
+      setUser(null);
+      setToken("");
+      setSelectedMunicipality(null);
+      navigate("/");
+    }
   };
 
   return (
-    <header className="header d-flex justify-content-between align-items-center p-1">
+    <header className={`header ${collapsed ? "collapsed" : ""}`}>
+      {/* IZQUIERDA: hamburger + logo */}
       <div className="header-left">
-        <h1 className="header-title tituloHeader" onClick={gotoMenu}>
-          Mi Muni en Línea
-        </h1>
+        <FontAwesomeIcon icon={faBars} className="header-toggle" onClick={() => {
+            console.log("hamburguesa clicada en Header");
+            onToggleSidebar();}}/>
+
+        {/* Si más adelante quieres el search, descomenta */}
+        {/* <div className="header-search">
+          <input type="text" placeholder="Search..." />
+          <FontAwesomeIcon icon={faSearch} className="fa-search" />
+        </div> */}
       </div>
 
+      {/* DERECHA: notificaciones + perfil */}
       <div className="header-right">
-        <div className="user-profile" onClick={toggleDropdown}>
-          <FontAwesomeIcon icon={faUser} className="user-icon" />
+        <div className="icon-wrapper">
+          <FontAwesomeIcon icon={faBell} />
+        </div>
+
+  
+
+        <div
+          className="user-profile" onClick={toggleDropdown}>
+          <img src="/img/usuarios.png" alt="User" className="user-icon" />
           <span className="user-name">{userEmail}</span>
           <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
 
           {isOpen && (
+        
             <div className="dropdown-menu">
-              <ul className="dropdown-menu-end show">
-                <li>
+            <ul className="dropdown-menu-end show">
+              <li>
+                <Link to="/editar-perfil" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
                   <FontAwesomeIcon icon={faEdit} className="menu-icon" />
-                  <Link to="/editar-perfil" className="menu-link">
-                    Editar Perfil
-                  </Link>
-                </li>
-                <li>
+                  <span className="ms-2">Editar Perfil</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/soporte-tecnico" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
                   <FontAwesomeIcon icon={faCog} className="menu-icon" />
-                  <Link to="/soporte-tecnico" className="menu-link">
-                    Soporte Técnico
-                  </Link>
-                </li>
-                <li>
+                  <span className="ms-2">Soporte Técnico</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/historial-pagos" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
                   <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
-                  <Link to="/historial-pagos" className="menu-link">
-                    Historial Pagos
-                  </Link>
-                </li>
-                <li onClick={handleLogout} style={{ cursor: "pointer" }}>
-                  <FontAwesomeIcon icon={faSignOutAlt} className="menu-icon" />
-                  <span className="menu-link">Salir</span>
-                </li>
-              </ul>
-            </div>
+                  <span className="ms-2">Historial Pagos</span>
+                </Link>
+              </li>
+               <li style={{ padding: 0 }}>
+              <span onClick={handleLogout}
+                className="menu-link" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
+              <span className="ms-2">Salir</span>
+            </span>
+             </li>
+            </ul>
+          </div>
+
+
           )}
         </div>
       </div>

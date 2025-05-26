@@ -1,0 +1,53 @@
+/* src/style/PagesStyles/cambioContraseñaStyles.css */
+
+/* 1) Contenedor principal: ancho máximo y centrado */
+.reset-pass-container {
+  max-width: 480px;
+  margin: 3rem auto;
+}
+
+/* 2) Card-body: padding y alineación de todo el contenido a la derecha */
+.reset-pass-container .card-body {
+  padding: 2rem;
+  text-align: right;      /* todo alineado a la derecha */
+  white-space: normal;    /* permite que el texto haga wrap */
+  word-wrap: break-word;  /* quiebra palabras largas si es necesario */
+}
+
+/* 3) Título, párrafos y labels alineados a la derecha */
+.reset-pass-container .card-title,
+.reset-pass-container .card-body p,
+.reset-pass-container .card-body label {
+  text-align: right;
+}
+
+/* 4) Inputs y botones ocupan 100% de ancho */
+.reset-pass-container .form-control,
+.reset-pass-container .input-group .btn,
+.reset-pass-container .btn-xl,
+.reset-pass-container .btn {
+  width: 100%;
+}
+
+/* 5) Placeholder y texto dentro del input alineados a la izquierda */
+.reset-pass-container .form-control {
+  text-align: left;
+}
+
+/* 6) Tamaños extra-grandes para inputs y botones */
+.form-control-xl {
+  padding: 1rem 1rem;
+  font-size: 1.125rem;
+}
+
+.btn-xl {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* 7) Texto descriptivo “lead” */
+.lead-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+}

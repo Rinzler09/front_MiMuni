@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -17,9 +17,18 @@ import {
 import "../../style/LayoutStyles/sidebar.css";
 import { useAuth } from "../../Auth/AuthContex";
 import { Toaster, toast } from "sonner";
-import { clavesCatastrales } from "../../services/claveCatastral";
+import { clavesCatastrales } from "../../services/claveCatastral";// Analizar esta importacion urgente
+import {mensajes} from "../../util/message"
+import { MdErrorOutline } from "react-icons/md";
 
-const Sidebar: React.FC = () => {
+
+//PROPS para controlar el collapse del sidebar
+interface SidebarPROPS{
+  onToggleSidebar:() => void;
+  collapsed: boolean;
+}
+
+const Sidebar: React.FC<SidebarPROPS> = ({collapsed, onToggleSidebar}) => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     EstadoCuenta: false,
     Declaraciones: false,
@@ -31,6 +40,7 @@ const Sidebar: React.FC = () => {
   });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();
+  const navigate = useNavigate();
 
   const toggleSection = (section: string) => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -39,6 +49,7 @@ const Sidebar: React.FC = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(prev => !prev);
   };
+    const gotoMenu = () => navigate("/dashboard");
 
   const municipalidades = user?.municipalidades || [];
 
@@ -71,9 +82,7 @@ const Sidebar: React.FC = () => {
 
   // Selección de municipalidad con toast
   const handleMunicipalitySelect = (
-    municipality: string,
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
+    municipality: string,  e: React.MouseEvent<HTMLButtonElement> ) => {
     e.preventDefault();
     e.stopPropagation();
     setSelectedMunicipality(municipality);
@@ -93,45 +102,51 @@ const Sidebar: React.FC = () => {
   // Notifica si no hay municipio tras login
   useEffect(() => {
     if (user && !selectedMunicipality) {
-      setTimeout(() => {
-        toast.info(
-          "Por favor, seleccione una municipalidad para continuar con el proceso de pago."
-        );
-      }, 3000);
+        setTimeout(() => {
+        toast.info( <span style={{ color: "blue", fontSize: "1.1em" }}>{mensajes["!Tomar nota!"]?.mensaje || "!Tomar Nota!"} </span>,{
+        description: (<span>Por favor, seleccione la municipalidad correspondiente para proceder con el proceso de pago.</span>),
+        icon: <MdErrorOutline style={{ color: "blue", fontSize: "1.2em" }} />
+        }
+      );
+        //toast.info( "Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
+      }, 7000);
     }
   }, [user, selectedMunicipality]);
 
   
   return (
+    
+    
     <div>
-      <Toaster richColors position="top-right" />
+      <Toaster closeButton position="bottom-left" />
       
       {/* Ícono de hamburguesa para móviles */}
-      <div className="hamburger-icon" onClick={toggleSidebar}>
+      <div className="hamburger-icon" onClick={onToggleSidebar}>
         <FontAwesomeIcon icon={faBars} />
       </div>
 
       {/* Contenedor del sidebar */}
-      <div className={`sidebar-container ${isSidebarOpen ? "active" : ""}`}>
-        <div className="sidebar">
-          {/* Sección de Municipalidades */}
+      <div className={`sidebar-container ${collapsed ? "collapsed" : ""}`}>
+          <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+            {/* ——— Brand / Logo arriba ——— */}
+   <div className="sidebar-brand">
+     <img
+       src="../../public/img/Muni.png" alt="Mi Muni En Línea" className="sidebar-logo" />
+     {/* sólo mostrar texto cuando NO esté colapsado */}
+     {!collapsed && (
+       <span className="sidebar-brand-text" onClick={gotoMenu}>Mi Muni En Línea</span>
+     )}
+   </div>
+            {/* Sección de Municipalidades */}
           <div className="sidebar-section">
-            <h3
-              id="btnMunicipalidades"
-              className={`section-title ${openSections.Municipalidades ? "active" : ""}`}
-              onClick={() => toggleSection("Municipalidades")}
-            >
+            <h3 id="btnMunicipalidades" className={`section-title ${openSections.Municipalidades ? "active" : ""}`} onClick={() => toggleSection("Municipalidades")}>
               Municipalidades <FontAwesomeIcon icon={faChevronDown} />
             </h3>
+
             <ul className={`menu-list ${openSections.Municipalidades ? "show" : ""}`}>
             {municipalidades.map((mun: string, index: number) => (
               <li key={index}>
-                <button
-                  type="button"
-                  className={`menu-item ${selectedMunicipality === mun ? "selected" : ""}`}
-                  disabled={selectedMunicipality === mun}
-                  onClick={(e) => handleMunicipalitySelect(mun, e)}
-                >
+                <button type="button" className={`menu-item ${selectedMunicipality === mun ? "selected" : ""}`} disabled={selectedMunicipality === mun} onClick={(e) => handleMunicipalitySelect(mun, e)}>
                   {mun}
                 </button>
               </li>
@@ -141,10 +156,7 @@ const Sidebar: React.FC = () => {
 
           {/* Sección Estado de Cuenta */}
           <div className="sidebar-section">
-            <h3
-              className={`section-title ${openSections.EstadoCuenta ? "active" : ""}`}
-              onClick={() => toggleSection("EstadoCuenta")}
-            >
+            <h3 className={`section-title ${openSections.EstadoCuenta ? "active" : ""}`} onClick={() => toggleSection("EstadoCuenta")}>
               Estado de Cuenta <FontAwesomeIcon icon={faChevronDown} />
             </h3>
             <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}>

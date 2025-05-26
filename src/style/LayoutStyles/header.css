@@ -1,47 +1,94 @@
+:root {
+  --sidebar-width: 250px;
+  --sidebar-collapsed-width: 60px;
+}
+
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #ff8a04;
-
-    color: white;
-    padding: 5px 15px;
-    font-size: 15px;
-    position: fixed;
-
-    top: 0;
-    left: 0;
-    width: 100%;
-
-    z-index: 1000;
-
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+  height: 50px;
+  background-color: #e26c0c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  transition: left 0.3s ease, width 0.3s ease;
+  z-index: 999;
 }
 
-.header-title {
-    font-size: 20px;
-    font-weight: bold;
-    padding-top: 5px;
+.header.collapsed {
+  left: var(--sidebar-collapsed-width);
+  width: calc(100% - var(--sidebar-collapsed-width));
 }
 
+/* Sección izquierda: hamburger, logo y buscador */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-toggle {
+  font-size: 1.2em;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.header-logo {
+  font-size: 1.25em;
+  color: #FFFFFF;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Sección derecha: iconos y perfil */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.icon-wrapper {
+  position: relative;
+  font-size: 1.2em;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.icon-wrapper .badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background-color: #e74c3c;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 10px;
+  padding: 2px 5px;
+}
+
+/* Perfil de usuario */
 .user-profile {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-
-.user-icon {
-    font-size: 20px;
-    margin-right: 10px;
+.user-profile .user-icon {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
 }
-
 
 .user-name {
-    font-size: 16px;
-    font-weight: 500;
-    margin-right: 10px;
+  margin: 0 8px;
+  font-size: 14px;
+  color: #FFFFFF;
 }
 
 .chevron-icon {
-    padding-right: 10px;
+  font-size: 0.75em;
+  color: #FFFFFF;
 }

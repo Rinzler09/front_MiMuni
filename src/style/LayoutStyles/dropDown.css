@@ -1,75 +1,72 @@
+/* Contenedor del dropdown */
 .dropdown-menu {
     position: absolute;
     top: 50px;
-    right: 10px;
+    right: 1px;
     background-color: white;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 200px;
     z-index: 1000;
-    display: none;
-    /* Oculto por defecto */
+    display: block; /* Mostrar el menú */
 }
 
-
+/* Lista sin estilos por defecto */
 .dropdown-menu ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
+/* Cada ítem: eliminamos padding aquí y lo colocamos en el enlace */
 .dropdown-menu li {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
-    font-size: 14px;
-    color: #333;
+    padding: 0px;                 /* Padding movido al enlace */
     cursor: pointer;
+    position: relative;
 }
 
+/* Hover en todo el li */
 .dropdown-menu li:hover {
     background-color: #f5f5f5;
 }
 
+/* Enlaces ocupando todo el li */
+.menu-link {
+    display: flex;              /* Flex para icono + texto */
+    align-items: center;
+    width: 100%;                /* Ocupa todo el ancho */
+    height: 100%;               /* Ocupa toda la altura */
+    padding: 7px 12px;         /* Padding del ítem */
+    text-decoration: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #000;
+}
 
+/* Icono dentro del enlace */
+.menu-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+
+
+/* Texto de subtítulo, si lo usas */
 .submenu-text {
     font-size: 12px;
     color: #888;
 }
 
-.dropdown-menu {
-    display: block;
-    /* Mostrar el menú */
-}
-
-.dropdown-menu {
-    z-index: 1000;
-    /* Mayor que otros elementos */
-}
-
-.menu-icon {
-    margin-right: 10px;
-    font-size: 16px;
-
-}
-
-.menu-link {
-    text-decoration: none;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    color: #000;
-
-}
-
+/* Estilo para listas dentro del menú (si aplica) */
 .dropdown-menu-list {
     background-color: #ff8a04;
     border-radius: 10px;
     margin: 5px 0;
 }
 
-
-/*Afecta directamente el titulo del Header*/
-
+/* Cursor para el título del header */
 .tituloHeader {
     cursor: pointer;
 }

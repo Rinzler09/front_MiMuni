@@ -52,8 +52,6 @@ const RegistrarUsuario: React.FC = () => {
             //toast.error(error?.message ?? "Usuario no registrado.");
             toast.error(mensajes["credenciales incorrectas"].mensaje);
         }
-
-        
     };
 
 

@@ -35,14 +35,14 @@
     /* Ajusta este valor para mover el contenedor hacia arriba o abajo según sea necesario */
     width: 75%;
     /* Toma casi todo el ancho disponible, ajusta según sea necesario */
-    max-width: 950px;
+    max-width: 965px;
     /* Limita el ancho máximo */
     height: 100%;
     /* Ajusta la altura según el contenido */
-    margin-left: 23%;
+    margin-left: 20%;
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
-    margin-top: 40px; /* Modificar la posicion del Container de la pagina*/
+    margin-top: 55px; /* Modificar la posicion del Container de la pagina*/
 
 }
 

@@ -11,17 +11,17 @@
     box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.1);
     margin-top: -535px;
     /* Ajusta este valor para mover el contenedor hacia arriba o abajo según sea necesario */
-    width: 75%;
+    width: 78%;
     /* Toma casi todo el ancho disponible, ajusta según sea necesario */
     max-width: 1200px;
     /* Limita el ancho máximo */
     height: 100%;
     /* Ajusta la altura según el contenido */
-    margin-left: 23%;
+    margin-left: 20%;
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
     /* Borde gris claro */
-    margin-top: 33px;
+    margin-top: 63px;
 
 }
 
@@ -41,3 +41,35 @@
     right: 120px;
 }
 
+/* ----------------------------------------
+   MEDIA QUERIES
+----------------------------------------- */
+
+/* Tablets y pantallas pequeñas (<= 768px) */
+@media (max-width: 768px) {
+  .detalles-impuesto-container {
+    width: 95%;
+    padding: 1rem;
+    margin: 3rem auto 1.5rem;
+  }
+  .btnFacturas {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Laptops medianas (769px – 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .detalles-impuesto-container {
+    width: 92%;
+    padding: 1.5rem;
+    margin-top: 3.5rem;
+  }
+}
+
+/* Escritorios grandes (> 1200px) */
+@media (min-width: 1201px) {
+  .detalles-impuesto-container {
+    margin-top: 5rem;
+  }
+}
