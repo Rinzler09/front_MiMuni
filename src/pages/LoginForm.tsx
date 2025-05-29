@@ -89,7 +89,7 @@ const LoginForm: React.FC = () => {
 
     try {
       const data = await login(email, password);
-      console.log("Resultado del login:", data);
+      //console.log("Resultado del login:", data);
 
       if (data.message.toLowerCase().includes("credenciales incorrectas")) {
         setIsSubmitting(false);
