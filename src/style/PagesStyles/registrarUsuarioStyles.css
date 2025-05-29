@@ -2,17 +2,23 @@
     display: grid;
     justify-self: center;
     /*Si no esta en un div se usa el self*/
+    border-radius: 8px;
     border: none;
-    background-color: #f25a1f;
-    max-width: 400px;
-    margin-bottom: 60px;
+    background-color: #f67003;
+    max-width: 650px;
+    margin-bottom: 100px;
     font-weight: bold;
     text-align: center;
-    /*El text align solo funciona con grid*/
+    width: 100%;
+    box-shadow: 0 3px 8px rgba(246,112,3,0.3);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    margin-top: 0rem;
 }
 
 .btn-primary:hover {
-    background-color: #fa883d;
+  background: #e65b00;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(246,112,3,0.35);
 }
 
 .form-container {
@@ -44,4 +50,8 @@
     display: flex;
     justify-self: center;
     margin-top: -50px;
+}
+
+.form-control{
+    background-color: white;
 }

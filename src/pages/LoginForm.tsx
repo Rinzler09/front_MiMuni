@@ -20,16 +20,16 @@ import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 
 // Imágenes del carrusel
-import slide1 from "../../public/img/LogoGeoRedes.png";
-import slide2 from "../../public/img/LogocompletoBALinea.png";
-import slide3 from "../../public/img/LogoSantaLucia.png";
+import slide1 from "../../public/img/muni.png";
+import slide2 from "../../public/img/muni.png";
+import slide3 from "../../public/img/muni.png";
 
 const slides = [
-  { image: slide1, description: "Hola, esto funciona de esta manera para GeoRedes."},
+  { image: slide1, description: "Bienvenido, estamos en compromiso y servicio a la comunidad."},
   
-  { image: slide2, description: "Hola, esto funciona de esta manera para Banco Atlántida." },
+  { image: slide2, description: " Bienvenido, estamos cerca de ti, al servicio de toda la comunidad." },
   
-  { image: slide3, description: "Hola, esto funciona de esta manera para Santa Lucía."},
+  { image: slide3, description: "Bienvenido, tsu voz, nuestra guía, tu bienestar, nuestra meta."},
 ];
 
 const LoginForm: React.FC = () => {
@@ -155,7 +155,7 @@ const LoginForm: React.FC = () => {
 
             {/* Panel izquierdo: carrusel */}
             <div className="col-md-5 d-none d-md-flex flex-column">
-              <h2 className="titu">Mi Muni en Línea</h2>
+              <h2 className="titu">MiMuni en Línea</h2>
               <div className="carousel-content">
                 <img src={slides[currentSlide].image} alt={slides[currentSlide].description} className="illustration"/>
                 <p className="slide-description">
@@ -174,7 +174,7 @@ const LoginForm: React.FC = () => {
             <div className="col-12 col-md-7 d-flex flex-column justify-content-center align-items-start">
               <h2 className="titu">LOGIN</h2>
               <span>
-                ¿Todavía no cuentas con una cuenta activa?{" "}
+                ¿Sin cuenta? Regístrate y empieza a disfrutar de nuestros servicios.{" "}
                 <a href="#" className="forgot-password" onClick={handleRegister}>
                   Activar Ahora
                 </a>

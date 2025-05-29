@@ -47,11 +47,12 @@ const AppRoutes: React.FC = () => {
          {/* <Route element={<PublicRoute />}>
         <Route path="/cambio-contraseña" element={<CambioContraseña />} />
         </Route> */}
-
+        <Route path="/:tipo" element={<General />} />
+        <Route path="/" element={<General/>} />
+         
         {/* Ruta protegida: :tipo */}
         <Route element={<PrivateRoute/>}>
-         <Route path="/" element={<General/>} />
-          <Route path="/:tipo" element={<General />} />
+         
         </Route>
                
       </Routes>

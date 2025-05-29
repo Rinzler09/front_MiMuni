@@ -62,7 +62,7 @@
   font-weight: 600;
   color: #e26c0c;
   white-space: nowrap;
-  animation: blink-logo 1.5s infinite;
+  
   transition: margin-left 0.4s ease;
   cursor: pointer;
 }

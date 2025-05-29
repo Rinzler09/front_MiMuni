@@ -1,3 +1,13 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: auto;        /* que el body crezca con el contenido */
+  overflow-y: auto;    /* scroll del navegador si hace falta */
+  box-sizing: border-box;
+}
+
+
+
 .modalPago {
     background: #fff;
     padding: 40px;

@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   //Sincronizacion de token 
   useEffect(() =>{
-    console.log("El token viene del auth:", token);
+    //console.log("El token viene del auth:", token);
     setAuthToken(token);
   }, [token]); 
 
@@ -224,7 +224,7 @@ useEffect(() => {
   }, 9 * 60 * 1000);
 
   return () => {
-    console.log("[AuthContext] limpiando intervalo de token:", intervalId);
+    //console.log("[AuthContext] limpiando intervalo de token:", intervalId);
     clearInterval(intervalId);
   };
 }, [token, showExpiredModal]);

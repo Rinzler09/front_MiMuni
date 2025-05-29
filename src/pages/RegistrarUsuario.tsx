@@ -138,12 +138,7 @@ const RegistrarUsuario: React.FC = () => {
             </form>
 
             {/*Reutilizacion de la ventana modal*/}
-            <Modal
-                isVisible={showModalDatos}
-                title="Éxito"
-                message={`Contraseña temporal enviada exitosamente, verifique su correo `}
-                onClose={() => navigate('/')}
-            />
+            <Modal isVisible={showModalDatos} title="Éxito" message={`Contraseña temporal enviada exitosamente, verifique su correo `} onClose={() => navigate('/')}/>
         </div >
     );
 };

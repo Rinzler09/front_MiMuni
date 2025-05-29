@@ -6,7 +6,8 @@ import "../../style/PagesStyles/titulo_TablasStyle.css"
 
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContex";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 interface Facturas {
   numFactura: number;
@@ -38,6 +39,7 @@ const ProceosFacturacion: React.FC = () => {
   const {claveCat, direccion} = state;
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
 
 
@@ -256,6 +258,7 @@ const ProceosFacturacion: React.FC = () => {
         </thead>
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
+          {loading}
           
           {facturasActuales.map((item, index) =>(
             <tr key={index}>
@@ -263,8 +266,8 @@ const ProceosFacturacion: React.FC = () => {
             <td style={{textAlign:"center"}}>{item.numFactura}</td>
             <td style={{textAlign:"center"}}>{item.fechaVence}</td>
             <td style={{textAlign:"center"}}>{item.descripcion}</td>
-            <td style={{textAlign:"center"}}>L{item.descPP}</td>
-            <td style={{textAlign:"center"}}>L{item.subtotal} </td>
+            <td style={{textAlign:"center"}}>L{item.subtotal}</td>
+            <td style={{textAlign:"center"}}>L{item.descPP} </td>
             <td style={{textAlign:"center"}}>L{item.descADM}</td>
             <td style={{textAlign:"center"}} >L{item.descAMN}</td>
             <td style={{textAlign:"center"}}>L{item.ajuste}</td>
