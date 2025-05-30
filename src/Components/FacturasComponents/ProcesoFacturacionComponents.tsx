@@ -323,7 +323,7 @@ const ProceosFacturacion: React.FC = () => {
           Pagar
         </Link>
 
-        <button id="btnFactura_Cons" className="button-links">Generar Factura Consolidada</button>
+        
       </div>
 
       {/* Modal de advertencia */}

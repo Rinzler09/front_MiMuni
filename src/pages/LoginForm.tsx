@@ -29,7 +29,7 @@ const slides = [
   
   { image: slide2, description: " Bienvenido, estamos cerca de ti, al servicio de toda la comunidad." },
   
-  { image: slide3, description: "Bienvenido, tsu voz, nuestra guía, tu bienestar, nuestra meta."},
+  { image: slide3, description: "Bienvenido, su voz, nuestra guía, tu bienestar, nuestra meta."},
 ];
 
 const LoginForm: React.FC = () => {
@@ -174,7 +174,7 @@ const LoginForm: React.FC = () => {
             <div className="col-12 col-md-7 d-flex flex-column justify-content-center align-items-start">
               <h2 className="titu">LOGIN</h2>
               <span>
-                ¿Sin cuenta? Regístrate y empieza a disfrutar de nuestros servicios.{" "}
+                Actíva y accede a todos los servicios en línea que tu municipalidad pone a tu disposición.{" "}
                 <a href="#" className="forgot-password" onClick={handleRegister}>
                   Activar Ahora
                 </a>
@@ -186,7 +186,7 @@ const LoginForm: React.FC = () => {
                   <span className="input-group-text">
                     <FaRegUser size={20} />
                   </span>
-                  <input type="text" className="form-control" placeholder="Ingrese su email" required maxLength={50}
+                  <input type="text" className="form-control" placeholder="Ingrese su correo electronico" required maxLength={50}
                     {...register("email", { required: "Email obligatorio.", maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
                       pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email inválido.",},})}
                     value={email} onChange={e => setEmail(e.target.value)}/>
@@ -207,14 +207,14 @@ const LoginForm: React.FC = () => {
                   {errors.contra && <ErrorMessage>{errors.contra.message}</ErrorMessage>}
                 </div>
 
-                {/* Recordar credenciales */}
+                {/* Recordar credenciales 
                 <div className="form-check mb-3">
                   <input type="checkbox" className="form-check-input" id="remember" />
                   <label htmlFor="remember" className="form-check-label">
                     Recordar credenciales
                   </label>
                 </div>
-
+*/}
                 {/* Olvidó contraseña */}
                 <a href="#" className="forgot-password mb-3" onClick={handleForgotPassword}>
                   ¿Olvidó su contraseña?

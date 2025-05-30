@@ -1,6 +1,5 @@
-
 /* ======================================================
-   2. Fondo y círculos animados
+   Fondo y círculos animados
    ====================================================== */
 .background {
   position: fixed;
@@ -17,17 +16,21 @@
   filter: blur(120px);
   animation: float 8s ease-in-out infinite;
 }
-.circle1 { width: 400px; height: 400px; top: 10%; left: 15%; background: #FF6600; }
+.circle1 {
+  width: 400px; height: 400px;
+  top: 10%; left: 15%;
+  background: #F0F0F0;
+}
 .circle2 {
   width: 300px; height: 300px;
   bottom: 10%; right: 20%;
-  background: #c7c7c7;
+  background: #F0F0F0;
   animation-duration: 10s;
 }
 .circle3 {
   width: 200px; height: 200px;
   bottom: 30%; left: 30%;
-  background: #FF6600;
+  background: #F0F0F0;
   animation-duration: 6s;
   animation-direction: reverse;
 }
@@ -38,7 +41,7 @@
 }
 
 /* ======================================================
-   3. Contenedor principal
+   Contenedor principal
    ====================================================== */
 .login-wrapper {
   background: #fff;
@@ -56,26 +59,26 @@
 }
 
 /* ======================================================
-   4. Panel izquierdo (carrusel)
+   Panel izquierdo (carrusel)
    ====================================================== */
 .col-md-5 {
   background: linear-gradient(
     to right,
-    rgb(242, 139, 54) -40%,
-    rgba(246,112,3,0.2) 50%,
-    #f59445 140%
+    rgb(248, 160, 88) 100%,
+    rgba(248, 160, 88) 100%,
+    rgb(248, 160, 88) 100%
   ) !important;
   background-size: 200% 200%;
   animation: gradientShift 10s ease infinite;
   display: flex;
   flex-direction: column;
   padding: 2rem 1.5rem;
-  color: #333;
+  color: #F0F0F0;
 }
 
 @keyframes gradientShift {
   0%   { background-position: 0% 50%; }
-  50%  { background-position:100% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
@@ -83,6 +86,7 @@
   font-size: 1.9rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
+  color: #F0F0F0;
 }
 
 .carousel-wrapper {
@@ -111,13 +115,14 @@
 
 .slide-description {
   font-size: 0.9rem;
-  color: #4a4a4a;
+  color: #F0F0F0;
   text-align: center;
   line-height: 1.4;
+  font-weight: bolder;
 }
 
 /* ======================================================
-   5. Navegación del carrusel (dots + flechas)
+   Navegación del carrusel (dots + flechas)
    ====================================================== */
 .slide-titles {
   display: flex;
@@ -129,16 +134,19 @@
 .slide-title {
   width: 10px;
   height: 10px;
-  border: 2px solid rgba(0,0,0,0.15);
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, border-color 0.3s;
+  background: #fff;
+  border: 2px solid #c4c4c4; /* borde oscuro */
 }
 
 .slide-title.active {
-  background: #f67003;
+  background: #F0F0F0;   /* activo en naranja */
+  border-color: #757575;     /* mismo borde oscuro */
 }
 
+/* Flechas de navegación */
 .carousel-nav {
   position: absolute;
   top: 50%; left: 0; right: 0;
@@ -160,7 +168,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  color: #333;
+  color: #F0F0F0;
   transition: background 0.3s;
 }
 
@@ -169,7 +177,7 @@
 }
 
 /* ======================================================
-   6. Panel derecho (formulario)
+   Panel derecho (formulario)
    ====================================================== */
 .col-md-7 {
   padding: 1rem 6.3rem;
@@ -184,6 +192,11 @@
   font-weight: 600;
   color: #333;
   margin-bottom: 1.75rem;
+}
+
+.titu {
+  /* si lo necesitas en otro sitio */
+  color: #F0F0F0;
 }
 
 .col-md-7 > span {
@@ -205,7 +218,7 @@
 }
 
 /* ======================================================
-   7. Inputs “bottom-only” y compactos
+   Inputs “bottom-only” y compactos
    ====================================================== */
 .input-group {
   display: flex;
@@ -251,11 +264,11 @@
 .form-control:focus {
   outline: none;
   box-shadow: none;
-  border-bottom-color: #f67003;
+  border-bottom-color: #f6f5f4;
 }
 
 /* ======================================================
-   8. Checkbox y enlace “Olvidó contraseña”
+   Checkbox y enlace “Olvidó contraseña”
    ====================================================== */
 .form-check {
   display: flex;
@@ -286,7 +299,7 @@ a.forgot-password:hover {
 }
 
 /* ======================================================
-   9. Botón principal refinado
+   Botón principal refinado
    ====================================================== */
 .login-btn {
   width: 100%;
