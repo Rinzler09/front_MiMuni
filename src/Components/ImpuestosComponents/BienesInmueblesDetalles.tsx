@@ -150,8 +150,7 @@ const DetallesImpuesto: React.FC = () => {
                   <td>
                     <button
                       className="btnFacturas"
-                      onClick={() => handleVerFacturas(item.claveCat, item.direccion)}
-                    >
+                      onClick={() => handleVerFacturas(item.claveCat, item.direccion)}>
                       Facturas
                     </button>
                   </td>

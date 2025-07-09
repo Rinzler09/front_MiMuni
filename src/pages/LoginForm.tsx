@@ -1,4 +1,5 @@
-// LoginForm.tsx
+// src/pages/LoginForm.tsx
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,69 +7,55 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../style/PagesStyles/loginFormStyles.css";
 import { login } from "../services/loginFormServices";
 import { Toaster, toast } from "sonner";
-
-// Manejo de errores con react-hook-form
 import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import type { confirmacionLogin } from "../types/generalForm";
-
-// AuthContext para almacenar datos de usuario
 import { useAuth } from "../Auth/AuthContex";
-
-// Iconos
 import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 
-// Imágenes del carrusel
 import slide1 from "../../public/img/muni.png";
 import slide2 from "../../public/img/muni.png";
 import slide3 from "../../public/img/muni.png";
 
 const slides = [
-  { image: slide1, description: "Bienvenido, estamos en compromiso y servicio a la comunidad."},
-  
-  { image: slide2, description: " Bienvenido, estamos cerca de ti, al servicio de toda la comunidad." },
-  
-  { image: slide3, description: "Bienvenido, su voz, nuestra guía, tu bienestar, nuestra meta."},
+  { image: slide1, description: "Bienvenido, estamos en compromiso y servicio a la comunidad." },
+  { image: slide2, description: "Bienvenido, estamos cerca de ti, al servicio de toda la comunidad." },
+  { image: slide3, description: "Bienvenido, su voz, nuestra guía, tu bienestar, nuestra meta." },
 ];
 
 const LoginForm: React.FC = () => {
-  // Estados del formulario
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Carrusel
   const [currentSlide, setCurrentSlide] = useState(0);
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % slides.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
   }, []);
 
-  //Verificacion de token
   const navigate = useNavigate();
   const { setUser, setToken } = useAuth();
 
-  // React Hook Form
   const {
     register,
-    formState: { errors }
+    formState: { errors },
   } = useForm<confirmacionLogin>({ defaultValues: { email: "", contra: "" } });
 
-  // Muestra errores de validación
   useEffect(() => {
     if (errors.email) toast.error(errors.email.message);
     if (errors.contra) toast.error(errors.contra.message);
   }, [errors.email, errors.contra]);
 
-  // Login handler
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
-    // Validaciones extra
+    // validaciones extra
     if (email.length > 50) {
       toast.error("El email no puede exceder 50 caracteres.");
       return;
@@ -78,48 +65,53 @@ const LoginForm: React.FC = () => {
       return;
     }
     const regexNumero = /\d/;
-    const regexSimbolo = /[!@#$%^&*(),.?":{}|<>]/;
+    const regexSimbolo = /[-!@#$%^&*()_=+]/;
     if (!regexNumero.test(password) || !regexSimbolo.test(password)) {
       toast.error("La contraseña debe incluir al menos un número y un símbolo especial.");
       return;
     }
 
-    if (isSubmitting) return;
     setIsSubmitting(true);
-
     try {
       const data = await login(email, password);
-      //console.log("Resultado del login:", data);
 
       if (data.message.toLowerCase().includes("credenciales incorrectas")) {
         setIsSubmitting(false);
         return;
       }
 
-      // Procesar municipalidades
+      // --- Procesar municipalidades ---
+      // TS ya sabe que puede ser string | string[]
+      const raw = data.municipalidades ?? "";
       let municipalidadesArray: string[] = [];
-      const rawMunicipios = data.municipalidades as string | string[] | undefined;
-      if (Array.isArray(rawMunicipios)) {
-        municipalidadesArray = rawMunicipios;
-      } else if (typeof rawMunicipios === "string") {
-        municipalidadesArray = rawMunicipios.split(",");
-      }
 
-      // Si es contraseña temporal…
+      if (Array.isArray(raw)) {
+        municipalidadesArray = raw;
+      } else {
+        municipalidadesArray = raw.split(",");
+      }
+     
+
+      const tokenValue = data.access_token || "";
+
+      // En esta parte es la logica de la contraseña temporal
       if (data.isTemporaryPassword) {
-        const tokenValue = data.access_token || "";
-        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray,});
+        setUser({
+          email: data.correo,
+          temporaryPassword: password,
+          municipalidades: municipalidadesArray,
+        });
         setToken(tokenValue);
-        sessionStorage.setItem("email", email);
-        sessionStorage.setItem("password", password);
         setTimeout(() => navigate("/cambio-contraseña"), 2000);
         return;
       }
 
-      // Condicion para las credenciales si son correctas
+      // login exitoso
       if (data.success) {
-        const tokenValue = data.access_token || "";
-        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray,});
+        setUser({
+          email: data.correo,
+          municipalidades: municipalidadesArray,
+        });
         setToken(tokenValue);
         setTimeout(() => navigate("/dashboard"), 3000);
       }
@@ -132,7 +124,7 @@ const LoginForm: React.FC = () => {
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/registrar-usuario", {state:{enviado:true}});
+    navigate("/registrar-usuario");
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {
@@ -142,91 +134,105 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className="background">
-      {/*<Toaster richColors position="bottom-left" />*/}
-        <Toaster closeButton position="bottom-left"/>
+      <Toaster closeButton position="top-right" richColors />
       <div className="circle circle1" />
       <div className="circle circle2" />
       <div className="circle circle3" />
 
       <div className="container min-vh-100 d-flex justify-content-center align-items-center">
-        {/* Aquí sólo cambio la clase del wrapper */}
         <div className="login-wrapper">
           <div className="row g-0">
-
-            {/* Panel izquierdo: carrusel */}
+            {/* Carrusel */}
             <div className="col-md-5 d-none d-md-flex flex-column">
               <h2 className="titu">MiMuni en Línea</h2>
               <div className="carousel-content">
-                <img src={slides[currentSlide].image} alt={slides[currentSlide].description} className="illustration"/>
-                <p className="slide-description">
-                  {slides[currentSlide].description}
-                </p>
+                <img
+                  src={slides[currentSlide].image}
+                  alt={slides[currentSlide].description}
+                  className="illustration"
+                />
+                <p className="slide-description">{slides[currentSlide].description}</p>
               </div>
               <div className="slide-titles">
                 {slides.map((_, idx) => (
-                  <span key={idx} className={`slide-title ${idx === currentSlide ? "active" : ""}`}
-                    onClick={() => setCurrentSlide(idx)}/>
+                  <span
+                    key={idx}
+                    className={`slide-title ${idx === currentSlide ? "active" : ""}`}
+                    onClick={() => setCurrentSlide(idx)}
+                  />
                 ))}
               </div>
             </div>
 
-            {/* Panel derecho: formulario */}
+            {/* Formulario */}
             <div className="col-12 col-md-7 d-flex flex-column justify-content-center align-items-start">
               <h2 className="titu">LOGIN</h2>
               <span>
-                Actíva y accede a todos los servicios en línea que tu municipalidad pone a tu disposición.{" "}
+                Actíva y accede a todos los servicios en línea que tu municipalidad pone a tu
+                disposición.&nbsp;
                 <a href="#" className="forgot-password" onClick={handleRegister}>
                   Activar Ahora
                 </a>
               </span>
 
               <form onSubmit={handleLogin} className="w-100">
-                {/* Email */}
-                <div className="input-group">
+                <div className="input-group mb-3">
                   <span className="input-group-text">
                     <FaRegUser size={20} />
                   </span>
-                  <input type="text" className="form-control" placeholder="Ingrese su correo electronico" required maxLength={50}
-                    {...register("email", { required: "Email obligatorio.", maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
-                      pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email inválido.",},})}
-                    value={email} onChange={e => setEmail(e.target.value)}/>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Correo electrónico"
+                    required
+                    maxLength={50}
+                    {...register("email", {
+                      required: "Email obligatorio.",
+                      maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Email inválido.",
+                      },
+                    })}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                   {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
                 </div>
 
-                {/* Contraseña */}
-                <div className="input-group">
+                <div className="input-group mb-3">
                   <span className="input-group-text">
                     <RiLockPasswordLine size={20} />
                   </span>
-                  <input type={showPassword ? "text" : "password"} className="form-control" placeholder="Ingrese su contraseña" required maxLength={50}
-                    {...register("contra", { required: "Contraseña obligatoria.", maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
-                    })} value={password} onChange={e => setPassword(e.target.value)} onBlur={e => setPassword(e.target.value.trim())}/>
-                  <span className="input-group-text" onClick={() => setShowPassword(!showPassword)} >
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="form-control"
+                    placeholder="Contraseña"
+                    required
+                    maxLength={50}
+                    {...register("contra", {
+                      required: "Contraseña obligatoria.",
+                      maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
+                    })}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onBlur={(e) => setPassword(e.target.value.trim())}
+                  />
+                  <span className="input-group-text" onClick={() => setShowPassword(!showPassword)}>
                     <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
                   </span>
                   {errors.contra && <ErrorMessage>{errors.contra.message}</ErrorMessage>}
                 </div>
 
-                {/* Recordar credenciales 
-                <div className="form-check mb-3">
-                  <input type="checkbox" className="form-check-input" id="remember" />
-                  <label htmlFor="remember" className="form-check-label">
-                    Recordar credenciales
-                  </label>
-                </div>
-*/}
-                {/* Olvidó contraseña */}
                 <a href="#" className="forgot-password mb-3" onClick={handleForgotPassword}>
                   ¿Olvidó su contraseña?
                 </a>
 
-                {/* Botón Iniciar sesión */}
                 <button type="submit" className="login-btn" disabled={isSubmitting}>
                   {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
                 </button>
               </form>
             </div>
-
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../style/PagesStyles/cambioContraseñaStyles.css";
-import type { cambioContraseña } from "../../types/generalForm";
+import type { cambioContrasena } from "../../types/generalForm";
 import ErrorMessage from "../../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -21,8 +21,8 @@ const RestablecerContraseña: React.FC = () => {
   const { Modals } = useSessionModal();
 
     //Valores iniciales para el formualrio 
-    const initialValues: cambioContraseña = {
-        contraseña: "",
+    const initialValues: cambioContrasena = {
+        contrasena: "",
         confirmaContra: "",
       }
 
@@ -33,10 +33,10 @@ const RestablecerContraseña: React.FC = () => {
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm<cambioContraseña>({ defaultValues: initialValues});
+  } = useForm<cambioContrasena>({ defaultValues: initialValues});
 
   //Comparar la contraseña 
-  const password = watch("contraseña");
+  const password = watch("contrasena");
   const [isRecaptchaVerified, setIsRecaptchaVerified] = useState(false);
   const [isEmailSent, setIsEmailSent]             = useState(false);
 
@@ -52,10 +52,10 @@ const RestablecerContraseña: React.FC = () => {
 
  
 
-  const handleRecuperar = async (data: cambioContraseña) => {
+  const handleRecuperar = async (data: cambioContrasena) => {
     console.log("Envío de datos al backend", data);
     try {
-      const response = await receteoContraServices(data.contraseña, token as string);
+      const response = await receteoContraServices(data.contrasena, token as string);
       console.log("Lo que se envia para el backend desde el frontend:", data)
       console.log("Token desde el hadleRecuperar:", token);
       if (typeof response === "object") {
@@ -95,26 +95,26 @@ const RestablecerContraseña: React.FC = () => {
               type={showPassword ? "text" : "password"}
               className="form-control"
               placeholder="Ingrese nueva contraseña"
-              {...register("contraseña", {
+              {...register("contrasena", {
                 required: "La contraseña es obligatoria",
                 minLength:{value: 8, message: "la contraseña debe tener al menos 8 caracteres",},
                 maxLength:{value: 50, message:"La contraseña no debe superar los 50 caracteres",},
                 validate: {
                     //Valida que contenga al menos digito(acepto mas)
                     hasAtLeastOneDigit:(value: string) =>{
-                        const digitCount = (value.match(/\d/g) || []).length;
+                        const digitCount = (value.match(/\d/g) || []).length;//Verificacion en esta linea
                         return(
                             digitCount >=1 || "La contraseña debe contener al menos un numero."
                         );
                     },
                     //Valida que contenga Existente un caracter especial
                     hasOneSpecial:(value: string) =>{
-                        const specialCount = (value.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
+                        const specialCount = (value.match(/[-!@#$%^&*()_=+]/g) || []).length;// Verificar elcodigo 
                         return(specialCount >= 1 || "Por seguridad, la contraseña debe incluir uno o más caracteres especiales.");
                     },
                     //Valida que contenga al menos una letra mayscula
                     hasUppercase:(value: string) =>
-                        /[A-Z]/.test(value) || "La contraseña debe contener al menos una letra mayúscula.",
+                        /[A-Z]/.test(value) || "La contraseña debe contener al menos una letra mayúscula.",//Verificacion en esta linea
                 },
 
               })}
@@ -122,7 +122,7 @@ const RestablecerContraseña: React.FC = () => {
             <span className="input.group.text" style={{ cursor: "pointer" }} onClick={() => setShowPassword(prev => !prev)}>
                 <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
             </span>
-            {errors.contraseña && (<ErrorMessage>{errors.contraseña.message}</ErrorMessage>)}
+            {errors.contrasena && (<ErrorMessage>{errors.contrasena.message}</ErrorMessage>)}
           </div>
           
 

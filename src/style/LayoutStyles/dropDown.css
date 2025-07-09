@@ -7,8 +7,7 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 200px;
-    z-index: 1000;
+    width: 240px;
     display: block; /* Mostrar el menú */
 }
 
@@ -28,10 +27,6 @@
     position: relative;
 }
 
-/* Hover en todo el li */
-.dropdown-menu li:hover {
-    background-color: #f5f5f5;
-}
 
 /* Enlaces ocupando todo el li */
 .menu-link {
@@ -70,3 +65,4 @@
 .tituloHeader {
     cursor: pointer;
 }
+

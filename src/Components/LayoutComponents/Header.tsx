@@ -46,27 +46,17 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
 
   return (
     <header className={`header ${collapsed ? "collapsed" : ""}`}>
+
       {/* IZQUIERDA: hamburger + logo */}
       <div className="header-left">
         <FontAwesomeIcon icon={faBars} className="header-toggle" onClick={() => {
             console.log("hamburguesa clicada en Header");
             onToggleSidebar();}}/>
-
-        {/* Si más adelante quieres el search, descomenta */}
-        {/* <div className="header-search">
-          <input type="text" placeholder="Search..." />
-          <FontAwesomeIcon icon={faSearch} className="fa-search" />
-        </div> */}
       </div>
 
       {/* DERECHA: notificaciones + perfil */}
       <div className="header-right">
-        <div className="icon-wrapper">
-          <FontAwesomeIcon icon={faBell} />
-        </div>
-
-  
-
+      
         <div
           className="user-profile" onClick={toggleDropdown}>
           <img src="/img/usuarios.png" alt="User" className="user-icon" />
@@ -76,19 +66,15 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
           {isOpen && (
         
             <div className="dropdown-menu">
+              
             <ul className="dropdown-menu-end show">
               <li>
                 <Link to="/editar-perfil" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
                   <FontAwesomeIcon icon={faEdit} className="menu-icon" />
-                  <span className="ms-2">Editar Perfil</span>
+                  <span className="ms-2">Restablecer Contraseña</span>
                 </Link>
               </li>
-              <li>
-                <Link to="/soporte-tecnico" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
-                  <FontAwesomeIcon icon={faCog} className="menu-icon" />
-                  <span className="ms-2">Soporte Técnico</span>
-                </Link>
-              </li>
+              
               <li>
                 <Link to="/historial-pagos" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
                   <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />

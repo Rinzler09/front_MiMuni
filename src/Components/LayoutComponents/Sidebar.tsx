@@ -1,6 +1,7 @@
+// Importamos React y los hooks useState y useEffect para manejar estado y efectos secundarios.
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link, useNavigate } from "react-router-dom";// Importamos Link y useNavigate de React Router para la navegación dentro de la aplicación.
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";// Importamos FontAwesomeIcon para usar íconos en los componentes.
 import {
   faHome,
   faUser,
@@ -13,22 +14,23 @@ import {
   faChevronDown,
   faRepeat,
   faBars,
-} from "@fortawesome/free-solid-svg-icons";
-import "../../style/LayoutStyles/sidebar.css";
-import { useAuth } from "../../Auth/AuthContex";
-import { Toaster, toast } from "sonner";
-import { clavesCatastrales } from "../../services/claveCatastral";// Analizar esta importacion urgente
-import {mensajes} from "../../util/message"
-import { MdErrorOutline } from "react-icons/md";
+} from "@fortawesome/free-solid-svg-icons";// Importamos varios íconos específicos desde Font Awesome que serán utilizados en el menú lateral.
+import "../../style/LayoutStyles/sidebar.css";// Importamos la hoja de estilos específica del sidebar (barra lateral) para aplicar estilos personalizados.
+import { useAuth } from "../../Auth/AuthContex";// Importamos el contexto de autenticación para acceder a los datos del usuario logueado.
+import { Toaster, toast } from "sonner";// Importamos Toaster y toast desde la librería 'sonner' para mostrar notificaciones al usuario.
+import { mensajes } from "../../util/message";// Importamos un archivo que contiene mensajes personalizados para mostrar al usuario en diferentes eventos.
+import { MdErrorOutline } from "react-icons/md";// Importamos un ícono adicional desde react-icons para mostrar errores u otras alertas gráficas.
 
 
-//PROPS para controlar el collapse del sidebar
-interface SidebarPROPS{
-  onToggleSidebar:() => void;
-  collapsed: boolean;
+
+//Esta interface viene de para el boton de hamburguesa en el lado de sidebar para que tenga una funcionalidad de al momento de precionarla se pueda colapsar 
+interface sidebarInterface{// En esta parte estamos declarando una interface para poder tipar porque vamos declarar la forma de props las propiedades
+  onToggleSidebar:() => void;// El ontoggleSidebar es una funcion callback que el componente padre le pasa al sidebar, esto nos ayudara al omento de abrir y cerrar un boton del menu
+  collapsed: boolean;// Esto indica el estado del sidebar, al momento de preocionar se activa al estado de true y cuando el menu del sidebar esta expandido es false
 }
 
-const Sidebar: React.FC<SidebarPROPS> = ({collapsed, onToggleSidebar}) => {
+const Sidebar: React.FC<sidebarInterface> = ({collapsed, onToggleSidebar}) => {
+  console.log("Ledio click para cerrar", collapsed);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     EstadoCuenta: false,
     Declaraciones: false,
@@ -53,32 +55,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({collapsed, onToggleSidebar}) => {
 
   const municipalidades = user?.municipalidades || [];
 
-  // Keep-alive inmediato al cambiar de municipio
-  useEffect(() => {
-    if (!user?.token || !selectedMunicipality) return;
-    const token = user.token;
-    const municipality = selectedMunicipality;
-    (async () => {
-      try {
-        await clavesCatastrales(municipality, token);
-      } catch (err) {
-        console.warn("Keep-alive fallido:", err);
-      }
-    })();
-  }, [user?.token, selectedMunicipality]);
-
-  // Heartbeat periódico cada 4 minutos
-  useEffect(() => {
-    if (!user?.token || !selectedMunicipality) return;
-    const token = user.token;
-    const municipality = selectedMunicipality;
-    const intervalId = setInterval(() => {
-      clavesCatastrales(municipality, token).catch(err =>
-        console.warn("Heartbeat fallido:", err)
-      );
-    }, 4 * 60 * 1000);
-    return () => clearInterval(intervalId);
-  }, [user?.token, selectedMunicipality]);
+ 
 
   // Selección de municipalidad con toast
   const handleMunicipalitySelect = (
@@ -118,7 +95,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({collapsed, onToggleSidebar}) => {
     
     
     <div>
-      <Toaster closeButton position="bottom-left" />
+      <Toaster closeButton position="top-right" />
       
       {/* Ícono de hamburguesa para móviles */}
       <div className="hamburger-icon" onClick={onToggleSidebar}>

@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../style/PagesStyles/cambioContraseñaStyles.css";
 
 import type { verificacion, codigoVerificacion } from "../../types/generalForm";
-import ErrorMessage from "../../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -40,6 +39,7 @@ const RecuperarContraseña: React.FC = () => {
   // reCAPTCHA OK
   const onRecaptcha = (_token: string | null) => {
     setIsRecaptchaVerified(true);
+    console.log("reCAPTCHA verificado:", _token);
   };
 
   // Countdown para desbloquear OTP tras bloqueo

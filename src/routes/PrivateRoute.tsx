@@ -1,71 +1,34 @@
-import React, {useEffect, useState} from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../Auth/AuthContex";
-
-
-//Interface para definir la estructura del token
-interface tokenPayload{
-  exp:number;
-  [key:string]: any;
-}
-
-//Interface para definir al uusario autenticado
-interface User{
-  token: string;
-}
+// src/routes/PrivateRoute.tsx
+import { Navigate, Outlet, useLocation } from "react-router-dom";// Libreria  de react router dom para el manejo de rutas
+import { useEffect, useRef } from "react";// hooks de react para efectos segundarios y referencias
 
 const PrivateRoute: React.FC = () => {
-  const {user, isLoading} = useAuth();
-  const [isTokenValid, setIsTokenValid] = useState<boolean>(true);
-/*
-  @param token - Token JWT en formato string
-  @return true si el token tiene tres partes y no ha expirado, de lo contrario false.
-*/
-const validacionToken = (token: string): boolean => {
-  const parts: string[] = token.split(".");
-  if (parts.length !== 3) {
-    //console.error("Token no tiene 3 partes:", token);
-    return false;
-  }
-  try {
-    const payloadJson: string = atob(parts[1]);
-    const payload: tokenPayload = JSON.parse(payloadJson);
-    if (!payload.exp) {
-     // console.error("El token no tiene 'exp'", payload);
-      return false;
-    }
-    const now: number = Math.floor(Date.now() / 1000);
-   // console.log("Token expira en:", payload.exp, "ahora es:", now);
-    return payload.exp > now;
-  } catch (error) {
-    //console.error("Error decodificando el token:", error);
-    return false;
-  }
-};
+  
+  const token = sessionStorage.getItem("Token");//Se obtiene desde el sesionStore el token para que valide la parte de si existe un usuario con token para poder pasar la ruta
+   const localizacionRuta = useLocation();//Eso nos ayuda a obtener la ubicacion actual de la ruta
 
+  // // Referencias para salto de primer render y ruta previa
+  const renderizarPrimero = useRef(true);
+   const rutaAnterior = useRef(localizacionRuta.pathname);
 
-//Se realiza la validacion del token 
-useEffect(() => {
-  if (!isLoading && user && (user as User).token) {
-    const valid: boolean = validacionToken((user as User).token);
-    if (!valid) {
-      setIsTokenValid(false);
-      //logout();
-    }
-  }
-}, [isLoading, user]);
-//Mientras se carga la sesion, se muestra un mensaje 
-if (isLoading) {
-  return <div>Cargando...</div>;
-}
+  useEffect(() => {
+     console.log("Ruta actual:", localizacionRuta.pathname);// Al momento de guardar la ruta actual, se imprime en la console
+     if (renderizarPrimero.current) {
+       // Primera vez: solo inicializa
+       renderizarPrimero.current = false;
+     } else {
+       // En cambios posteriores dentro de rutas protegidas...
+       if (token && localizacionRuta.pathname !== rutaAnterior.current) {
+         window.location.reload();//Esto recarga la pagina si el usuario cambia de ruta dentro de las rutas protegidas
+       }
+     }
+     rutaAnterior.current = localizacionRuta.pathname;
+   }, [localizacionRuta.pathname, token]);
 
-//si no existe un usuario autenticado, redirige a la pagina de login
-if (!user || !(user as User).token || !isTokenValid) {
-  return <Navigate to="/" replace />;
-}
-
-//Si el token es valido, renderiza el componente hijo
-return <Outlet />;
+  // Si no hay user, redirige al login; si hay, renderiza las rutas hijas, la comunicacion  es mediante de la libreria de 
+  //react-router-dom, es la version de aplicacion web en navegador/ Document Object Model Es una representacion estructurada de una pagina web que 
+  // que el navegador crea cuando carga una pagina HTML
+  return token ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default PrivateRoute;

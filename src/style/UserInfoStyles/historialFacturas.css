@@ -2,22 +2,93 @@
 
     /*Alinea el componente de historial factura a una posicion relativa a otro componente*/
     position: relative;
-    left: 5px;
     padding: 20px;
     background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 950px;
+    border-radius: 5px;
+    box-shadow: 3px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: none;
+    width: 78%;
     /* Limita el ancho máximo */
     height: 100%;
+    left: 30px;
     /* Ajusta la altura según el contenido */
-    margin-left: 27%;
+    margin-left: 15%;
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
-    /* Borde gris claro */
+    margin-top: 65px;
+}
+
+.buttonReset{
+    background-color: #D65D00 ;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    margin-left: 10px;
+}
+
+.buttonReset:hover{
+    background-color: #efefef;
+    color: black;
+}
+
+
+.buttonInvoices{
+    background-color: #D65D00;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;;
+    color: white;
+    margin-left: 13px;
+}
+
+.buttonInvoices:hover{
+    background-color: #efefef;
+    color: black;
 }
 
 .logoMuni {
     display: flex;
     justify-content: center;
 }
+
+.date-range-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
+}
+
+.date-range-filter{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 170px;
+}
+
+.date-input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 210px;
+}
+
+.date-inputs {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 210px;
+    margin-left: 10px;
+}
+
+.selectInvoice {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 250px;
+    margin-right: 10px;
+}
+

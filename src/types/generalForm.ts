@@ -1,36 +1,38 @@
+//Declaracionde type para el formulario de activacion de cuenta
 export type registroSolicitud = {
-    nombrecompleto: string
-    identidad: string
-    rtn: string   
-    correo: string
-    telefono: string
+    nombrecompleto: string;
+    identidad: string;
+    rtn: string;
+    correo: string;
+    telefono: string;
 }
 
 export type RegisterForm = Pick<registroSolicitud, 'nombrecompleto' | 'identidad' | 'correo' | 'telefono'> & {}
 
 // cambio de contraseñas
-export type cambioContraseña ={
-   
-    contraseña: string
-    confirmaContra: string
+export type cambioContrasena ={
+    contrasenaAnterior:string;
+    contrasena: string;
+    confirmaContra: string;
 }
-export type cambioContra = Pick<cambioContraseña, 'contraseña' | 'confirmaContra'> & {}
+export type cambioContra = Pick<cambioContrasena, 'contrasenaAnterior' | 'contrasena' | 'confirmaContra'> & {} /*En este apartado estamos usando Pick para poder
+definir un solo valor en especifico*/
 
 // Verificacion de login
 export type confirmacionLogin = {
-    email: string
-    contra: string
+    email: string;
+    contra: string;
 }
 export type loginConfir = Pick<confirmacionLogin, 'email' | 'contra'> &{}
 
 //Confirmacion de correo electronico
 export type verificacion = {
-    email:string
+    email:string;
 }
 export type verif = Pick<verificacion, 'email'> &{}
 
 //Confirmacion de codigo 
 export type codigoVerificacion = {
-    otp:string
+    otp:string;
 }
 export type codigoVerif = Pick<codigoVerificacion, 'otp'> &{}

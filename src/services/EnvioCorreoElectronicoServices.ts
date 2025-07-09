@@ -6,6 +6,7 @@ import type { AxiosResponseHeaders } from "axios";
 const API_URL = "/resetPwd/chkEmail";
 const API_URlCODIGO = "/resetPwd/validateOTP";
 const API_URLCONTRA = "/resetPwd/rstpwd";
+const API_CAMBIOCONTRA = "";
 
 
 
@@ -36,13 +37,13 @@ export const verificacioCodigoServices = async (email: string, otp:string): Prom
         const authHeader =  response.headers["authorization"] || response.headers["Authorization"] || response.headers["x-access-token"] || "";
         if (authHeader) {
             const newToken = authHeader.startsWith("Bearer") ? authHeader.slice(7): authHeader;
-            console.log("VerificacionOTP token recibido en header", newToken);
+            //console.log("VerificacionOTP token recibido en header", newToken);
             setAuthToken(newToken);
         }
         return response.data
     } catch (error: any) {
         throw new Error(
-            error.response?.data.message || "Codigo invalido"
+            error.response?.data.message || "El codigo es invalido o ha expirado"
         );
     }
 }
@@ -67,6 +68,15 @@ export const receteoContraServices = async (n_psswd:string, token:string) =>{
         throw new Error(
             error.response?.message || "La Contraseña no se puede cambiar"
         );
+        
+    }
+}
+
+//Configuracion para el endpoint de cambio de contraseña ya logeado
+export const cambioContraseniaServices = async(contraseñaAnterior: string, nuevaContraseña: string, repetirContraseña: string) =>{
+    try {
+        //Aqui ira toda la logica para poder enviar la solicitud necesaria al backend de Milton.
+    } catch (error) {
         
     }
 }

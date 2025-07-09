@@ -1,0 +1,48 @@
+.password-change-container {
+  max-width: 580px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+}
+
+.validations li {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.validations li.text-success i {
+  color: #D65D00; /* verde bootstrap */
+}
+
+.validations li.text-muted i {
+  color: #ccc;
+}
+
+.button{
+    width: 100%;
+  background: #D65D00;
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(246,112,3,0.3);
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  margin-top: 0rem;
+}
+
+.button:hover{
+    background-color: #FF7D19;
+}

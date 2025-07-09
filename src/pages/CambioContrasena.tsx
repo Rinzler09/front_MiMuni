@@ -4,7 +4,7 @@ import "../style/PagesStyles/cambioContraseñaStyles.css";
 import Municipalidad from "../Components/ImagesComponents/Municipalidad";
 
 // Importación nuevas al proyecto
-import type { cambioContraseña } from "../types/generalForm";
+import type { cambioContrasena } from "../types/generalForm";
 import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import { cambiarContra } from "../services/CambioControseñaServices";
@@ -15,7 +15,7 @@ import { logoutUsuario } from "../services/EliminacionCookie";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importar estilos de bootstrap icons (si no lo has hecho globalmente)
 import { useSessionModal } from "../hook/UseSessionTimeout";
 
-const CambioContraseña: React.FC = () => {
+const CambioContrasena: React.FC = () => {
   const navigate = useNavigate();
 
   // Estados para mostrar/ocultar cada contraseña
@@ -24,25 +24,25 @@ const CambioContraseña: React.FC = () => {
   const [showModalDatos, setShowModalDatos] = useState<boolean>(false);
 
   // Valores iniciales para el formulario
-  const initialValues: cambioContraseña = {
-    contraseña: "",
+  const initialValues: cambioContrasena = {
+    contrasena: "",
     confirmaContra: "",
   };
 
   const { register, watch, handleSubmit,
     formState: { errors },
-  } = useForm<cambioContraseña>({ defaultValues: initialValues });
+  } = useForm<cambioContrasena>({ defaultValues: initialValues });
 
   const { token } = useAuth(); // Extrae el token del contexto de autenticación
   const {Modals} = useSessionModal(); //Esto nos ayudara para las ventana modal
 
   // Observa el valor de la contraseña para compararla con la confirmación
-  const password = watch("contraseña");
-  const handleContra = async (formData: cambioContraseña) => {
+  const password = watch("contrasena");
+  const handleContra = async (formData: cambioContrasena) => {
     try {
       // Envía la nueva contraseña usando el servicio
       // Cierra sesión antes de cambiar la contraseña
-      const response = await cambiarContra(formData.contraseña, token as string);
+      const response = await cambiarContra(formData.contrasena, token as string);
       if (typeof response === "object") {
         toast.success(response.message);
         setTimeout(() => setShowModalDatos(true), 500);
@@ -85,7 +85,7 @@ const CambioContraseña: React.FC = () => {
             <div className="input-group">
               <input type={showPassword ? "text" : "password"} className="form-control"
                 placeholder="Ingrese su nueva contraseña"
-                {...register("contraseña", { required: "La Nueva Contraseña es necesaria",
+                {...register("contrasena", { required: "La Nueva Contraseña es necesaria",
                   minLength: { value: 8, message: "La contraseña debe contener al menos 8 caracteres.",},
                   maxLength: { value: 50, message: "La contraseña no debe superar los 50 caracteres.", }, validate: {
                     // Valida que contenga al menos un dígito.
@@ -93,7 +93,7 @@ const CambioContraseña: React.FC = () => {
                       const digitCount = (value.match(/\d/g) || []).length;
                       return ( digitCount >= 1 || "La contraseña debe contener al menos un número.");},
                     // Valida que contenga EXACTAMENTE un carácter especial
-                    hasOneSpecial: (value: string) => { const specialCount = (value.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
+                    hasOneSpecial: (value: string) => { const specialCount = (value.match(/[-!@#$%^&*()_=+]/g) || []).length;
                       return ( specialCount >= 1 || "Por seguridad, la contraseña debe incluir uno o más caracteres especiales.");},
                     // Valida que contenga al menos una letra mayúscula
                     hasUppercase: (value: string) => /[A-Z]/.test(value) || "La contraseña debe contener al menos una letra mayúscula.",},})}/>
@@ -102,7 +102,7 @@ const CambioContraseña: React.FC = () => {
                 <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
               </span>
             </div>
-            {errors.contraseña && (<ErrorMessage>{errors.contraseña.message}</ErrorMessage>)}
+            {errors.contrasena && (<ErrorMessage>{errors.contrasena.message}</ErrorMessage>)}
           </div>
 
           {/* Campo de confirmación de contraseña */}
@@ -133,4 +133,4 @@ const CambioContraseña: React.FC = () => {
   );
 };
 
-export default CambioContraseña;
+export default CambioContrasena;

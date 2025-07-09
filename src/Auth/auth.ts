@@ -1,58 +1,74 @@
 // src/Auth/auth.ts
-import axios, {
-  AxiosRequestConfig,
-  AxiosInstance,
-  AxiosResponse,
-  AxiosError,
-} from "axios";
 
-// Variable interna para mantener el token en este módulo
-let access_token: string | null = null;
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
 
-// Lista de callbacks que se llamarán cuando cambie el token
+let accessToken: string | null = null;
 type TokenSubscriber = (token: string | null) => void;
-const tokenSubscribers: TokenSubscriber[] = [];
+const subscribers: TokenSubscriber[] = [];
 
 /**
- * Llama a todos los suscriptores con el nuevo token
+ * Notifica a todos los suscriptores que el token ha cambiado.
  */
-function notifyTokenSubscribers(token: string | null) {
-  for (const cb of tokenSubscribers) {
+function notifySubscribers(token: string | null) {
+  for (const cb of subscribers) {
     try {
       cb(token);
     } catch {
-      // Ignoramos errores en callbacks individuales
+      console.error("Error al notificar a un suscriptor de token");
     }
   }
 }
 
 /**
- * Setter global del token para Axios y también notifica suscriptores
+ * Inicializa el accessToken desde sessionStorage.
+ */
+(function initTokenFromStorage() {
+  const raw = sessionStorage.getItem("Token");
+  if (raw) {
+    try {
+      accessToken = JSON.parse(raw);
+    } catch {
+      accessToken = null;
+    }
+  }
+  // Notificamos una vez a los suscriptores que haya
+  notifySubscribers(accessToken);
+})();
+
+/**
+ * Asigna un nuevo token, lo persiste y notifica a los suscriptores.
  */
 export function setAuthToken(token: string | null) {
-  access_token = token;
-  notifyTokenSubscribers(token);
-  console.log("Token desde auth.ts:", token);
+  accessToken = token;
+
+  if (token) {
+    sessionStorage.setItem("Token", JSON.stringify(token));
+  } else {
+    sessionStorage.removeItem("Token");
+  }
+
+  notifySubscribers(token);
 }
 
 /**
- * Getter sencillo si en algún momento lo necesitas
+ * Devuelve el token actual (puede ser null).
  */
 export function getAuthToken(): string | null {
-  return access_token;
+  return accessToken;
 }
 
+/**
+ * Registra un callback que se ejecutará cada vez que cambie el token.
+ * Devuelve una función para desuscribirse.
+ */
 export function subscribeAuthToken(cb: TokenSubscriber): () => void {
-  tokenSubscribers.push(cb);
+  subscribers.push(cb);
+  // Llamamos inmediatamente con el valor actual:
+  cb(accessToken);
   return () => {
-    const idx = tokenSubscribers.indexOf(cb);
-    if (idx !== -1) tokenSubscribers.splice(idx, 1);
+    const idx = subscribers.indexOf(cb);
+    if (idx !== -1) subscribers.splice(idx, 1);
   };
-}
-
-// Extendemos la configuración de Axios para incluir nuestra bandera de retry
-interface CustomAxiosRequestConfig extends AxiosRequestConfig {
-  _retry?: boolean;
 }
 
 const auth: AxiosInstance = axios.create({
@@ -60,41 +76,29 @@ const auth: AxiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Interceptor de petición: añade Authorization si tenemos token
+// Interceptor de petición: añade Authorization si hay token
 auth.interceptors.request.use(
   (config) => {
-    if (access_token) {
+    if (accessToken) {
       config.headers = config.headers ?? {};
-      (config.headers as Record<string, string>)["Authorization"] =
-        `Bearer ${access_token}`;
+      (config.headers as Record<string, string>)["Authorization"] = `Bearer ${accessToken}`;
     }
     return config;
   },
   (error: AxiosError) => Promise.reject(error)
 );
 
-// Interceptor de respuestas: manejo de 401 con retry
 auth.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as CustomAxiosRequestConfig;
+    const originalReq = error.config as { _retry?: boolean; url?: string };
 
-    // Evitar retry en login
-    if (originalRequest.url?.includes("/login/usuario")) {
+    // No reintentar en login
+    if (originalReq.url?.includes("/login/usuario")) {
       return Promise.reject(error);
     }
 
-    // Retry único en caso de 401
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      originalRequest.withCredentials = true;
-
-      try {
-        return await auth.request(originalRequest);
-      } catch (err) {
-        return Promise.reject(err);
-      }
-    }
+    // Aquí podrías manejar 401 y usar getAuthToken()/renovar token, etc.
 
     return Promise.reject(error);
   }

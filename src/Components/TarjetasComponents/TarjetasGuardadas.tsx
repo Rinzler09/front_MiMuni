@@ -71,15 +71,13 @@ const TarjetasGuardadas: React.FC = () => {
     const eliminarCard = () => {
         if (tarjetaBorrar) { // si existe el hook
             tarjetaBorrar.remove();
-            console.log("Tarjeta Eliminada");
+            console.log("Tarjeta Eliminada"); 
         } else {
             console.log("No se encontro tarjeta");
         }
-
     }
 
     return (
-
 
         <div className="admin-tarjetas-container">
             <h2 className="admin-title"><br />Tarjetas Guardadas</h2>
