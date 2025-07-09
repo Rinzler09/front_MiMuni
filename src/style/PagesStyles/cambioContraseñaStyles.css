@@ -1,29 +1,29 @@
-.btn-contraseña {
-    display: grid;
-    justify-self: center;
-    /*Si no esta en un div se usa el self*/
-    border: none;
-    background-color: #f25a1f;
-    max-width: 450px;
-    margin-bottom: 90px;
-    font-weight: bold;
-    text-align: center;
-    /*El text align solo funciona con grid*/
-}
-
 .btn-contraseña:hover {
     background-color: #fa883d;
 }
 
 .form-container-contraseña {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    /*Centra los componentes internos de este div */
+    margin: auto;
+    /*centra el div como tal ya que pone un margin automatico */
     background-color: rgb(232, 231, 231);
     padding: 20px 0px;
     margin-bottom: 20px;
     border-radius: 20px;
+    max-width: fit-content;
+
 }
 
 .form-container-contraseña>div {
-    margin: 0px 19px;
+    margin: 0px auto;
+    /*este es el margin de los inputs   */
+    min-width: 80%;
+    /* Este es el width minimo de los inputs de contra  */
+    /*Es el 60% del elemento padre en el cual esta contenido */
 }
 
 .linea {
@@ -77,6 +77,7 @@ h2 {
     font-weight: 600;
     color: #1f2937;
 }
+
 p {
     font-size: 0.95rem;
     color: #4b5563;
@@ -94,6 +95,7 @@ p {
     padding: 0 0.75rem;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
+
 .form-control:focus {
     border-color: #c55d0d;
     box-shadow: 0 0 0 0.2rem rgba(197, 93, 13, 0.25);
@@ -104,15 +106,21 @@ p {
 .recaptcha-card {
     display: flex;
     align-items: center;
-    justify-content: flex-end;    /* o flex-start si lo quieres pegado a la izquierda */
-    padding: 1rem;                /* quitas el padding lateral excesivo */
+    justify-content: flex-end;
+    /* o flex-start si lo quieres pegado a la izquierda */
+    padding: 1rem;
+    /* quitas el padding lateral excesivo */
     margin-bottom: 1.5rem;
 }
 
 /* 5. Botones con hover/efecto */
 .btn-contraseña {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 90px;
+    justify-self: center;
     display: block;
-    width: 100%;
+    min-width: 20%;
     background-color: #c55d0d;
     color: #fff;
     border: none;
@@ -123,6 +131,7 @@ p {
     transition: background-color 0.3s, transform 0.2s;
     cursor: pointer;
 }
+
 .btn-contraseña:hover {
     background-color: #a0480b;
     transform: translateY(-2px);
@@ -134,15 +143,20 @@ p {
     gap: 0.75rem;
     margin-top: 1rem;
 }
+
 .code-input {
     flex: 1;
     height: 3rem;
     border-radius: 6px;
 }
+
 .validate-btn {
-    flex: 0 0 auto;    /* no crece ni encoge */
-    width: auto;       /* anula cualquier width:100% heredado */
-    min-width: 120px;  /* opcional, para que no quede demasiado pequeñito */
+    flex: 0 0 auto;
+    /* no crece ni encoge */
+    width: auto;
+    /* anula cualquier width:100% heredado */
+    min-width: 120px;
+    /* opcional, para que no quede demasiado pequeñito */
     height: 3rem;
     border-radius: 6px;
 }
@@ -160,16 +174,19 @@ p {
 
 .info-text {
     font-size: 0.9rem;
-    color: #4b5563;       /* un gris suave */
+    color: #4b5563;
+    /* un gris suave */
     line-height: 1.4;
     max-width: 90%;
-    margin: 0 auto;      /* centrado */
+    margin: 0 auto;
+    /* centrado */
 }
 
 /* Botones desactivados */
 .btn-contraseña:disabled,
 .validate-btn:disabled {
-    background-color: #cbd5e1;   /* gris suave */
+    background-color: #cbd5e1;
+    /* gris suave */
     color: #6b7280;
     cursor: not-allowed;
     transform: none;
@@ -197,6 +214,7 @@ form:has(input:disabled) {
     padding: 1rem 1rem;
     font-size: 1.125rem;
 }
+
 .btn-xl {
     padding: 0.75rem 1.5rem;
     font-size: 1.125rem;
@@ -220,42 +238,44 @@ form:has(input:disabled) {
    usando CSS Grid en cada DIV.mb-3 del formulario
    ———————————————————————————————————— */
 
-.reset-pass-container form > div.mb-3 {
+.reset-pass-container form>div.mb-3 {
     /* convertimos el wrapper en grid */
     display: grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
-      "label label"
-      "input icon"
-      "error error";
+        "label label"
+        "input icon"
+        "error error";
     gap: 0.5rem;
     align-items: center;
 }
 
-.reset-pass-container form > div.mb-3 > label.form-label {
+.reset-pass-container form>div.mb-3>label.form-label {
     grid-area: label;
-    margin: 0; /* quitamos el margin-bottom por defecto */
+    margin: 0;
+    /* quitamos el margin-bottom por defecto */
 }
 
-.reset-pass-container form > div.mb-3 > .form-control {
+.reset-pass-container form>div.mb-3>.form-control {
     grid-area: input;
     width: 100%;
 }
 
-.reset-pass-container form > div.mb-3 > span {
+.reset-pass-container form>div.mb-3>span {
     grid-area: icon;
     justify-self: end;
     align-self: center;
     cursor: pointer;
-    color: #6c757d; /* ajustar si quieres otro tono */
+    color: #6c757d;
+    /* ajustar si quieres otro tono */
 }
 
-.reset-pass-container form > div.mb-3 > span:hover {
+.reset-pass-container form>div.mb-3>span:hover {
     color: #495057;
 }
 
-.reset-pass-container form > div.mb-3 > .ErrorMessage {
+.reset-pass-container form>div.mb-3>.ErrorMessage {
     grid-area: error;
     margin: 0;
 }

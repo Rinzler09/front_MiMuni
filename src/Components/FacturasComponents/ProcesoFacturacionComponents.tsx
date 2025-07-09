@@ -5,7 +5,7 @@ import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import "../../style/PagesStyles/titulo_TablasStyle.css"
 
 import { facturaBienesInmueble } from "../../services/facturasBI";
-import { useAuth } from "../../Auth/AuthContex";
+import { useAuth } from "../../Auth/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -24,8 +24,8 @@ interface Facturas {
 
 //Interfaz recibie informacion de Bienes Inmuebles
 interface LocationState {
-  claveCat:string;
-  direccion:string;
+  claveCat: string;
+  direccion: string;
 }
 
 const ProceosFacturacion: React.FC = () => {
@@ -36,7 +36,7 @@ const ProceosFacturacion: React.FC = () => {
     setModalDetPago(false);
   };
   const { state } = useLocation() as { state: LocationState };
-  const {claveCat, direccion} = state;
+  const { claveCat, direccion } = state;
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -87,18 +87,20 @@ const ProceosFacturacion: React.FC = () => {
   /*HOOKS PARA PAGOS A DB GEOREDES*/
   const [facturas, setFacturas] = useState<Facturas[]>([]);
 
-   // Paginación
-    const [paginaActual, setPaginaActual] = useState(1);
-    const registrosPorPagina = 5;
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const registrosPorPagina = 5;
 
 
-     // Cálculo de los índices para la paginación
+  // Cálculo de los índices para la paginación
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
- 
+
 
   const { user, selectedMunicipality } = useAuth();
+
+  const token = sessionStorage.getItem("access_TKN");
 
   // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
   //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo
@@ -107,20 +109,20 @@ const ProceosFacturacion: React.FC = () => {
     const fetchFacturas = async () => {
       try {
         if (!selectedMunicipality || !user?.token) return;
-  
-        const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, user.token);
-  
+
+        const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, token);
+
         if (respuesta && Array.isArray(respuesta)) {
           setFacturas(respuesta);
         } else {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
         }
       } catch (error) {
-       //console.error("Error obteniendo registros:", error);
-      
+        //console.error("Error obteniendo registros:", error);
+
       }
     };
-  
+
     fetchFacturas();
   }, [claveCat, selectedMunicipality, user]);
 
@@ -171,7 +173,7 @@ const ProceosFacturacion: React.FC = () => {
     });
     closeCardModal();
   };
-  
+
   //Implementacion para la seleccion de checkbox en la facturas
   const [selectItems, setSelectedItems] = useState<number[]>([]);
   //vereficacion si se han seleccionado todas la facturas
@@ -180,19 +182,19 @@ const ProceosFacturacion: React.FC = () => {
   //Seleccion global de todas las facturas
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-        const allIndices = facturasActuales.map((_, index) => index);
-        setSelectedItems(allIndices);
+      const allIndices = facturasActuales.map((_, index) => index);
+      setSelectedItems(allIndices);
 
-        // Calcular el total de las facturas seleccionadas
-        const totalSum = facturasActuales.reduce((acc, item) => {
-          return acc + Number(item.total);
-        }, 0);
-        setSelectedAmount(totalSum);
-      } else {
-        setSelectedItems([]);
-        setSelectedAmount(0);
-      }
-    };
+      // Calcular el total de las facturas seleccionadas
+      const totalSum = facturasActuales.reduce((acc, item) => {
+        return acc + Number(item.total);
+      }, 0);
+      setSelectedAmount(totalSum);
+    } else {
+      setSelectedItems([]);
+      setSelectedAmount(0);
+    }
+  };
 
   //Seleccion individual de cada factura
   const handleRowSelect = (index: number) => {
@@ -202,7 +204,7 @@ const ProceosFacturacion: React.FC = () => {
     if (selectItems.includes(index)) {
       setSelectedItems(prev => prev.filter(i => i !== index));
       setSelectedAmount(prev => prev - valorNumerico);
-    }else{
+    } else {
       setSelectedItems(prev => [...prev, index]);
       setSelectedAmount(prev => prev + valorNumerico);
     }
@@ -211,10 +213,10 @@ const ProceosFacturacion: React.FC = () => {
   return (
     <div className="detalles-impuesto-container">
 
-      <div className="title" style={{textAlign:"center"}}> ESTADO DE CUENTA BIENES INMUEBLES</div>
+      <div className="title" style={{ textAlign: "center" }}> ESTADO DE CUENTA BIENES INMUEBLES</div>
 
       <h2 className="subTitles">Datos del Inmueble</h2>
-     
+
       <table className="details-table">
         <thead>
           <tr>
@@ -227,54 +229,54 @@ const ProceosFacturacion: React.FC = () => {
           <tr>
             <td style={{ textAlign: "center" }} >{claveCat}</td>
             <td style={{ textAlign: "center" }}>0801-2001-03973</td>
-            <td  style={{textAlign: "center"}}>{direccion}</td>
+            <td style={{ textAlign: "center" }}>{direccion}</td>
           </tr>
-        
-         
+
+
         </tbody>
       </table>
 
-      <br/>
+      <br />
 
-      
-      <br/>
+
+      <br />
 
       {/* Datos de las Tablas*/}
       <table className="details-table">
         <thead>
           <tr>
-            <th><input type="checkbox" checked={allSelected} onChange={handleSelectAll}  /></th>
+            <th><input type="checkbox" checked={allSelected} onChange={handleSelectAll} /></th>
             <th>N° Factura</th>
-                <th>Fecha Vence</th>
-                <th>Descripción</th>
-                <th>Subtotal</th>
-                <th>Desc. P.P</th>
-                <th>Desc. ADM</th>
-                <th>Desc. AMN</th>
-                <th>Ajuste</th>
-                <th>Valor Pagado</th>
-                <th>Total</th>
+            <th>Fecha Vence</th>
+            <th>Descripción</th>
+            <th>Subtotal</th>
+            <th>Desc. P.P</th>
+            <th>Desc. ADM</th>
+            <th>Desc. AMN</th>
+            <th>Ajuste</th>
+            <th>Valor Pagado</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
           {loading}
-          
-          {facturasActuales.map((item, index) =>(
+
+          {facturasActuales.map((item, index) => (
             <tr key={index}>
-            <td style={{textAlign:"center"}}><input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
-            <td style={{textAlign:"center"}}>{item.numFactura}</td>
-            <td style={{textAlign:"center"}}>{item.fechaVence}</td>
-            <td style={{textAlign:"center"}}>{item.descripcion}</td>
-            <td style={{textAlign:"center"}}>L{item.subtotal}</td>
-            <td style={{textAlign:"center"}}>L{item.descPP} </td>
-            <td style={{textAlign:"center"}}>L{item.descADM}</td>
-            <td style={{textAlign:"center"}} >L{item.descAMN}</td>
-            <td style={{textAlign:"center"}}>L{item.ajuste}</td>
-            <td style={{textAlign:"center"}}>L{item.valorPagado}</td>
-            <td style={{textAlign:"center"}}>L{item.total}</td>
-          </tr>
-          )) }
+              <td style={{ textAlign: "center" }}><input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
+              <td style={{ textAlign: "center" }}>{item.numFactura}</td>
+              <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
+              <td style={{ textAlign: "center" }}>{item.descripcion}</td>
+              <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
+              <td style={{ textAlign: "center" }}>L{item.descPP} </td>
+              <td style={{ textAlign: "center" }}>L{item.descADM}</td>
+              <td style={{ textAlign: "center" }} >L{item.descAMN}</td>
+              <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
+              <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
+              <td style={{ textAlign: "center" }}>L{item.total}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
@@ -323,7 +325,7 @@ const ProceosFacturacion: React.FC = () => {
           Pagar
         </Link>
 
-        
+
       </div>
 
       {/* Modal de advertencia */}
@@ -564,7 +566,7 @@ const ProceosFacturacion: React.FC = () => {
                   type="text"
                   placeholder="Nombre completo"
                   onChange={handleCardNameChange}
-                  onFocus={() => setIsBackView(false)}/>
+                  onFocus={() => setIsBackView(false)} />
                 <button
                   type="button"
                   className="button-continue"

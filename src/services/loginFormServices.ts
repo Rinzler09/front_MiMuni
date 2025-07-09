@@ -1,8 +1,8 @@
-// src/services/loginFormServices.ts
+//Codigo Revisado por MP
+
 import { toast } from "sonner";
 import auth from "../Auth/auth";
 import { mensajes } from "../util/message";
-import type { AxiosResponseHeaders } from "axios";
 import { MdCheckCircle } from 'react-icons/md';
 import React from "react";
 
@@ -23,9 +23,9 @@ interface LoginResult {
   municipalidades?: string[];
 }
 
-const interpretarMensaje = (
+const interpretarMensaje = ( //esta funcion se usa para mandar mostrar mensajes al frontend segun los mensajes que vienen del backend ya que no se puede mostrar el mismo mensaje
   mensajeBackend: string
-): { mensaje: string; tipo: "success" | "error" | "info" | "post" } => {
+): { mensaje: string; tipo: string } => {
   const clave = mensajeBackend.toLowerCase();
   for (const key in mensajes) {
     if (clave.includes(key)) {
@@ -35,70 +35,62 @@ const interpretarMensaje = (
   return { mensaje: mensajeBackend, tipo: "success" };
 };
 
-export const login = async (
+export const login = async ( //funcion login la cual sirve para validar credenciales
   email: string,
   password: string
 ): Promise<LoginResult> => {
   try {
     const response = await auth.post<LoginResponse>(
-      API_URL,
-      { email, password },
-      { validateStatus: (s) => s >= 200 && s < 500 }
+      API_URL, //endpoint por el cual se consume la API
+      { email, password }, //payload
+      { validateStatus: (s) => s >= 200 && s < 500 } //opcion para validar estados
     );
 
-    // Encabezado
-    const headers = response.headers as AxiosResponseHeaders;
+    //obtengo el token y el tipo de la respuesta
+    const [type, token] = response.headers.authorization?.split(' ') ?? [];
+    const acc_TKN = type === 'Bearer' ? token : undefined; // si el tipo es Bearer entonces el valor de token pasa a acc_TKN
+    //console.log("Este es el type: ", type);
+    //console.log("Este es el token: ", acc_TKN);
 
-    const viaGet = headers.get("authorization") ?? headers.get("Authorization");
-
-    const rawIndex = (response.headers as Record<string, unknown>)["authorization"]
-      ?? (response.headers as Record<string, unknown>)["Authorization"];
-
-    // Normaliza a string | null
-    const rawHeader: string | null =
-      typeof viaGet === "string" ? viaGet :
-      typeof rawIndex === "string" ? rawIndex :
-      null;
-
-    //Extrae sólo el token, quitando "Bearer "
-    const accessToken: string | undefined =
-      rawHeader?.startsWith("Bearer ")
-        ? rawHeader.slice(7)
-        : rawHeader ?? undefined;
-
-    // DEBUG: Verifica en consola
-    console.log("JWT extraído:", accessToken);
 
     // Si 401, credenciales inválidas
     if (response.status === 401) {
       toast.error(mensajes["credenciales incorrectas"].mensaje);
       return {
-        success: false,
-        message: mensajes["credenciales incorrectas"].mensaje,
+        success: false,//parametro que si es true se utiliza para establecer datos iniciales en hook de usuario
+        message: mensajes["credenciales incorrectas"].mensaje, //se utiliza la llave para obtener el valor del objeto mensajes 
       };
     }
 
-    // Desestructura body
+    // Desestructura body de la respuesta del backend
     const { message, user, municipalidades } = response.data;
-    const { mensaje, tipo } = interpretarMensaje(message);
+    const { mensaje, tipo } = interpretarMensaje(message); //se obtiene el mensaje y se desestructura del diccionario el mensaje y el tipo
 
-    if (tipo === "error") {
+    if (tipo === "error") {//en caso que el tipo en el diccionario sea un error
       toast.error(mensaje);
       return { success: false, message };
     }
 
-    if (tipo === "info") { // En caso de que sea exitoso 
+    if (tipo === "infoPwdTemporal") { // En caso de que este intentando activar cuenta con contra temporal
       toast.info(mensaje);
       return {
-        success: true, isTemporaryPassword: true, correo: user, message, access_token: accessToken,};
+        success: true, isTemporaryPassword: true, correo: user, message, access_token: acc_TKN,
+      };
     }
 
-    // Éxito normal
-    toast.success( mensajes['Tus credenciales son correctas.']?.mensaje || 'Tus credenciales son correctas.',{ description: '¡Bienvenido de nuevo!',
-      icon: React.createElement(MdCheckCircle, {style: {color: "green", fontSize: "1.2em"}})
+    // En caso de que el login sea exitoso entonces se personaliza un toast y 
+    // se devuelve un objeto al TSX
+    toast.success(mensajes['Tus credenciales son correctas.']?.mensaje || 'Tus credenciales son correctas.', {
+      description: '¡Bienvenido de nuevo!',
+      icon: React.createElement(MdCheckCircle, { style: { color: "green", fontSize: "1.2em" } })
     })
     return {
-      success: true, isTemporaryPassword: false, correo: user, message, municipalidades, access_token: accessToken,
+      success: true,
+      isTemporaryPassword: false,
+      correo: user,
+      message,
+      municipalidades,
+      access_token: acc_TKN,
     };
   } catch (error: any) {
     const errorMessage =

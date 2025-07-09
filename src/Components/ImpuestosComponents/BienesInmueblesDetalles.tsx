@@ -7,7 +7,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 import { clavesCatastrales } from "../../services/claveCatastral";
 import { facturaBienesInmueble } from "../../services/facturasBI";
-import { useAuth } from "../../Auth/AuthContex";
+import { useAuth } from "../../Auth/AuthContext";
 
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
 import "../../style/PagesStyles/titulo_TablasStyle.css";
@@ -27,7 +27,8 @@ interface Claves {
 const DetallesImpuesto: React.FC = () => {
   const navigate = useNavigate();
   const { user, selectedMunicipality } = useAuth();
-  const token = user?.token;
+  // const token = user?.token;
+  const token = sessionStorage.getItem("access_TKN");
 
   const [claves, setClaves] = useState<Claves[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,7 +112,7 @@ const DetallesImpuesto: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
-     
+
       <h2 className="title" style={{ textAlign: "center" }}>
         LISTADO DE BIENES INMUEBLES
       </h2>
@@ -128,35 +129,35 @@ const DetallesImpuesto: React.FC = () => {
           {loading
             // Mientras carga, mostramos skeletons
             ? Array.from({ length: registrosPorPagina }).map((_, i) => (
-                <tr key={i}>
-                  {Array.from({ length: 9 }).map((__, j) => (
-                    <td key={j} style={{ textAlign: "center" }}>
-                      <Skeleton height={20} />
-                    </td>
-                  ))}
-                </tr>
-              ))
+              <tr key={i}>
+                {Array.from({ length: 9 }).map((__, j) => (
+                  <td key={j} style={{ textAlign: "center" }}>
+                    <Skeleton height={20} />
+                  </td>
+                ))}
+              </tr>
+            ))
             // Una vez cargado, los datos reales
             : registrosActuales.map((item, i) => (
-                <tr key={i}>
-                  <td style={{ textAlign: "center" }}>{item.prop}</td>
-                  <td style={{ textAlign: "center" }}>{item.claveCat}</td>
-                  <td style={{ textAlign: "center" }}>L{item.valorImp}</td>
-                  <td style={{ textAlign: "center" }}>{item.uso}</td>
-                  <td style={{ textAlign: "center" }}>{item.subUso}</td>
-                  <td style={{ textAlign: "center" }}>{item.aldea}</td>
-                  <td style={{ textAlign: "center" }}>{item.barrio}</td>
-                  <td style={{ textAlign: "center" }}>{item.direccion}</td>
-                  <td>
-                    <button
-                      className="btnFacturas"
-                      onClick={() => handleVerFacturas(item.claveCat, item.direccion)}
-                    >
-                      Facturas
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              <tr key={i}>
+                <td style={{ textAlign: "center" }}>{item.prop}</td>
+                <td style={{ textAlign: "center" }}>{item.claveCat}</td>
+                <td style={{ textAlign: "center" }}>L{item.valorImp}</td>
+                <td style={{ textAlign: "center" }}>{item.uso}</td>
+                <td style={{ textAlign: "center" }}>{item.subUso}</td>
+                <td style={{ textAlign: "center" }}>{item.aldea}</td>
+                <td style={{ textAlign: "center" }}>{item.barrio}</td>
+                <td style={{ textAlign: "center" }}>{item.direccion}</td>
+                <td>
+                  <button
+                    className="btnFacturas"
+                    onClick={() => handleVerFacturas(item.claveCat, item.direccion)}
+                  >
+                    Facturas
+                  </button>
+                </td>
+              </tr>
+            ))}
 
           {!loading && claves.length === 0 && (
             <tr>
@@ -171,8 +172,8 @@ const DetallesImpuesto: React.FC = () => {
       {pagsTotales > 1 && !loading && (
         <div className="pagination">
           {Array.from({ length: pagsTotales }, (_, i) => (
-            <button key={i+1} onClick={() => handleCambioPag(i+1)}>
-              {i+1}
+            <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
+              {i + 1}
             </button>
           ))}
         </div>

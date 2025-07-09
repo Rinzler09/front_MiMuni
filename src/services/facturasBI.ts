@@ -5,7 +5,7 @@ const API_URL = "/facturasBI/consulta";
 export const facturaBienesInmueble = async (
   municipalidad: string,
   claveCat: string,
-  token: string
+  token: string | null
 ) => {
   try {
     const response = await auth.post(

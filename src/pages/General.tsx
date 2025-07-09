@@ -1,8 +1,13 @@
-import React, { FC, Suspense } from 'react'
-import { useParams } from 'react-router-dom';
+import React, { FC, Suspense, useEffect } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../Components/LayoutComponents/Sidebar'
 import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
+import { useAuth } from '../Auth/AuthContext';
+import { useSessionTimeout } from '../hook/UseSessionTimeout';
+//me quede por aqui ya que sera aqui en donde se implementara la logica 
+// de los eventos mas la logica de las modales
+
 
 // Definimos una interfaz para mapear los tipos de servicios a sus componentes correspondientes.
 interface Components {
@@ -41,12 +46,44 @@ const Components: Components = {
 };
 
 const General: FC = () => {
+
     // Extraemos el parámetro "tipo" de la URL, por ejemplo: /impuesto-bienes-inmuebles
     const { tipo } = useParams<{ tipo: string }>();
-    console.log(tipo);
+    //console.log("Este es el tipo en general.tsx, ", tipo);
 
     // Buscamos el componente correspondiente al servicio solicitado.
     const Componente = tipo ? Components[tipo] : null;
+
+
+    //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    // const { refreshToken } = useAuth();
+
+    //Se configura el hook de sesion con callbacks
+    const { Modals, initializeRFSession } = useSessionTimeout({//se importan las modales del sesionTimeOut y tambien la funcion resetSession la 
+        // cual limpia y reprograma sus timers basados en el atributo "exp" del JWT lo cual reinicia el reloj de advertencia cuando el 
+        // usuario tiene interaccion con la pantalla
+
+        // onRefresh: refreshToken, //onRefresh se ejecutara la funcion para refrescar el token llamada refreshToken
+        onExpire: () => {
+            if (location.pathname !== '/') navigate('/'); //si expira la sesion y la ruta actual es diferente a index entonces navega al index  
+        },
+        isOTimeSession: false,
+    });
+
+    useEffect(() => {
+        const events = ["mousemove", "mousedown", "keydown", "touchstart", "scroll"] as const; //se añade as const para que TS 
+        // infiera una tupla de literales en lugar de un arreglo tipo string "string[]" generico por ende ahora events es inmutable 
+        // no se puede alterar ya que es de tipo readonly definiendolo como "as const"
+        const onActivity = () => initializeRFSession(); //cada vez que ocurra uno de los eventos de "events" llamamos a
+        //  resetSessionTimers que vuelve a programar los warnings  
+        events.forEach(e => window.addEventListener(e, onActivity));//se añade un event listener para que ejecute la funcion onActivity con cada uno de los eventos definidos
+        //sintaxis de addEventListener = addEventListener(eventName, handler o funcion que se ejecutara con ese evento)
+        return () => events.forEach(e => window.removeEventListener(e, onActivity)); //esto garantiza que no queden listeners colgados en memoria después de que el componente sea desmontado
+    }, [initializeRFSession]); //resetSessionTimers no cambiara a menos de que una de sus dependencias internas cambien ya que usa useCallback
+    //los timers internos de la funcion son los que cambian la funcion de resetSessionTimers como tal no
 
     return (
         <div>
@@ -62,6 +99,7 @@ const General: FC = () => {
                     }
                 </Suspense>
             </div>
+            {Modals} {/* Este hook se coloca al final del render para que las advertencias o expiraciones aparezcan sobre el layout*/}
         </div>
     )
 }

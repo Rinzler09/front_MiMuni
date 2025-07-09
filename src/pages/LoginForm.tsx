@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import type { confirmacionLogin } from "../types/generalForm";
 
 // AuthContext para almacenar datos de usuario
-import { useAuth } from "../Auth/AuthContex";
+import { useAuth } from "../Auth/AuthContext";
 
 // Iconos
 import { FaRegUser } from "react-icons/fa";
@@ -25,11 +25,11 @@ import slide2 from "../../public/img/muni.png";
 import slide3 from "../../public/img/muni.png";
 
 const slides = [
-  { image: slide1, description: "Bienvenido, estamos en compromiso y servicio a la comunidad."},
-  
+  { image: slide1, description: "Bienvenido, estamos en compromiso y servicio a la comunidad." },
+
   { image: slide2, description: " Bienvenido, estamos cerca de ti, al servicio de toda la comunidad." },
-  
-  { image: slide3, description: "Bienvenido, su voz, nuestra guía, tu bienestar, nuestra meta."},
+
+  { image: slide3, description: "Bienvenido, su voz, nuestra guía, tu bienestar, nuestra meta." },
 ];
 
 const LoginForm: React.FC = () => {
@@ -68,6 +68,7 @@ const LoginForm: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const emailLowCase = email.toLocaleLowerCase();
     // Validaciones extra
     if (email.length > 50) {
       toast.error("El email no puede exceder 50 caracteres.");
@@ -77,22 +78,27 @@ const LoginForm: React.FC = () => {
       toast.error("La contraseña debe tener entre 8 y 50 caracteres, incluyendo una letra mayúscula, un número y un símbolo especial.");
       return;
     }
-    const regexNumero = /\d/;
-    const regexSimbolo = /[!@#$%^&*(),.?":{}|<>]/;
+    const regexNumero = /\d/; //regexNumero debe contener un digito entre 0-9
+    const regexSimbolo = /[!@#$%^&*()-_=+]/; //estos caracteres son los que GR usa para emitir la temp pwd
+    // lo que se puede hacer es que a la hora de reestablecer y cambiar por primera vez la contra
+    // que solo estos caracteres especiales esten disponibles.
+    //En el input textfield se debe mostrar que otros caracteres no son validos
     if (!regexNumero.test(password) || !regexSimbolo.test(password)) {
       toast.error("La contraseña debe incluir al menos un número y un símbolo especial.");
       return;
-    }
+    } //si no cumple con los parametros anteriores entonces lanza un toast de error
 
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+
+    if (isSubmitting) return; //cambia el boton de iniciando sesion para que aparezca
+    setIsSubmitting(true); //  como que esta cargando, tambien se puede implementar un loading
 
     try {
-      const data = await login(email, password);
-      //console.log("Resultado del login:", data);
+      const data = await login(emailLowCase, password);
+      console.log("Resultado del login:", data);
+      console.log("el correo, ", emailLowCase);
 
       if (data.message.toLowerCase().includes("credenciales incorrectas")) {
-        setIsSubmitting(false);
+        setIsSubmitting(false);// innecesario por los momentos
         return;
       }
 
@@ -108,18 +114,18 @@ const LoginForm: React.FC = () => {
       // Si es contraseña temporal…
       if (data.isTemporaryPassword) {
         const tokenValue = data.access_token || "";
-        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray,});
+        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray, });
         setToken(tokenValue);
-        sessionStorage.setItem("email", email);
-        sessionStorage.setItem("password", password);
-        setTimeout(() => navigate("/cambio-contraseña"), 2000);
+        sessionStorage.setItem("email", emailLowCase); //se guarda en SessionStorage para el cambio de contraseña inicial
+        sessionStorage.setItem("password", password);//se guarda en SessionStorage para el cambio de contraseña inicial
+        setTimeout(() => navigate("/cambio-contrasena"), 2000);
         return;
       }
 
-      // Condicion para las credenciales si son correctas
+      // Si se recibe success: true desde el service entonces se ejecuta este bloque de codigo
       if (data.success) {
         const tokenValue = data.access_token || "";
-        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray,});
+        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray, });
         setToken(tokenValue);
         setTimeout(() => navigate("/dashboard"), 3000);
       }
@@ -132,7 +138,7 @@ const LoginForm: React.FC = () => {
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/registrar-usuario", {state:{enviado:true}});
+    navigate("/registrar-usuario", { state: { enviado: true } });
   };
 
   const handleForgotPassword = (e: React.FormEvent) => {
@@ -143,7 +149,7 @@ const LoginForm: React.FC = () => {
   return (
     <div className="background">
       {/*<Toaster richColors position="bottom-left" />*/}
-        <Toaster closeButton position="bottom-left"/>
+      <Toaster closeButton position="bottom-left" />
       <div className="circle circle1" />
       <div className="circle circle2" />
       <div className="circle circle3" />
@@ -157,7 +163,7 @@ const LoginForm: React.FC = () => {
             <div className="col-md-5 d-none d-md-flex flex-column">
               <h2 className="titu">MiMuni en Línea</h2>
               <div className="carousel-content">
-                <img src={slides[currentSlide].image} alt={slides[currentSlide].description} className="illustration"/>
+                <img src={slides[currentSlide].image} alt={slides[currentSlide].description} className="illustration" />
                 <p className="slide-description">
                   {slides[currentSlide].description}
                 </p>
@@ -165,7 +171,7 @@ const LoginForm: React.FC = () => {
               <div className="slide-titles">
                 {slides.map((_, idx) => (
                   <span key={idx} className={`slide-title ${idx === currentSlide ? "active" : ""}`}
-                    onClick={() => setCurrentSlide(idx)}/>
+                    onClick={() => setCurrentSlide(idx)} />
                 ))}
               </div>
             </div>
@@ -187,9 +193,11 @@ const LoginForm: React.FC = () => {
                     <FaRegUser size={20} />
                   </span>
                   <input type="text" className="form-control" placeholder="Ingrese su correo electronico" required maxLength={50}
-                    {...register("email", { required: "Email obligatorio.", maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
-                      pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email inválido.",},})}
-                    value={email} onChange={e => setEmail(e.target.value)}/>
+                    {...register("email", {
+                      required: "Email obligatorio.", maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
+                      pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Email inválido.", },
+                    })}
+                    value={email} onChange={e => setEmail(e.target.value)} />
                   {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
                 </div>
 
@@ -199,8 +207,9 @@ const LoginForm: React.FC = () => {
                     <RiLockPasswordLine size={20} />
                   </span>
                   <input type={showPassword ? "text" : "password"} className="form-control" placeholder="Ingrese su contraseña" required maxLength={50}
-                    {...register("contra", { required: "Contraseña obligatoria.", maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
-                    })} value={password} onChange={e => setPassword(e.target.value)} onBlur={e => setPassword(e.target.value.trim())}/>
+                    {...register("contra", {
+                      required: "Contraseña obligatoria.", maxLength: { value: 50, message: "No puede exceder 50 caracteres." },
+                    })} value={password} onChange={e => setPassword(e.target.value)} onBlur={e => setPassword(e.target.value.trim())} />
                   <span className="input-group-text" onClick={() => setShowPassword(!showPassword)} >
                     <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
                   </span>
