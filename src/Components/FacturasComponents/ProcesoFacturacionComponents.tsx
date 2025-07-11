@@ -96,11 +96,7 @@ const ProceosFacturacion: React.FC = () => {
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
-
-
-  const { user, selectedMunicipality } = useAuth();
-
-  const token = sessionStorage.getItem("access_TKN");
+  const { user, selectedMunicipality, token } = useAuth();
 
   // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
   //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo

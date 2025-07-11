@@ -78,7 +78,7 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
         setToken(null);
         //navigate("/"); //cada pantalla debe tener su validacion del navigate                     
         //}, [navigate, onExpire]);
-    }, [navigate]);
+    }, []);
 
 
     //   Aqui se programa warningTimer, refresh y expire basandose en expTimeStamp (segundos)

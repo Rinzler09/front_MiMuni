@@ -148,8 +148,8 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className="background">
-      {/*<Toaster richColors position="bottom-left" />*/}
-      <Toaster closeButton position="bottom-left" />
+      {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast*/}
+    <Toaster closeButton position="top-right" richColors />
       <div className="circle circle1" />
       <div className="circle circle2" />
       <div className="circle circle3" />

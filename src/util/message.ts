@@ -6,7 +6,7 @@ export const mensajes: { [key: string]: { mensaje: string; tipo: string } } = {
 
   "contraseña temporal": { mensaje: "Tu contraseña temporal es correcta. Se recomienda cambiarla para mayor seguridad.", tipo: "infoPwdTemporal", },
 
-  "too many requests": { mensaje: "Has realizado muchos intentos. Espera un momento.", tipo: "error", },
+  "too many requests": { mensaje: "Has realizado muchos intentos. Espera 1 minuto.", tipo: "error", },
 
   "Contraseña correcta": { mensaje: "Tus credenciales son correctas.", tipo: "success", },
 

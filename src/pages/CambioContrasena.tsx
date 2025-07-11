@@ -28,7 +28,7 @@ const CambioContrasena: React.FC = () => {
 
   // Valores iniciales para el formulario
   const initialValues: cambioContrasena = {
-    contraseña: "",
+    contrasena: "",
     confirmaContra: "",
   };
 
@@ -54,7 +54,7 @@ const CambioContrasena: React.FC = () => {
   // }, [Modals]);
 
   // Observa el valor de la contraseña para compararla con la confirmación
-  const password = watch("contraseña");
+  const password = watch("contrasena");
   const [isChngPPwd, setIsChngPPwd] = useState(false);//hook para cambiar el texto del btn Cambio de Contra
 
   const handleContra = async (formData: cambioContrasena) => {
@@ -62,7 +62,7 @@ const CambioContrasena: React.FC = () => {
     try {
       // Envía la nueva contraseña usando el servicio
       // Cierra sesión antes de cambiar la contraseña
-      const response = await cambiarContra(formData.contraseña);
+      const response = await cambiarContra(formData.contrasena);
       if (typeof response === "object") {
         toast.success(response.message);
         setTimeout(() => setShowModalDatos(true), 500);
@@ -114,20 +114,23 @@ const CambioContrasena: React.FC = () => {
             <div className="input-group">
               <input type={showPassword ? "text" : "password"} className="form-control"
                 placeholder="Ingrese su nueva contraseña"
-                {...register("contraseña", {
+                {...register("contrasena", {
                   required: "La Nueva Contraseña es necesaria",
                   minLength: { value: 8, message: "La contraseña debe contener al menos 8 caracteres.", },
                   maxLength: { value: 50, message: "La contraseña no debe superar los 50 caracteres.", }, validate: {
                     // Valida que contenga al menos un dígito.
                     hasAtLeastOneDigit: (value: string) => {
-                      const digitCount = (value.match(/\d/g) || []).length;
-                      return (digitCount >= 1 || "La contraseña debe contener al menos un número.");
+                      const digitCount = /\d/g.test(value);
+                      return (digitCount  || "La contraseña debe contener al menos un número.");
                     },
                     // Valida que contenga EXACTAMENTE un carácter especial
                     hasOneSpecial: (value: string) => {
+                      if (/[^\w-!@#$%^&*()_=+]/.test(value)) {
+                        return "La contraseña solo puede contener estos caracteres especiales -!@#$%^&*()_=+";
+                      }
                       //const specialCount = (value.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
-                      const specialCount = (value.match(/[!@#$%^&*()-_=+]/g) || []).length;//este es el arreglo de caracteres especiales que valida el Login From
-                      return (specialCount >= 1 || "Por seguridad, la contraseña debe incluir uno o más caracteres especiales.");
+                      const specialCount = /[-!@#$%^&*()_=+]/g.test(value);//este es el arreglo de caracteres especiales que valida el Login From
+                      return (specialCount  || "Por seguridad, la contraseña debe incluir al menos uno de estos caracteres -!@#$%^&*()_=+");
                     },
                     // Valida que contenga al menos una letra mayúscula
                     hasUppercase: (value: string) => /[A-Z]/.test(value) || "La contraseña debe contener al menos una letra mayúscula.",
@@ -138,7 +141,7 @@ const CambioContrasena: React.FC = () => {
                 <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
               </span>
             </div>
-            {errors.contraseña && (<ErrorMessage>{errors.contraseña.message}</ErrorMessage>)}
+            {errors.contrasena && (<ErrorMessage>{errors.contrasena.message}</ErrorMessage>)}
           </div>
 
           {/* Campo de confirmación de contraseña */}

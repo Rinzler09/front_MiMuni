@@ -119,7 +119,8 @@ const Sidebar: React.FC<any> = ({ collapsed, onToggleSidebar }) => {
 
 
     <div>
-      <Toaster closeButton position="bottom-left" />
+       {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast*/}
+          <Toaster closeButton position="top-right" richColors />
 
       {/* Ícono de hamburguesa para móviles */}
       <div className="hamburger-icon" onClick={onToggleSidebar}>

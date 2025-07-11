@@ -26,9 +26,9 @@ interface Claves {
 
 const DetallesImpuesto: React.FC = () => {
   const navigate = useNavigate();
-  const { user, selectedMunicipality } = useAuth();
+  const { user, selectedMunicipality, token } = useAuth();
   // const token = user?.token;
-  const token = sessionStorage.getItem("access_TKN");
+  
 
   const [claves, setClaves] = useState<Claves[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +80,7 @@ const DetallesImpuesto: React.FC = () => {
     };
 
     fetchClaves();
-  }, [selectedMunicipality, token]);
+  }, [selectedMunicipality]);
 
   // Paginación
   const indUltimoReg = paginaActual * registrosPorPagina;

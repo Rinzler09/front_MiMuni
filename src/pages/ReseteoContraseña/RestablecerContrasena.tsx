@@ -29,11 +29,11 @@ const RestablecerContrasena: React.FC = () => {
     },
     isOTimeSession: true,
   });
-  // const { token } = useAuth();
-  const token = sessionStorage.getItem("access_TKN");//se guarda mendiante hook en AuthContext
+  const { token } = useAuth();//se guarda mendiante hook en AuthContext
+  
   //Valores iniciales para el formualrio 
   const initialValues: cambioContrasena = {
-    contraseña: "",
+    contrasena: "",
     confirmaContra: "",
   }
 
@@ -42,12 +42,12 @@ const RestablecerContrasena: React.FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    watch,// OJO, Validar para que funciona el watch
     formState: { errors }
   } = useForm<cambioContrasena>({ defaultValues: initialValues });
 
   //Comparar la contraseña 
-  const password = watch("contraseña");
+  const password = watch("contrasena");
   const [isRecaptchaVerified, setIsRecaptchaVerified] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isChngPwd, setIsChngPwd] = useState(false);//hook para validar si se esta restableciendo la PWD
@@ -73,7 +73,7 @@ const RestablecerContrasena: React.FC = () => {
     try {
       console.log("Lo que se envia para el backend desde el frontend:", data)
       console.log("Token desde el hadleRecuperar:", token);
-      const response = await receteoContraServices(data.contraseña, token as string);
+      const response = await receteoContraServices(data.contrasena, token as string);
 
       if (typeof response === "object") {
         //toast.success(response.message);
@@ -114,22 +114,33 @@ const RestablecerContrasena: React.FC = () => {
               type={showPassword ? "text" : "password"}
               className="form-control"
               placeholder="Ingrese nueva contraseña"
-              {...register("contraseña", {
+              {...register("contrasena", {
                 required: "La contraseña es obligatoria",
                 minLength: { value: 8, message: "la contraseña debe tener al menos 8 caracteres", },
                 maxLength: { value: 50, message: "La contraseña no debe superar los 50 caracteres", },
                 validate: {
                   //Valida que contenga al menos digito(acepto mas)
                   hasAtLeastOneDigit: (value: string) => {
-                    const digitCount = (value.match(/\d/g) || []).length;
+                    const digitCount = /\d/g.test(value);
                     return (
-                      digitCount >= 1 || "La contraseña debe contener al menos un numero."
+                      digitCount  || "La contraseña debe contener al menos un numero."
                     );
                   },
                   //Valida que contenga Existente un caracter especial
                   hasOneSpecial: (value: string) => {
-                    const specialCount = (value.match(/[!@#$%^&*()-_=+]/g) || []).length;//verificar esta linea de codigo
-                    return (specialCount >= 1 || "Por seguridad, la contraseña debe incluir uno o más caracteres especiales.");
+
+                    if (/[^\w-!@#$%^&*()_=+]/.test(value)) {//En esta condicion se utiliza para poder validar que solo acepte los caracteres permitido
+                      //que esta dentro del arreglo personalizado, es decir si el usuario agrega un caracter que esta dentro del rango y despues agrega
+                      //otro sera automaticamente invalido y le mostrarar el mensahe del return
+                      //se utilia el \w porque este equivale cualquier caracter alfanumerico(Letra mayuscula o digitos)
+                        return "La contraseña solo puede contener estos caracteres especiales -!@#$%^&*()_=+";// mensaje que retorna al momento de validar 
+                        // si encuentra otro caracter que no esta en el arreglo personalizado.
+                      }
+
+                    const specialCount = /[-!@#$%^&*()_=+]/g.test(value);//En este caso estamos usando el .test() ya que devuelve un booleano si encuentra al menos un caracter, 
+                    // que esta dentro del arreglo personalizado,
+                    return(specialCount || "Por seguridad, la contraseña debe incluir al menos uno de estos caracteres -!@#$%^&*()_=+");
+                    //Si no esta dentro del arreglo de los caracter, retornamos un return con el mensaje.
                   },
                   //Valida que contenga al menos una letra mayscula
                   hasUppercase: (value: string) =>
@@ -141,7 +152,7 @@ const RestablecerContrasena: React.FC = () => {
             <span className="input.group.text" style={{ cursor: "pointer" }} onClick={() => setShowPassword(prev => !prev)}>
               <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
             </span>
-            {errors.contraseña && (<ErrorMessage>{errors.contraseña.message}</ErrorMessage>)}
+            {errors.contrasena && (<ErrorMessage>{errors.contrasena.message}</ErrorMessage>)}
           </div>
 
 

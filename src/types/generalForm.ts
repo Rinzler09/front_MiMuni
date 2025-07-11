@@ -10,11 +10,18 @@ export type RegisterForm = Pick<registroSolicitud, 'nombrecompleto' | 'identidad
 
 // cambio de contraseñas
 export type cambioContrasena = {
-
-    contraseña: string
+    contrasena: string
     confirmaContra: string
 }
-export type cambioContra = Pick<cambioContrasena, 'contraseña' | 'confirmaContra'> & {}
+export type cambioContra = Pick<cambioContrasena, 'contrasena' | 'confirmaContra'> & {}
+
+//Cambio de contraseña para sesion
+export type resetPwdSession ={
+    contrasenaAnterior: string 
+    contrasena: string
+    confirmaContra: string
+}
+
 
 // Verificacion de login
 export type confirmacionLogin = {
