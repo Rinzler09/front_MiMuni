@@ -43,7 +43,7 @@ const RecuperarContrasena: React.FC = () => {
     setIsRecaptchaVerified(true);
   };
 
-  const { setToken } = useAuth();
+  const { setTokenOT } = useAuth();
 
 
   // Countdown para desbloquear OTP tras bloqueo
@@ -98,7 +98,7 @@ const RecuperarContrasena: React.FC = () => {
     }
     try {
       setIsSendingOTP(true);
-      const resp = await verificacioCodigoServices(emailRef.current, data.otp, setToken);
+      const resp = await verificacioCodigoServices(emailRef.current, data.otp, setTokenOT);
       console.log("El status de la respuesta de verificacioCodigoServices: ", resp?.status);
       if (resp?.status === 200) {
         // navigate('/restablecer-contrasena');

@@ -3,10 +3,10 @@ import { Navigate, Outlet } from "react-router-dom";// Libreria  de react router
 import { useAuth } from "../Auth/AuthContext";// Importamos el context de autenticacion
 
 const PrivateRoute: React.FC = () => {
-     const { token } = useAuth();// Se obtiene el usuario del context de autenticacion
+    const { token, tokenOT } = useAuth();// Se obtiene el usuario del context de autenticacion
 
-    console.log("Validacion de token en PrivateRoute, token: ", token);
-    return token ? <Outlet /> : <Navigate to="/" />;
+    console.log("Validacion de token en PrivateRoute, token: ", token || tokenOT);
+    return (token || tokenOT) ? <Outlet /> : <Navigate to="/" />;
     //se debe validar despues de 2s
 
     // return user ? <Outlet /> : <Navigate to="/" />;

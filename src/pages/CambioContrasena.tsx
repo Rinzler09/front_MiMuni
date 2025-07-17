@@ -37,12 +37,13 @@ const CambioContrasena: React.FC = () => {
   } = useForm<cambioContrasena>({ defaultValues: initialValues });
 
   const { token } = useAuth(); // Extrae el token del contexto de autenticación
+  // const location = useLocation();
 
   // const { Modals } = useSessionModal(); 
   const { Modals, handleExpire } = useSessionTimeout({ //Esto nos ayudara para las ventanas modales del temporizador
     onExpire: () => {
-      // console.log("Esta es la location de la ruta: ", location.pathname);
-      if (location.pathname === "/cambio-contrasena") { //solo navegara al indice si estamos en esta pantalla cambio contraseña ya que es en donde estamos trabajando
+      console.log("Esta es la location de la ruta: ", window.location.pathname);
+      if (window.location.pathname === "/cambio-contrasena") { //solo navegara al indice si estamos en esta pantalla cambio contraseña ya que es en donde estamos trabajando
         navigate("/");//esto redirigira al login form cuando el expireTimer llegue a 0 en useSessionTimeOut 
       }
     },
@@ -80,7 +81,7 @@ const CambioContrasena: React.FC = () => {
   const cerrar = async () => {
     try {
       console.log("entro a la funcion Cerrar la cual limpia registros y llama a handleExpire");
-      await logoutUsuario(token as string);
+      // await logoutUsuario(token as string);
       handleExpire();
       navigate("/");
       // if (location.pathname === "cambio-contraseña") { //solo navegara al indice si estamos en esta pantalla 
@@ -121,7 +122,7 @@ const CambioContrasena: React.FC = () => {
                     // Valida que contenga al menos un dígito.
                     hasAtLeastOneDigit: (value: string) => {
                       const digitCount = /\d/g.test(value);
-                      return (digitCount  || "La contraseña debe contener al menos un número.");
+                      return (digitCount || "La contraseña debe contener al menos un número.");
                     },
                     // Valida que contenga EXACTAMENTE un carácter especial
                     hasOneSpecial: (value: string) => {
@@ -130,7 +131,7 @@ const CambioContrasena: React.FC = () => {
                       }
                       //const specialCount = (value.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
                       const specialCount = /[-!@#$%^&*()_=+]/g.test(value);//este es el arreglo de caracteres especiales que valida el Login From
-                      return (specialCount  || "Por seguridad, la contraseña debe incluir al menos uno de estos caracteres -!@#$%^&*()_=+");
+                      return (specialCount || "Por seguridad, la contraseña debe incluir al menos uno de estos caracteres -!@#$%^&*()_=+");
                     },
                     // Valida que contenga al menos una letra mayúscula
                     hasUppercase: (value: string) => /[A-Z]/.test(value) || "La contraseña debe contener al menos una letra mayúscula.",

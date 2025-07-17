@@ -8,7 +8,8 @@
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 240px;
-    display: block; /* Mostrar el menú */
+    display: block;
+    /* Mostrar el menú */
 }
 
 /* Lista sin estilos por defecto */
@@ -22,7 +23,8 @@
 .dropdown-menu li {
     display: flex;
     align-items: center;
-    padding: 0px;                 /* Padding movido al enlace */
+    padding: 0px;
+    /* Padding movido al enlace */
     cursor: pointer;
     position: relative;
 }
@@ -30,14 +32,24 @@
 
 /* Enlaces ocupando todo el li */
 .menu-link {
-    display: flex;              /* Flex para icono + texto */
+    display: flex;
+    /* Flex para icono + texto */
     align-items: center;
-    width: 100%;                /* Ocupa todo el ancho */
-    height: 100%;               /* Ocupa toda la altura */
-    padding: 7px 12px;         /* Padding del ítem */
+    width: 100%;
+    /* Ocupa todo el ancho */
+    height: 100%;
+    /* Ocupa toda la altura */
+    padding: 7px 12px;
+    /* Padding del ítem */
     text-decoration: none;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: #000;
+    border-radius: 0.375rem;
+}
+
+.menu-link:hover {
+    background: #495057;
+    color: #fff;
 }
 
 /* Icono dentro del enlace */
@@ -65,4 +77,3 @@
 .tituloHeader {
     cursor: pointer;
 }
-

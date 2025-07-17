@@ -4,13 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import "../../style/ImpuestosStyles/detalleBienInmueble.css";
 import { clavesCatastrales } from "../../services/claveCatastral";
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
-
-import "../../style/ImpuestosStyles/detalleBienInmueble.css";
-import "../../style/PagesStyles/titulo_TablasStyle.css";
 import { mensajes } from "../../util/message";
 
 interface Claves {
@@ -28,7 +25,7 @@ const DetallesImpuesto: React.FC = () => {
   const navigate = useNavigate();
   const { user, selectedMunicipality, token } = useAuth();
   // const token = user?.token;
-  
+
 
   const [claves, setClaves] = useState<Claves[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +39,7 @@ const DetallesImpuesto: React.FC = () => {
       setLoading(true);
       try {
         const respuesta = await clavesCatastrales(selectedMunicipality, token);
-        console.log(" respuesta API clavesCatastrales:", respuesta);
+        // console.log(" respuesta API clavesCatastrales:", respuesta);
 
         // 1) Extraemos array: puede venir directamente o en respuesta.data
         const rawArray = Array.isArray(respuesta)

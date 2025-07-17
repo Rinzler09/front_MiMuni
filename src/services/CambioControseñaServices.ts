@@ -10,7 +10,7 @@ export const cambiarContra = async (n_psswd: string) => {
     // Obtén el correo electrónico y la contraseña vieja desde localStorage
     const email = sessionStorage.getItem("email");//se guarda en login form 
     const o_psswd = sessionStorage.getItem("password");//se guarda en login form 
-    const token = sessionStorage.getItem("access_TKN");//Se usa esta logica debido a que no se puede instancear el hook useAuth()
+    const token = sessionStorage.getItem("access_TKN_OT");//Se usa esta logica debido a que no se puede instancear el hook useAuth()
     console.log("este es el token en cambiocontraseñaservices ", token);
     if (!email) {
       throw new Error("No se encontra correo.");

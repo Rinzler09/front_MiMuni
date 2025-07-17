@@ -14,7 +14,7 @@ import "../../style/LayoutStyles/dropDown.css";
 import "../../style/LayoutStyles/header.css";
 import { useAuth } from "../../Auth/AuthContext";
 import { logoutUsuario } from "../../services/EliminacionCookie";
-import { useSessionTimeout } from "../../hook/UseSessionTimeout";
+// import { useSessionTimeout } from "../../hook/UseSessionTimeout";
 
 // Props para controlar el collapse del sidebar
 // interface HeaderProps {  //marley lo programo y no supo explicar
@@ -26,10 +26,9 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { user, token, setUser, setToken, setSelectedMunicipality } = useAuth();
-  const {handleExpire} = useSessionTimeout();
+  // const { handleExpire } = useSessionTimeout();
   const userEmail = user?.email ?? "Inicia Sesion";
   const toggleDropdown = () => setIsOpen((o) => !o);
-
 
   const handleLogout = async () => {
     try {
@@ -37,10 +36,11 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
     } catch (err) {
       console.error("Error al hacer logout:", err);
     } finally {
-      // setUser(null);
-      // setToken(null);
-      // setSelectedMunicipality(null);
-      handleExpire();
+      console.log("Entro a handleLogOut")
+      setUser(null);
+      setToken(null);
+      setSelectedMunicipality(null);
+      // handleExpire(); me genera problemas porque carga dos veces el useSessionTimeOut en la misma pantalla que es General.tsx
       navigate("/");
     }
   };
@@ -63,7 +63,7 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
 
       {/* DERECHA: notificaciones + perfil */}
       <div className="header-right">
-     
+
 
 
         <div
@@ -75,30 +75,30 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
           {isOpen && (
 
             <div className="dropdown-menu">
-              
-            <ul className="dropdown-menu-end show">
-              <li>
-                <Link to="/editar-perfil" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
-                  <FontAwesomeIcon icon={faEdit} className="menu-icon" />
-                  <span className="ms-2">Restablecer Contraseña</span>
-                </Link>
-              </li>
-              
-              <li>
-                <Link to="/historial-pagos" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
-                  <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
-                  <span className="ms-2">Historial Pagos</span>
-                </Link>
-              </li>
-               <li style={{ padding: 0 }}>
-              <span onClick={handleLogout}
-                className="menu-link" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
-              <span className="ms-2">Salir</span>
-            </span>
-             </li>
-            </ul>
-          </div>
+
+              <ul className="dropdown-menu-end show">
+                <li>
+                  <Link to="/editar-perfil" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
+                    <FontAwesomeIcon icon={faEdit} className="menu-icon" />
+                    <span className="ms-2">Restablecer Contraseña</span>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link to="/historial-pagos" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
+                    <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
+                    <span className="ms-2">Historial Pagos</span>
+                  </Link>
+                </li>
+                <li style={{ padding: 0 }}>
+                  <span onClick={handleLogout}
+                    className="menu-link" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                    <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
+                    <span className="ms-2">Salir</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
 
 
           )}

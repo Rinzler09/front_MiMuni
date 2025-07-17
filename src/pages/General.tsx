@@ -1,6 +1,6 @@
 import React, { FC, Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Sidebar from '../Components/LayoutComponents/Sidebar'
+import Sidebar from '../Components/LayoutComponents/Sidebar';
 import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
 import { useAuth } from '../Auth/AuthContext';
@@ -58,7 +58,8 @@ const General: FC = () => {
     //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
 
     const navigate = useNavigate();
-    const location = useLocation();
+    const location = useLocation();//se necesita para validar si el expireTimer se aplicara o no
+    const notGeneralLocations = ['/', '/registrar-usuario', '/enviar-codigo', '/cambio-contrasena', '/restablecer-contrasena'];//Las rutas en donde el expireTimer de General no tendra efecto
     // const { refreshToken } = useAuth();
 
     //Se configura el hook de sesion con callbacks
@@ -68,13 +69,19 @@ const General: FC = () => {
 
         // onRefresh: refreshToken, //onRefresh se ejecutara la funcion para refrescar el token llamada refreshToken
         onExpire: () => {
-            if (location.pathname !== '/') navigate('/'); //si expira la sesion y la ruta actual es diferente a index entonces navega al index  
+            // if (!notGeneralLocations.includes(location.pathname)) {
+            //     console.log("Location: ", location.pathname);
+            //     console.log("Navego a '/' ya que esta en una ruta que se carga en General.tsx")
+            navigate('/'); //si expira la sesion y la ruta actual NO es una ruta contenida en el arreglo de rutas que no se cargan en General entonces se navega al index
+            // } else {
+            //     console.log("NO navego a '/' ya que esta en una ruta que NO se carga en General.tsx")
+            // }
         },
         isOTimeSession: false,
     });
 
     useEffect(() => {
-        const events = ["mousemove", "mousedown", "keydown", "touchstart", "scroll"] as const; //se añade as const para que TS 
+        const events = ["mousemove", "keydown", "touchstart", "scroll"] as const; //se añade as const para que TS 
         // infiera una tupla de literales en lugar de un arreglo tipo string "string[]" generico por ende ahora events es inmutable 
         // no se puede alterar ya que es de tipo readonly definiendolo como "as const"
         const onActivity = () => initializeRFSession(); //cada vez que ocurra uno de los eventos de "events" llamamos a

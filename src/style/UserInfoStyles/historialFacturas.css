@@ -18,8 +18,8 @@
     margin-top: 65px;
 }
 
-.buttonReset{
-    background-color: #D65D00 ;
+.buttonReset {
+    background-color: #D65D00;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;
@@ -28,23 +28,24 @@
     margin-left: 10px;
 }
 
-.buttonReset:hover{
+.buttonReset:hover {
     background-color: #efefef;
     color: black;
 }
 
 
-.buttonInvoices{
+.buttonInvoices {
     background-color: #D65D00;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;
-    cursor: pointer;;
+    cursor: pointer;
+    ;
     color: white;
     margin-left: 13px;
 }
 
-.buttonInvoices:hover{
+.buttonInvoices:hover {
     background-color: #efefef;
     color: black;
 }
@@ -59,10 +60,10 @@
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 20px;
-    
+
 }
 
-.date-range-filter{
+.date-range-filter {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -92,3 +93,78 @@
     margin-right: 10px;
 }
 
+/* Se utilizara estas reglas CSS para la tabla que se cargue en historial Facturas */
+
+
+.details-table {
+    width: 101%;
+    max-width: 950px;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.details-table th {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 12px;
+
+}
+
+.details-table td {
+    padding: 10px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 11px;
+}
+
+
+.details-table th {
+    background-color: #9b3900;
+    color: white;
+    text-align: center;
+}
+
+.details-table tr:hover {
+    background-color: #f0f0f0;
+
+}
+
+.details-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.column {
+    width: 30%;
+    /*Toma el 30% del ancho de la pantalla*/
+}
+
+.column label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.column p {
+    margin: 0;
+    padding: 5px 0;
+    border-bottom: 1px dashed #ddd;
+    color: #333;
+}

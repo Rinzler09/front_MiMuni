@@ -52,6 +52,8 @@ interface AuthContextProps { //en esta interfaaz se definen todos los valores y 
     setUser: Dispatch<SetStateAction<User | null>>; //el respectivo setter para el valor del user
     token: string | null; //el valor de token
     setToken: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor del token
+    tokenOT: string | null; //el valor de token
+    setTokenOT: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor del token
     selectedMunicipality: string | null;//el valor de selectedMunicipality
     setSelectedMunicipality: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor de selectedMunicipality 
     logout: () => void; // función para cerrar sesión y limpiar todo el estado de autenticación.
@@ -69,6 +71,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         useSessionStorageState<User | null>("userPayload", null);
     const [token, setToken] =
         useSessionStorageState<string | null>('access_TKN', null);//hook para guardar estado en session storage
+    const [tokenOT, setTokenOT] =
+        useSessionStorageState<string | null>('access_TKN_OT', null);//hook para guardar estado en session storage
     const [selectedMunicipality, setSelectedMunicipality] =
         useSessionStorageState<string | null>("selectedMunicipality", null);
 
@@ -135,6 +139,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setUser,
                 token,
                 setToken,
+                tokenOT,
+                setTokenOT,
                 selectedMunicipality,
                 setSelectedMunicipality,
                 logout,

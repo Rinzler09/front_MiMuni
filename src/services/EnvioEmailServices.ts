@@ -27,7 +27,7 @@ export const correoRecuperacionContrasenia = async (email: string) => {
 
 //En esta funcion verificaremos si el codigo es autentico
 
-export const verificacioCodigoServices = async (email: string, otp: string, setToken: (t: string) => void): Promise<any> => {
+export const verificacioCodigoServices = async (email: string, otp: string, setTokenOT: (t: string) => void): Promise<any> => {
 
     try {
         const response = await auth.post(
@@ -41,7 +41,7 @@ export const verificacioCodigoServices = async (email: string, otp: string, setT
             const newToken = authHeader.startsWith("Bearer") ? authHeader.slice(7) : authHeader;
             console.log("VerificacionOTP token recibido en header", newToken);//estas obteniendo el token de forma correcta BACATLAN
             //setAuthToken(newToken);//este hook es especifico para auth.ts ya que se debe guardar en memoria tambien el token y en auth.ts se guarda en memoria
-            setToken(newToken);//se usa el hook de contexto el que se define en AuthContext para que el nuevo token sea guardado
+            setTokenOT(newToken);//se usa el hook de contexto el que se define en AuthContext para que el nuevo token sea guardado
             // directamente en ese mismo estado - se caracteriza porque al guardar el token usando useSessionStorage se guarda con ""
             //console.log("El token que se establecio en el OTP, ", newToken); si se esta estableciendo bien
         }

@@ -50,7 +50,7 @@ const LoginForm: React.FC = () => {
 
   //Verificacion de token
   const navigate = useNavigate();
-  const { setUser, setToken } = useAuth();
+  const { setUser, setToken, setTokenOT } = useAuth();
 
   // React Hook Form
   const {
@@ -114,8 +114,8 @@ const LoginForm: React.FC = () => {
       // Si es contraseña temporal…
       if (data.isTemporaryPassword) {
         const tokenValue = data.access_token || "";
-        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray, });
-        setToken(tokenValue);
+        // setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray, });
+        setTokenOT(tokenValue);
         sessionStorage.setItem("email", emailLowCase); //se guarda en SessionStorage para el cambio de contraseña inicial
         sessionStorage.setItem("password", password);//se guarda en SessionStorage para el cambio de contraseña inicial
         setTimeout(() => navigate("/cambio-contrasena"), 2000);
@@ -149,7 +149,7 @@ const LoginForm: React.FC = () => {
   return (
     <div className="background">
       {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast*/}
-    <Toaster closeButton position="top-right" richColors />
+      <Toaster closeButton position="top-right" richColors />
       <div className="circle circle1" />
       <div className="circle circle2" />
       <div className="circle circle3" />

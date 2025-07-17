@@ -1,6 +1,6 @@
 // src/Pages/CambioContraseña.tsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../../style/PagesStyles/cambioContraseñaStyles.css";
 import type { cambioContrasena } from "../../types/generalForm";
 import ErrorMessage from "../../Components/ErrorMessage.tsx/MostrarMensajesError";
@@ -17,20 +17,21 @@ import { useSessionTimeout } from "../../hook/UseSessionTimeout";
 
 const RestablecerContrasena: React.FC = () => {
   const navigate = useNavigate();
+  // const location = useLocation();
   //const { token, logout } = useAuth(); //Extrae el token del context de autenticacion
   //console.log("Token desde RestablecerContra:",token);
   // const token = sessionStorage.getItem("access_TKN");
   const { Modals } = useSessionTimeout({
     onExpire: () => {
-      // console.log("Esta es la location de la ruta: ", location.pathname);
-      if (location.pathname === "/restablecer-contrasena") { //solo navegara al indice si estamos en esta pantalla cambio contraseña ya que es en donde estamos trabajando
+      console.log("Esta es la location de la ruta: ", window.location.pathname);
+      if (window.location.pathname === "/restablecer-contrasena") { //solo navegara al indice si estamos en esta pantalla cambio contraseña ya que es en donde estamos trabajando
         navigate("/");//esto redirigira al login form cuando el expireTimer llegue a 0 en useSessionTimeOut 
       }
     },
     isOTimeSession: true,
   });
-  const { token } = useAuth();//se guarda mendiante hook en AuthContext
-  
+  const { tokenOT } = useAuth();//se guarda mendiante hook en AuthContext
+
   //Valores iniciales para el formualrio 
   const initialValues: cambioContrasena = {
     contrasena: "",
@@ -55,9 +56,9 @@ const RestablecerContrasena: React.FC = () => {
   //Funcion para poder cambiar la pagina al login
   const navegacionLogin = async () => {
     try {
-      await logoutUsuario(token as string);
+      // await logoutUsuario(token as string); esta pantalla no usa cookie de refreshToken
       console.log("entro en logout");
-      sessionStorage.removeItem("access_TKN");
+      sessionStorage.removeItem("access_TKN_OT");
       navigate("/");
 
     } catch (error) {
@@ -72,8 +73,8 @@ const RestablecerContrasena: React.FC = () => {
     setIsChngPwd(true);
     try {
       console.log("Lo que se envia para el backend desde el frontend:", data)
-      console.log("Token desde el hadleRecuperar:", token);
-      const response = await receteoContraServices(data.contrasena, token as string);
+      console.log("Token desde el hadleRecuperar:", tokenOT);
+      const response = await receteoContraServices(data.contrasena, tokenOT as string);
 
       if (typeof response === "object") {
         //toast.success(response.message);
@@ -123,7 +124,7 @@ const RestablecerContrasena: React.FC = () => {
                   hasAtLeastOneDigit: (value: string) => {
                     const digitCount = /\d/g.test(value);
                     return (
-                      digitCount  || "La contraseña debe contener al menos un numero."
+                      digitCount || "La contraseña debe contener al menos un numero."
                     );
                   },
                   //Valida que contenga Existente un caracter especial
@@ -133,13 +134,13 @@ const RestablecerContrasena: React.FC = () => {
                       //que esta dentro del arreglo personalizado, es decir si el usuario agrega un caracter que esta dentro del rango y despues agrega
                       //otro sera automaticamente invalido y le mostrarar el mensahe del return
                       //se utilia el \w porque este equivale cualquier caracter alfanumerico(Letra mayuscula o digitos)
-                        return "La contraseña solo puede contener estos caracteres especiales -!@#$%^&*()_=+";// mensaje que retorna al momento de validar 
-                        // si encuentra otro caracter que no esta en el arreglo personalizado.
-                      }
+                      return "La contraseña solo puede contener estos caracteres especiales -!@#$%^&*()_=+";// mensaje que retorna al momento de validar 
+                      // si encuentra otro caracter que no esta en el arreglo personalizado.
+                    }
 
                     const specialCount = /[-!@#$%^&*()_=+]/g.test(value);//En este caso estamos usando el .test() ya que devuelve un booleano si encuentra al menos un caracter, 
                     // que esta dentro del arreglo personalizado,
-                    return(specialCount || "Por seguridad, la contraseña debe incluir al menos uno de estos caracteres -!@#$%^&*()_=+");
+                    return (specialCount || "Por seguridad, la contraseña debe incluir al menos uno de estos caracteres -!@#$%^&*()_=+");
                     //Si no esta dentro del arreglo de los caracter, retornamos un return con el mensaje.
                   },
                   //Valida que contenga al menos una letra mayscula

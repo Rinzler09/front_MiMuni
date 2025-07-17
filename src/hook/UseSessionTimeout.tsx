@@ -5,11 +5,12 @@
 // 3) Gestionar la expiración definitiva con handleExpire, que borra el storage, oculta el warning, llama a el callback onExpire y limpia el estado.
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "../Components/ModalComponents/modalComponent";
 import { jwtDecode } from "jwt-decode";
 import { getAuthToken } from "../Auth/auth";
 import { useAuth } from "../Auth/AuthContext";
+import { logoutUsuario } from "../services/EliminacionCookie";
 
 
 // const decoded = jwtDecode(token);
@@ -36,7 +37,7 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
     const [countdown, setCountdown] = useState(0);            // Segundos restantes
     const [isOTSession, setIsOTSession] = useState(false); // hook para manejar mensaje de ventana modal
     const [canRenewTKN, setCanRenewTKN] = useState(true); // hook para la logica de renovacion del TKN 
-    const { refreshToken, setToken, token } = useAuth();
+    const { refreshToken, tokenOT, token } = useAuth();
 
     //   Refs permiten:
     //   Guardar el timer sin que se reinicie al renderizar el componente.
@@ -49,12 +50,15 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
     // const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const expireTimer = useRef<ReturnType<typeof setTimeout> | null>(null); //este es el hook con el temporizador para salir de la sesion al login form
     const countdownInterval = useRef<ReturnType<typeof setInterval> | null>(null); //este es el hook con el temporizador dentro del warningTimer que actura como contador
-
+    // const location = useLocation();
 
 
     const clearAll = () => {// se declara una funcion que se utilizara para cancelar todos los temporizadores activos
         [warningTimer, /*refreshTimer,*/ expireTimer].forEach(ref => {//forEach crea un arreglo con las tres refs de los setTimeout y recorre cada una
-            if (ref.current) clearTimeout(ref.current);         // si la ref tiene un timeout activo, lo cancela con clearTimeOut
+            if (ref.current) {
+                clearTimeout(ref.current);         // si la ref tiene un timeout activo, lo cancela con clearTimeOut
+                //console.log("Se limpio esta ref: ", ref);
+            }
             ref.current = null;                                  // Luego le pone null a la referencia especifica para simbolizar que no hay ningun temporizador
         });
         if (countdownInterval.current) {                       // Comprueba si hay un setInterval activo (para el contador de segundos de la advertencia).
@@ -64,26 +68,58 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
     };
 
     const handleExpire = useCallback(() => {
+        const notGeneralLocations = ['/', '/registrar-usuario', '/enviar-codigo', '/cambio-contrasena', '/restablecer-contrasena'];//Las rutas en donde el expireTimer de General no tendra efecto
+        const newToken = sessionStorage.getItem("access_TKN");
         console.log("Entro a Handle Expire");
+
+        if (!isOTimeSession) { //Si no esta en una pantalla que sea de One Time Session entonces se ejecuta
+            //  este bloque y esto es debido a que las One Time Sessions no usan rfToken
+            const removeRF_TKN = async () => {//Intenta remover el refreshToken
+                if (newToken) {
+                    try {
+                        await logoutUsuario(newToken as string);
+                    } catch (err) {
+                        console.log("Error al hacer logout para remover el RF_Token:", err);
+                    }
+                } else {
+                    console.log("No hay Refresh Token que remover")
+                }
+            }
+            removeRF_TKN();
+
+            if (!notGeneralLocations.includes(window.location.pathname)) {
+                console.log("Location: ", window.location.pathname);
+                if (onExpire) onExpire();
+                console.log("Navego a '/' ya que esta en una ruta que se carga en General.tsx")
+            } else {
+                console.log("NO navego a '/' ya que esta en una ruta que NO se carga en General.tsx")
+            }
+        } else {
+            console.log("Se ejecuto onExpire sin la validacion de GeneralLocations debido a que es una isOtimeSession")
+            //De igual forma las pantallas que sean una isOtimeSession siempre deben ejecutar el onExpire
+            if (onExpire) onExpire();
+            sessionStorage.removeItem("access_TKN_OT");
+            sessionStorage.removeItem("email");//este existe en cambio de contraseña inicial
+            sessionStorage.removeItem("password");//este existe en cambio de contraseña inicial
+            return;
+        }
+
         sessionStorage.removeItem("access_TKN");//este existe en cambio de contraseña inicial y reseteo de contraseña
-        sessionStorage.removeItem("email");//este existe en cambio de contraseña inicial
-        sessionStorage.removeItem("password");//este existe en cambio de contraseña inicial
         sessionStorage.removeItem("userPayload");//este existe en cambio de contraseña inicial
         sessionStorage.removeItem("selectedMunicipality");//este existe en general y se le agrega valor cuando selecciona una Muni
         clearAll();// Limpia todos los timers
         setShowWarning(false);// Oculta warning
         setIsOTSession(false);//hook para mostrar que es sesion de uso Unico para el boton de la modal
         setCanRenewTKN(false); // una vez cerrada la sesion no se puede renovar el token 
-        if (onExpire) onExpire();                            // Llama callback de expire que hace lo que se programa desde cualquier otra parte de la app
-        setToken(null);
+        // if (onExpire) onExpire();                            // Llama callback de expire que hace lo que se programa desde cualquier otra parte de la app
+        // setToken(null);
         //navigate("/"); //cada pantalla debe tener su validacion del navigate                     
-        //}, [navigate, onExpire]);
     }, []);
-
 
     //   Aqui se programa warningTimer, refresh y expire basandose en expTimeStamp (segundos)
     const initializeOTSession = useCallback((expTKN_s: number) => {
         console.log("Entro a initializeOTSession");
+        setIsOTSession(true);
         clearAll(); //llama a la funcion para limpiar los timers
         const timeNow_ms = Date.now(); //obtiene la hora actual en ms
         //console.log("el tiempo ahora: ", now); // devuelve algo asi el tiempo ahora:  1750265541964 ms la fecha de hoy en ms
@@ -93,6 +129,7 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
         //console.log("Tiempo restante para que expire el token en ms: ", timeToExp_ms);//muestra 10 min en ms
 
         if (timeToExp_ms <= 0) { //si el token ya expiro
+            console.log("timeToExp_ms <= 0");
             handleExpire(); //con esta funcion se fuerza la expiracion
             return;
         }
@@ -103,7 +140,6 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
         if (warningOffset_ms > 0) { // si todavia falta tiempo para que expire el token, programa un warning
             warningTimer.current = setTimeout(() => { //Guarda en la ref en un setTimeout para ejecutar lo siguiente justo al llegar a ese offset, es decir cuando falten 2 minutos.
                 setShowWarning(true); //Muestra la modal de advertencia ("¿Sigues ahí?").
-                setIsOTSession(true);
                 console.log("Ahora Deberia mostrar modal de estas ahi?");
 
                 countdownInterval.current = setInterval(() => {//Inicia un temporizador que se ejecuta cada segundo para la modal de sigues ahi?.
@@ -125,7 +161,11 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
             }, 1_000); //Repite ese conteo cada segundo (1000 ms o cada 1s). Este es el contador que va en modal
         }
 
-        expireTimer.current = setTimeout(handleExpire, (expTKN_ms - Date.now())); //se ejecutara handleExpire cuando se cumpla el tiempo de vencimiento del token
+        expireTimer.current = setTimeout(
+            () => {
+                console.log("Entro al expireTimer de initializeOTSession")
+                handleExpire()
+            }, (expTKN_ms - Date.now())); //se ejecutara handleExpire cuando se cumpla el tiempo de vencimiento del token
 
     }, [onExpire]);
     //Solo se vuelve a recrear la funcion de initializeOTSession si cambia onExpire u onRefresh
@@ -138,7 +178,7 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
 
     // const initializeRFSession = useCallback((expTKN_s: number) => {
     const initializeRFSession = useCallback(() => {
-        // console.log("Entro a InitializeRFSession");
+        //console.log("Entro a InitializeRFSession");
         setCanRenewTKN(true);
         // console.log("El valor de canRenew, ", canRenewTKN);
         clearAll(); // limpia temporizadores anteriores usados para las ventanas modales
@@ -148,77 +188,55 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
         // Tras 4 min de inactividad el warning y empieza conteo
         warningTimer.current = setTimeout(() => {
             setShowWarning(true);
+            console.log("Ahora debe mostrar ventana modal de inactividad");
 
             countdownInterval.current = setInterval(() => {
                 const remainingMs = deadline - Date.now();
                 const secs = Math.max(Math.ceil(remainingMs / 1000), 0);
                 setCountdown(secs);
             }, 1000);
-        }, delay - 60_000);
+        }, delay - 60_000);//se mostrara el warning al minuto 3 de inactividad 
 
         // Y a la misma vez se agenda el logout
-        expireTimer.current = setTimeout(handleExpire, delay);//aqui se esta usando la funcion handleexpire la cual se ejecutara 4 min despues de inactividad
-
+        expireTimer.current = setTimeout(
+            () => {
+                console.log("Entro al expireTimer de initializeRFSession")
+                handleExpire()
+            }, delay);//aqui se esta usando la funcion handleexpire la cual se ejecutara 4 min despues de inactividad
         // console.log("El valor de warniungtimer", warningTimer);
         // console.log("El valor de expireTimer", expireTimer);
-    }, [handleExpire]);//se usa como dependencia ya que se esta usando dentro del callback 
+        // }, [handleExpire]);//se usa como dependencia ya que se esta usando dentro del callback 
+    }, []);//se usa como dependencia ya que se esta usando dentro del callback 
 
-
-    // Manejador de expiración: limpia, cierra warning y llama callback
-    //esto ocurre ya cuando se regresa al login form
-
-    // useEffect(() => {
-    //     console.log("Entro al useEffect para refrescar el token ")
-    //     const intervalId = setInterval(() => { //se usa un setInterval ya que es un bloque de codigo que queremos que se este ejecutando periodicamente
-
-    //         // Solo refresca el token si no esta mostrando el warning y el hook canRenewTKN es true
-    //         if (canRenewTKN) {
-    //             console.log("Intentando refrescar token");
-    //             refreshToken();
-    //         } else {
-    //             console.log("No se pudo refrescar el token");
-    //         }
-    //     }, 240_000); //este intervalo se ejecutara cada 3:30 min lo cual dejara al token de salida obsoleto en 1:30 min
-
-    //     return () => clearInterval(intervalId);// Limpieza al desmontar o cuando cambien dependencias
-    // }, [refreshToken]);
-
-
-
-    //iba despues de los console.logs
-    // if (remainingExpMs < 60_000 && canRenewTKN) { //si los segundos restantes para la expiracion del token son 60s
-    //     console.log("Intentando refrescar token sin Timeout (por recarga)");
-    //     refreshToken();
-    // }
-    // else {
-    //     console.log("No se pudo refrescar el token");
-    // }
 
 
     // Cada vez que el token cambie, reprograma todo según su exp
     useEffect(() => { // este useEffect arranca el ciclo basándose en la llegada de un token nuevo.
-        if (!token) {
-            clearAll();                                        // Sin token, limpia timers
-            return;
-        }
+        console.log("Entro al UseEffect que arranca todos las sesiones");
+        // if (tokenOT) {
+        //     clearAll();                                        // Sin token, limpia timers
+        //     return;
+        // }
         try {
-            const { exp } = jwtDecode<JwtPayload>(token);      // Decodifica exp del JWT
-            // console.log("Este es el tiempo de exp del token: ", exp)
-            if (isOTimeSession) { // Cuando se instancia la funcion de useSessionTimeOut y se le envia true a la opcion isOTimeSession
-                //  desde cualquier parte del aplicativo entonces inicializa una sesion unica, de lo contrario inicializa una sesion normal
-                initializeOTSession(exp);// Agenda los timers segun el tiempo de expiracion
-                // setIsOTSession(true);
+            if (tokenOT) {
+                if (isOTimeSession) { // Cuando se instancia la funcion de useSessionTimeOut y se le envia true a la opcion isOTimeSession
+                    //  desde cualquier parte del aplicativo entonces inicializa una sesion unica, de lo contrario inicializa una sesion normal
+                    const { exp } = jwtDecode<JwtPayload>(tokenOT);      // Decodifica exp del JWT
+                    // console.log("Este es el tiempo de exp del token: ", exp)
+                    initializeOTSession(exp);// Agenda los timers segun el tiempo de expiracion
+                    // setIsOTSession(true);
+                }
             } else {
                 initializeRFSession();
             }
-
 
         } catch (error) {
             console.log("hubo un error al obtener el atributo exp: ", error);
             handleExpire();                                    // Token inválido => expira
         }
         // }, [token, initializeSession, handleExpire]);
-    }, [handleExpire]);
+        // }, [handleExpire]);
+    }, []);
     //dependencias de initializeOTSession:
     //  token = Si el JWT cambia  se debe reprogramar todo el ciclo de expiracion basandose en la nueva expiracion, 
     // initializeSession = esta es la funcion que agenda los setTimeout para warning y logout y si cambia onRefresh u onExpire se debe usar su nueva version
