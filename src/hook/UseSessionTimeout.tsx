@@ -5,10 +5,8 @@
 // 3) Gestionar la expiración definitiva con handleExpire, que borra el storage, oculta el warning, llama a el callback onExpire y limpia el estado.
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import Modal from "../Components/ModalComponents/modalComponent";
 import { jwtDecode } from "jwt-decode";
-import { getAuthToken } from "../Auth/auth";
 import { useAuth } from "../Auth/AuthContext";
 import { logoutUsuario } from "../services/EliminacionCookie";
 
@@ -17,7 +15,7 @@ import { logoutUsuario } from "../services/EliminacionCookie";
 
 interface UseSessionTimeoutOptions {
     onExpire?: () => void; //funcion opcional para expirar sesion
-    onRefresh?: () => void; //funcion opcional para renovar token
+    // onRefresh?: () => void; //funcion opcional para renovar token
     isOTimeSession?: boolean; //asi sabremos si es una sesion para solo una vez (usadas en pantallas de contraseñas) o una sesion normal
 }
 
@@ -25,39 +23,34 @@ interface JwtPayload { //interfaz que se usara para decodificar el exp del token
     exp: number; // Timestamp de expiración en segundos UNIX
 }
 
-export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseSessionTimeoutOptions = {}) { /*= {} significa que si no se le pasa nada por defecto sera un objeto vacio*/
-    // export function useSessionTimeout({ onExpire, onRefresh, }: UseSessionTimeoutOptions = {}) { /*= {} significa que si no se le pasa nada por defecto sera un objeto vacio*/
-    // export function useSessionTimeout() { /*= {} significa que si no se le pasa nada por defecto sera un objeto vacio*/
+export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeoutOptions = {}) { /*= {} significa que si no se le pasa nada por defecto sera un objeto vacio*/
 
-    const navigate = useNavigate(); //hook que sirve para redirigir las paginas
-    // const [token, setToken] = useState<string | null>(() => getAuthToken());
-    // console.log("Este es el valor del token en use session timeout: ", token);
-    // const [token, setToken] = useState<string | null>(() => getAuthToken());//el estado inicial es de token se obtendra de la funcion getAuthToken()
     const [showWarning, setShowWarning] = useState(false);    // Muestra modal de advertencia
     const [countdown, setCountdown] = useState(0);            // Segundos restantes
     const [isOTSession, setIsOTSession] = useState(false); // hook para manejar mensaje de ventana modal
     const [canRenewTKN, setCanRenewTKN] = useState(true); // hook para la logica de renovacion del TKN 
     const { refreshToken, tokenOT, token } = useAuth();
-
-    //   Refs permiten:
-    //   Guardar el timer sin que se reinicie al renderizar el componente.
-    //   Poder cancelar el timer luego con clearTimeout(warningTimer.current).
-    //   useRef sirve aquí como una “caja mutable” que conserva el ID del timeout 
-    //   sin provocar re-renderizados.
+    const [hasAcceptedOT, setHasAcceptedOT] = useState(false); //hook para el manejo del estado del boton de "Entendido" en ventana modal de sesiones OT
+    const [showExpired, setShowExpired] = useState(false); // Muestra modal de sesion expirada
 
     // Refs para almacenar IDs de timers y poder limpiarlos
     const warningTimer = useRef<ReturnType<typeof setTimeout> | null>(null); //este es el hook con el temporizador para mostrar la ventana de warning
     // const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const expireTimer = useRef<ReturnType<typeof setTimeout> | null>(null); //este es el hook con el temporizador para salir de la sesion al login form
     const countdownInterval = useRef<ReturnType<typeof setInterval> | null>(null); //este es el hook con el temporizador dentro del warningTimer que actura como contador
-    // const location = useLocation();
+    const showWarningRef = useRef(showWarning);
+    const countdownRef = useRef(countdown);
+    const hasAcceptedOTRef = useRef(hasAcceptedOT);
 
+    useEffect(() => { showWarningRef.current = showWarning; }, [showWarning]); //useEffect para actualizar la variable refShowWarning cada vez que el hook showWarning cambie, asi el handleExpire usara referencia a una ref en vez de un useState estatico
+    useEffect(() => { countdownRef.current = countdown; }, [countdown]); //hace lo mismo que el useEffect de showWarning
+    useEffect(() => { hasAcceptedOTRef.current = hasAcceptedOT; }, [hasAcceptedOT]);
 
-    const clearAll = () => {// se declara una funcion que se utilizara para cancelar todos los temporizadores activos
+    const clearAll = useCallback(() => {// se declara una funcion que se utilizara para cancelar todos los temporizadores activos
         [warningTimer, /*refreshTimer,*/ expireTimer].forEach(ref => {//forEach crea un arreglo con las tres refs de los setTimeout y recorre cada una
-            if (ref.current) {
+            if (ref.current) { //si existe un setTimeout con el ID que se itera 
+                // console.log("Limpiando Timer con ID (ClearAll): ", ref.current, " y es de tipo(ref): ", typeof ref.current);
                 clearTimeout(ref.current);         // si la ref tiene un timeout activo, lo cancela con clearTimeOut
-                //console.log("Se limpio esta ref: ", ref);
             }
             ref.current = null;                                  // Luego le pone null a la referencia especifica para simbolizar que no hay ningun temporizador
         });
@@ -65,15 +58,16 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
             clearInterval(countdownInterval.current);           // Si existe uno activo entonces lo limpia
             countdownInterval.current = null;                    // Y de igual forma pone la referencia en null
         }
-    };
+    }, []);// se cambio clearAll a una funcion que usa useCallback para memorizar 
 
     const handleExpire = useCallback(() => {
+        console.log("Entro a la funcion de handleExpire()");
         const notGeneralLocations = ['/', '/registrar-usuario', '/enviar-codigo', '/cambio-contrasena', '/restablecer-contrasena'];//Las rutas en donde el expireTimer de General no tendra efecto
-        const newToken = sessionStorage.getItem("access_TKN");
-        console.log("Entro a Handle Expire");
 
         if (!isOTimeSession) { //Si no esta en una pantalla que sea de One Time Session entonces se ejecuta
             //  este bloque y esto es debido a que las One Time Sessions no usan rfToken
+            const newToken = sessionStorage.getItem("access_TKN");
+
             const removeRF_TKN = async () => {//Intenta remover el refreshToken
                 if (newToken) {
                     try {
@@ -89,31 +83,36 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
 
             if (!notGeneralLocations.includes(window.location.pathname)) {
                 console.log("Location: ", window.location.pathname);
-                if (onExpire) onExpire();
-                console.log("Navego a '/' ya que esta en una ruta que se carga en General.tsx")
+                sessionStorage.removeItem("access_TKN");//este existe en cambio de contraseña inicial y reseteo de contraseña
+                sessionStorage.removeItem("userPayload");//este existe en cambio de contraseña inicial
+                sessionStorage.removeItem("selectedMunicipality");//este existe en general y se le agrega valor cuando selecciona una Muni
+                setShowWarning(false);// Oculta warning
+                setIsOTSession(false);//hook para mostrar que es sesion de uso Unico para el boton de la modal
+                setCanRenewTKN(false); // una vez cerrada la sesion no se puede renovar el token    
+                // if (onExpire) onExpire(); se comento para que fuera agregado a la Modal de sesion expirada 
+                console.log("Navegara a '/' ya que esta en una ruta que se carga en General.tsx");
+                clearAll();// Limpia todos los timers
+                setShowExpired(true);//se agrego esta linea ya que es el hook que mostrara la ventana modal de sesion expirada
+
+                return;
             } else {
-                console.log("NO navego a '/' ya que esta en una ruta que NO se carga en General.tsx")
+                console.log("NO navego a '/' ya que esta en una ruta que NO se carga en General.tsx");
+                return;
             }
         } else {
+            //Bloque para oneTimeSessions
             console.log("Se ejecuto onExpire sin la validacion de GeneralLocations debido a que es una isOtimeSession")
             //De igual forma las pantallas que sean una isOtimeSession siempre deben ejecutar el onExpire
-            if (onExpire) onExpire();
             sessionStorage.removeItem("access_TKN_OT");
             sessionStorage.removeItem("email");//este existe en cambio de contraseña inicial
             sessionStorage.removeItem("password");//este existe en cambio de contraseña inicial
+            clearAll();// Limpia todos los timers
+            setShowWarning(false);// Oculta warning
+            setShowExpired(true);//se agrego esta linea ya que es el hook que mostrara la ventana modal de sesion expirada
+            // if (onExpire) onExpire();  se comento para que fuera agregado a la Modal de sesion expirada 
             return;
         }
 
-        sessionStorage.removeItem("access_TKN");//este existe en cambio de contraseña inicial y reseteo de contraseña
-        sessionStorage.removeItem("userPayload");//este existe en cambio de contraseña inicial
-        sessionStorage.removeItem("selectedMunicipality");//este existe en general y se le agrega valor cuando selecciona una Muni
-        clearAll();// Limpia todos los timers
-        setShowWarning(false);// Oculta warning
-        setIsOTSession(false);//hook para mostrar que es sesion de uso Unico para el boton de la modal
-        setCanRenewTKN(false); // una vez cerrada la sesion no se puede renovar el token 
-        // if (onExpire) onExpire();                            // Llama callback de expire que hace lo que se programa desde cualquier otra parte de la app
-        // setToken(null);
-        //navigate("/"); //cada pantalla debe tener su validacion del navigate                     
     }, []);
 
     //   Aqui se programa warningTimer, refresh y expire basandose en expTimeStamp (segundos)
@@ -163,8 +162,18 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
 
         expireTimer.current = setTimeout(
             () => {
-                console.log("Entro al expireTimer de initializeOTSession")
-                handleExpire()
+                console.log("Entro al expireTimer de initializeOTSession que ejecuta handleExpire()");
+                console.log("El valor de showWarningRef en expireTimer: ", showWarningRef,
+                    " el de CountDownRef es: ", countdownRef, " y el de hasAcceptedOTRef es: ", hasAcceptedOTRef);
+
+                if ((showWarningRef.current === true && countdownRef.current <= 1) ||
+                    (hasAcceptedOTRef.current === true && countdownRef.current <= 1)) { //se tiene que usar .current para acceder al valor del useRef ya que si solo se compara countdownRef se estaria comparando todo el objeto al numero 1 lo cual genera un ERROR
+                    handleExpire();
+                } else {
+                    console.log("No esta mostrando la venta modal de alerta de sesionOT, no se va a ejecutar el codigo de handleExpire().");
+                    return;
+                }
+
             }, (expTKN_ms - Date.now())); //se ejecutara handleExpire cuando se cumpla el tiempo de vencimiento del token
 
     }, [onExpire]);
@@ -172,15 +181,9 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
     //Garantiza que, cuando efectivamente cambie el callback que se le da al expirar o al refrescar sesion la logica se actualice de nuevo
 
 
-
-    //me quede por aqui ya que debo validar la logica del hook canrenewTKN para ver cuando puede renovar el accessToken
-    //  y tengo que ver si el use Effect va aqui o en General.tsx.  
-
     // const initializeRFSession = useCallback((expTKN_s: number) => {
     const initializeRFSession = useCallback(() => {
-        //console.log("Entro a InitializeRFSession");
         setCanRenewTKN(true);
-        // console.log("El valor de canRenew, ", canRenewTKN);
         clearAll(); // limpia temporizadores anteriores usados para las ventanas modales
         const delay = 240_000;                  // 4 minutos para mostrar la venta modal tras inactividad
         const deadline = Date.now() + delay; // toma los milisegundos de la fecha actual y le suma los milisegundos de delay
@@ -197,26 +200,29 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
             }, 1000);
         }, delay - 60_000);//se mostrara el warning al minuto 3 de inactividad 
 
+        // console.log("El ultimo warning timer que se agendo fue el ID: ", warningTimer.current)
+
         // Y a la misma vez se agenda el logout
         expireTimer.current = setTimeout(
             () => {
-                console.log("Entro al expireTimer de initializeRFSession")
-                handleExpire()
-            }, delay);//aqui se esta usando la funcion handleexpire la cual se ejecutara 4 min despues de inactividad
-        // console.log("El valor de warniungtimer", warningTimer);
-        // console.log("El valor de expireTimer", expireTimer);
-        // }, [handleExpire]);//se usa como dependencia ya que se esta usando dentro del callback 
-    }, []);//se usa como dependencia ya que se esta usando dentro del callback 
+                console.log("Entro al expireTimer de initializeRFSession que ejecuta handleExpire()");
+                console.log("El valor de showWarningRef en expireTimer: ", showWarningRef, " y el de CountDown es: ", countdownRef);
+                if (showWarningRef.current === true && countdownRef.current <= 1) { //se tiene que usar .current para acceder al valor del useRef ya que si solo se compara countdownRef se estaria comparando todo el objeto al numero 1 lo cual genera un ERROR
+                    handleExpire();
+                } else {
+                    console.log("No esta mostrando la venta modal de alerta de sesionRF, no se va a ejecutar el codigo de handleExpire(). ");
+                    return;
+                }
 
+            }, delay);//aqui se esta usando la funcion handleexpire la cual se ejecutara 4 min despues de inactividad
+
+    }, []);//se usa como dependencia ya que se esta usando dentro del callback 
 
 
     // Cada vez que el token cambie, reprograma todo según su exp
     useEffect(() => { // este useEffect arranca el ciclo basándose en la llegada de un token nuevo.
         console.log("Entro al UseEffect que arranca todos las sesiones");
-        // if (tokenOT) {
-        //     clearAll();                                        // Sin token, limpia timers
-        //     return;
-        // }
+
         try {
             if (tokenOT) {
                 if (isOTimeSession) { // Cuando se instancia la funcion de useSessionTimeOut y se le envia true a la opcion isOTimeSession
@@ -234,8 +240,7 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
             console.log("hubo un error al obtener el atributo exp: ", error);
             handleExpire();                                    // Token inválido => expira
         }
-        // }, [token, initializeSession, handleExpire]);
-        // }, [handleExpire]);
+
     }, []);
     //dependencias de initializeOTSession:
     //  token = Si el JWT cambia  se debe reprogramar todo el ciclo de expiracion basandose en la nueva expiracion, 
@@ -272,6 +277,7 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
     }, [token])
     // }, [refreshToken])
 
+    //La constante Modals es donde se definen las ventanas modales de advertencia para las sesiones RF y OT  
     const Modals = (
         <Modal isVisible={showWarning} title={isOTSession ? 'Advertencia' : '¿Sigues ahí?'} showCloseButton={false}>
             <div style={{ textAlign: "center", marginTop: "1rem" }}>
@@ -284,8 +290,11 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
                     onClick={() => {
                         setShowWarning(false); // Cierra warning
                         if (!isOTSession) { // si no es una sesion de uso unico entonces que pueda ejecutar bloque que refresca el token
-                            console.log("evento onClick y es un RFSession");
+                            console.log("evento onClick y es un RFsession");
                             initializeRFSession(); //Inicializa la sesion de nuevo en caso de que el usuario este ahi
+                        } else {
+                            console.log("evento onClick y es una OTsession");
+                            setHasAcceptedOT(true); //En caso de que le haya aparecido el mensaje de "Entendido" en el boton de la modal si es una OTsession
                         }
                     }}
                 >
@@ -295,6 +304,27 @@ export function useSessionTimeout({ onExpire, onRefresh, isOTimeSession, }: UseS
         </Modal>
     );
 
-    return { Modals, initializeRFSession, handleExpire };  // Devuelve el componente con las Modales 
+    //La constante SsExpiredModal es donde se definen las ventanas modales de sesion caducada para las sesiones RF y OT, las cuales navegaran al Login en su evento onClick
+    const SsExpiredModal = (
+        <Modal isVisible={showExpired} title={isOTSession ? 'Tiempo Agotado' : 'Sesion Expirada'} showCloseButton={false}>
+            <div>
+                <p>{isOTSession ? "Por favor, inténtalo de nuevo." :
+                    "Por favor, vuelve a iniciar sesión."}
+                </p>
+                <button
+                    className="modal-button"
+                    onClick={() => {
+                        setShowExpired(false); //cierra la ventana modal de expired
+                        if (onExpire) onExpire();
+                    }}
+                >
+                    {isOTSession ? 'Regresar' : 'Iniciar sesión'}
+                </button>
+            </div>
+
+        </Modal>
+    );
+
+    return { Modals, initializeRFSession, clearAll, SsExpiredModal };  // Devuelve el componente con las Modales 
     //handleExpire: se devuelve porque se utiliza en pantallas (ej. CambioContrasena) para limpiar los sessionStorage y otro contenido que pueda quedar de la sesion
 }

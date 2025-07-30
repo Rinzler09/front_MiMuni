@@ -8,6 +8,7 @@ import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { toast } from "sonner";
 
 interface Facturas {
   numFactura: number;
@@ -104,7 +105,11 @@ const ProceosFacturacion: React.FC = () => {
   useEffect(() => {
     const fetchFacturas = async () => {
       try {
-        if (!selectedMunicipality || !user?.token) return;
+
+        if (!selectedMunicipality) {
+          toast.error("No se ha seleccionado una Municipalidad, no cargara registros de facturas.");
+          return;
+        }
 
         const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, token);
 
@@ -114,8 +119,7 @@ const ProceosFacturacion: React.FC = () => {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
         }
       } catch (error) {
-        //console.error("Error obteniendo registros:", error);
-
+        console.log("Error obteniendo registros:", error);
       }
     };
 

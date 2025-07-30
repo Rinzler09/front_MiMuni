@@ -41,7 +41,9 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
       setToken(null);
       setSelectedMunicipality(null);
       // handleExpire(); me genera problemas porque carga dos veces el useSessionTimeOut en la misma pantalla que es General.tsx
-      navigate("/");
+      navigate("/"); //navigate si esta funcionando aqui no es necesario el .reload(), probablemente por el finally
+      //window.location.reload(); //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
+
     }
   };
 
@@ -94,7 +96,7 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
                   <span onClick={handleLogout}
                     className="menu-link" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                     <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
-                    <span className="ms-2">Salir</span>
+                    <span className="ms-2">Cerrar sesión</span>
                   </span>
                 </li>
               </ul>

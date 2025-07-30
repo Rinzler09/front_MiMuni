@@ -4,12 +4,37 @@ import { useForm } from 'react-hook-form';//Libreria para validar los campos del
 import ErrorMessage from '../../ErrorMessage.tsx/MostrarMensajesError'; //Importacion del componenete que viene el mensaje del error
 import { resetPwdSessionService } from '../../../services/RstPwdSessionService'; //Servicio para enviar la solicitud de cambio de contraseña
 import type { resetPwdSession } from '../../../types/generalForm'//Importancion del type para el manejo de los datos del formulario
+import { Toaster, toast } from "sonner";
+import { useAuth } from '../../../Auth/AuthContext';
+import Modal from '../../ModalComponents/modalComponent';
+import { useNavigate } from 'react-router-dom';
+import { logoutUsuario } from '../../../services/EliminacionCookie';
+
 
 const ResetPwdSession: React.FC = () => {
+  const navigate = useNavigate();
+  const { token, setUser, setToken, setSelectedMunicipality } = useAuth();
   const [showCurrent, setShowCurrent] = useState(true);//constante para manejar la visibilidad de la contraseña anterior mendiante del hook useState
   const [showNew, setShowNew] = useState(true);// constante para manejar la visibilidad de la contraseña actual mendiante del hook useState
   const [showConfirm, setShowConfirm] = useState(true);//constante para manejar la visibilidad de la contraseña confirmacion mendiante del hook useState
   const [isChngPwdSS, setIsChngPwdSS] = useState(false);
+  const [showModalDatos, setShowModalDatos] = useState<boolean>(false);
+
+  //Funcion para poder cambiar la pagina al login
+  const handleLogout = async () => {
+    try {
+      await logoutUsuario(token as string);
+    } catch (err) {
+      console.error("Error al hacer logout:", err);
+    } finally {
+      console.log("Entro a handleLogOut")
+      setUser(null);
+      setToken(null);
+      setSelectedMunicipality(null);
+      // handleExpire(); me genera problemas porque carga dos veces el useSessionTimeOut en la misma pantalla que es General.tsx
+      navigate("/");//navigate si esta funcionando aqui no es necesario el .reload(), probablemente por el finally
+    }
+  };
 
   // Validaciones de los campos del formulario
   //iniitialValues es utilizado para validar valores iniciales como los campos del formulario,
@@ -20,21 +45,32 @@ const ResetPwdSession: React.FC = () => {
   //el register permite en poder registrar los campos para poder validarlos
   //el formState es para manejar estados personalizados como en este caso l|os errores de los campos
   //El handleSubmit realiza la tarea de enviar la informacion de los formulario al backend.
-  const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues });//En este caso estamos usando el hook useForm para poder manejar la valides de los campos del formulario
+  const { register, watch, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues });//En este caso estamos usando el hook useForm para poder manejar la valides de los campos del formulario
 
   /*Esta funcion de handleResetContrasenaSession se hace responsable del evento para ejecutar el cambio de contraseña
   El formData es todo el objeto que tiene del formulario para enviarle al backend para hacer la,
   Validaacion en la peticion en lo que viene el objeto de cambioContraseña de generalForm.ts que es donde se define los type
   */
+
+  const password = watch("contrasena"); //Se utiliza para validar que el campo de contrasena nueva y el de repetir contrasena nueva sean iguales
   const handleResetContrasenaSession = async (formData: resetPwdSession) => {
     console.log("Envío de datos para RstPwdSession al backend", formData);
     setIsChngPwdSS(true);
     try {
       //Response es una funcion en donde envia una peticion al backend para cambiar la contraseña 
       //en esta funcion en via una promesa y retorna con una respuesta 
-      const response = await resetPwdSessionService(formData.contrasenaAnterior, formData.contrasena, formData.confirmaContra);
-    } catch (error) {
+      const response: any = await resetPwdSessionService(formData.contrasenaAnterior, formData.contrasena, formData.confirmaContra, token as string);
+      if (response.status === 200) {
+        setTimeout(() => setShowModalDatos(true), 500);
+      } else {
+        toast.error("No se pudo actualizar la contraseña");
+      }
+      console.log("La respuesta en restablecerContraSesion.tsx: ", response);
 
+    } catch (error: any) {
+      toast.error(error?.message ?? "Error al actualizar la contraseña, Intente nuevamente");
+    } finally {
+      setIsChngPwdSS(false);
     }
   };
 
@@ -57,7 +93,7 @@ const ResetPwdSession: React.FC = () => {
           es viene siendo un margen de 0.5rem que eso equivale 8px.
           *mb significa margin-bottom seguido del numero  
         */}
-        <h2 className="text-start mb-2">Cambiar Contraseña</h2>
+        <h2 className="text-start mb-2">Restablecer Contraseña</h2>
         <p className="text-start mb-4">Por favor, complete los siguientes campos para actualizar su contraseña.</p>
       </div>
 
@@ -208,6 +244,9 @@ const ResetPwdSession: React.FC = () => {
                 minLength: { value: 8, message: "La nueva contraseña debe contener al menos 8 caracteres.", },
                 maxLength: { value: 50, message: "La nueva contraseña no debe superar los 50 caracteres.", },
                 validate: {
+                  isSamePwd: (value: string) => {
+                    return value === password || "Las contraseñas no coinciden."
+                  },
                   //Valida que contenga al menos digito(acepto mas)
                   hasAtLeastOneDigit: (value: string) => {//La funcion de hasAtLeastOneDigit es donde recibe el valor del campo para validar
                     const digitCount = /\d/g.test(value);//este arreglo en donde devuelve string en donde si no encuentra un caracter
@@ -245,10 +284,14 @@ const ResetPwdSession: React.FC = () => {
         </div>
 
         {/** Botón cambiar */}
-        <button type="submit" className="button">
-          CAMBIAR CONTRASEÑA
+        <button type="submit" className="button  mb-3">
+          {isChngPwdSS ? 'Restableciendo...' : 'Restablecer'}
         </button>
       </form>
+      {/*Ventana modal para poder avisar que todo esta perfecto*/}
+      <Modal isVisible={showModalDatos} title="Exito" message="La contraseña se actualizo correctamente. Por seguridad inicia sesion con tus nuevas credenciales."
+        iconSrc="img/procesado.svg" iconAlt="Icono de exito" closeButtonLabel="Aceptar" onClose={() => handleLogout()} />
+
     </div>
   );
 };

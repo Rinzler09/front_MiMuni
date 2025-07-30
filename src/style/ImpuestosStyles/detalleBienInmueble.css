@@ -36,7 +36,7 @@
 
 
 .btnFacturas:hover {
-  width: calc(85%);
+  /* width: calc(85%); */
   background-color: #c4751a;
 }
 

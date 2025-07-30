@@ -1,5 +1,6 @@
 // LoginForm.tsx
 import React, { useState, useEffect } from "react";
+import { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -14,6 +15,7 @@ import type { confirmacionLogin } from "../types/generalForm";
 
 // AuthContext para almacenar datos de usuario
 import { useAuth } from "../Auth/AuthContext";
+
 
 // Iconos
 import { FaRegUser } from "react-icons/fa";
@@ -50,7 +52,7 @@ const LoginForm: React.FC = () => {
 
   //Verificacion de token
   const navigate = useNavigate();
-  const { setUser, setToken, setTokenOT } = useAuth();
+  const { setUser, setToken, setTokenOT /*setSessionCounter, sessionCounter*/ } = useAuth();
 
   // React Hook Form
   const {
@@ -114,7 +116,6 @@ const LoginForm: React.FC = () => {
       // Si es contraseña temporal…
       if (data.isTemporaryPassword) {
         const tokenValue = data.access_token || "";
-        // setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray, });
         setTokenOT(tokenValue);
         sessionStorage.setItem("email", emailLowCase); //se guarda en SessionStorage para el cambio de contraseña inicial
         sessionStorage.setItem("password", password);//se guarda en SessionStorage para el cambio de contraseña inicial
@@ -125,8 +126,9 @@ const LoginForm: React.FC = () => {
       // Si se recibe success: true desde el service entonces se ejecuta este bloque de codigo
       if (data.success) {
         const tokenValue = data.access_token || "";
-        setUser({ email: data.correo, token: tokenValue, municipalidades: municipalidadesArray, });
+        setUser({ email: data.correo, /*token: tokenValue,*/ municipalidades: municipalidadesArray, });
         setToken(tokenValue);
+        // setSessionCounter(sessionCounter + 1);
         setTimeout(() => navigate("/dashboard"), 3000);
       }
     } catch (err: any) {
@@ -147,17 +149,18 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="background">
-      {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast*/}
-      <Toaster closeButton position="top-right" richColors />
-      <div className="circle circle1" />
-      <div className="circle circle2" />
-      <div className="circle circle3" />
 
-      <div className="container min-vh-100 d-flex justify-content-center align-items-center">
-        {/* Aquí sólo cambio la clase del wrapper */}
-        <div className="login-wrapper">
-          <div className="row g-0">
+    <Suspense fallback={<div>Cargando Login ...</div>}>
+
+
+      <div className="background">
+        {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast*/}
+        <Toaster closeButton position="top-right" richColors />
+
+        <div className="container min-vh-100 d-flex justify-content-center align-items-center">
+          {/* Aquí sólo cambio la clase del wrapper */}
+          <div className="login-wrapper">
+            {/* <div className="row g-0"> se comento para intentar solucionar el error de los bordes en el login despues de cerrar sesion*/}
 
             {/* Panel izquierdo: carrusel */}
             <div className="col-md-5 d-none d-md-flex flex-column">
@@ -222,8 +225,8 @@ const LoginForm: React.FC = () => {
                   <label htmlFor="remember" className="form-check-label">
                     Recordar credenciales
                   </label>
-                </div>
-*/}
+                </div>*/}
+
                 {/* Olvidó contraseña */}
                 <a href="#" className="forgot-password mb-3" onClick={handleForgotPassword}>
                   ¿Olvidó su contraseña?
@@ -236,10 +239,12 @@ const LoginForm: React.FC = () => {
               </form>
             </div>
 
+            {/* </div> */}
           </div>
         </div>
       </div>
-    </div>
+    </Suspense>
+
   );
 };
 

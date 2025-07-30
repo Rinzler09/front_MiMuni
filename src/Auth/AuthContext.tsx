@@ -9,7 +9,8 @@ import React, {
     SetStateAction,
 } from "react";
 import { logoutUsuario } from "../services/EliminacionCookie";
-import auth, { setAuthToken } from "./auth";
+// import { useSessionTimeout } from "../hook/UseSessionTimeout";
+
 
 type SessionState<T> = [T, Dispatch<SetStateAction<T>>];//esto sirve para crear un hook personalizado "<SetStateAction<T>>" ya que con esto establecemos 
 // un estado entonces el type SessionState devuelve [valor, setter]
@@ -58,6 +59,10 @@ interface AuthContextProps { //en esta interfaaz se definen todos los valores y 
     setSelectedMunicipality: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor de selectedMunicipality 
     logout: () => void; // función para cerrar sesión y limpiar todo el estado de autenticación.
     refreshToken: () => Promise<void>; //función para pedir un nuevo access token al servidor backend y actualizarlo.
+    // clearAllHeader: () => void;
+    // sessionCounter: number;
+    // setSessionCounter: Dispatch<SetStateAction<number>>
+
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);//aqui se crea un contexto de react el cual llevara los datos
@@ -76,7 +81,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [selectedMunicipality, setSelectedMunicipality] =
         useSessionStorageState<string | null>("selectedMunicipality", null);
 
-    // setAuthToken(token);//Aqui Inyectamos el token actual a la variable interna que se encuentra en Auth.ts
+    // const [sessionCounter, setSessionCounter] =
+    //     useSessionStorageState<number>("sessionCounter", 0);
+    // const { clearAll } = useSessionTimeout();
+
+    // const clearAllHeader = clearAll;
 
     const logout = useCallback(async () => {//cuando se usa useCallback hacemos que esta sea una funcion asincrona memorizada 
         // es decir que solo cambiara si cambian las dependencias al final 
@@ -145,6 +154,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setSelectedMunicipality,
                 logout,
                 refreshToken,
+                // clearAllHeader
+                // sessionCounter,
+                // setSessionCounter
             }}
         >
             {children} {/* Esta linea envuelve todos los componentes hijos con el contexto de autenticacion*/}

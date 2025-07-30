@@ -36,15 +36,16 @@ const CambioContrasena: React.FC = () => {
     formState: { errors },
   } = useForm<cambioContrasena>({ defaultValues: initialValues });
 
-  const { token } = useAuth(); // Extrae el token del contexto de autenticación
+  // const { token } = useAuth(); // Extrae el token del contexto de autenticación pero no se usa ya que el token se extrae en el service directamente
   // const location = useLocation();
 
   // const { Modals } = useSessionModal(); 
-  const { Modals, handleExpire } = useSessionTimeout({ //Esto nos ayudara para las ventanas modales del temporizador
+  const { Modals, clearAll, SsExpiredModal } = useSessionTimeout({ //Esto nos ayudara para las ventanas modales del temporizador
     onExpire: () => {
       console.log("Esta es la location de la ruta: ", window.location.pathname);
       if (window.location.pathname === "/cambio-contrasena") { //solo navegara al indice si estamos en esta pantalla cambio contraseña ya que es en donde estamos trabajando
-        navigate("/");//esto redirigira al login form cuando el expireTimer llegue a 0 en useSessionTimeOut 
+        window.location.reload();  //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
+        //navigate("/");//esto redirigira al login form cuando el expireTimer llegue a 0 en useSessionTimeOut 
       }
     },
     isOTimeSession: true,
@@ -82,8 +83,13 @@ const CambioContrasena: React.FC = () => {
     try {
       console.log("entro a la funcion Cerrar la cual limpia registros y llama a handleExpire");
       // await logoutUsuario(token as string);
-      handleExpire();
-      navigate("/");
+      sessionStorage.removeItem("access_TKN_OT");
+      sessionStorage.removeItem("email");//este existe en cambio de contraseña inicial
+      sessionStorage.removeItem("password");//este existe en cambio de contraseña inicial
+      clearAll();// Limpia todos los timers
+      //navigate("/"); //necesario ya que onExpire solo se ejecuta cuando la sesion expira
+      window.location.reload();  //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
+
       // if (location.pathname === "cambio-contraseña") { //solo navegara al indice si estamos en esta pantalla 
       //   console.log("Navego a / porque estaba dentro de cambio de contraseña");
       //   navigate("/");
@@ -172,6 +178,7 @@ const CambioContrasena: React.FC = () => {
       <Modal iconSrc="public\img\procesado.svg" isVisible={showModalDatos} title="Éxito"
         message="Contraseña actualizada correctamente, ingrese sus credenciales para continuar." onClose={() => cerrar()} />
       {Modals}
+      {SsExpiredModal}  {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
     </div>
   );
 };

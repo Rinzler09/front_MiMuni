@@ -21,11 +21,12 @@ const RestablecerContrasena: React.FC = () => {
   //const { token, logout } = useAuth(); //Extrae el token del context de autenticacion
   //console.log("Token desde RestablecerContra:",token);
   // const token = sessionStorage.getItem("access_TKN");
-  const { Modals } = useSessionTimeout({
+  const { Modals, SsExpiredModal, clearAll } = useSessionTimeout({
     onExpire: () => {
       console.log("Esta es la location de la ruta: ", window.location.pathname);
       if (window.location.pathname === "/restablecer-contrasena") { //solo navegara al indice si estamos en esta pantalla cambio contraseña ya que es en donde estamos trabajando
-        navigate("/");//esto redirigira al login form cuando el expireTimer llegue a 0 en useSessionTimeOut 
+        window.location.reload();  //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
+        //navigate("/");//esto redirigira al login form cuando el expireTimer llegue a 0 en useSessionTimeOut 
       }
     },
     isOTimeSession: true,
@@ -59,7 +60,10 @@ const RestablecerContrasena: React.FC = () => {
       // await logoutUsuario(token as string); esta pantalla no usa cookie de refreshToken
       console.log("entro en logout");
       sessionStorage.removeItem("access_TKN_OT");
-      navigate("/");
+      clearAll();// Limpia todos los timers y no usa handleExpire ya que contiene la modal de sesion expirada
+      //navigate("/"); //necesario ya que onExpire solo se ejecuta cuando la sesion expira 
+      window.location.reload(); //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
+
 
     } catch (error) {
       console.log("Error al  cerrar sesion:", error);
@@ -189,6 +193,7 @@ const RestablecerContrasena: React.FC = () => {
       </div>
 
       {Modals}
+      {SsExpiredModal}  {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
     </div>
 
 

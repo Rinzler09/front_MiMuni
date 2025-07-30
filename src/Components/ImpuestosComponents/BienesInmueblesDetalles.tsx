@@ -1,7 +1,7 @@
 // src/components/DetallesImpuesto.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
@@ -98,7 +98,7 @@ const DetallesImpuesto: React.FC = () => {
         claveCat,
         token
       );
-      toast.success("Factura generada para proceso de pago");
+      toast.success("Factura generada para proceso de pago.");
       navigate("/facturas-BI", {
         state: { municipalidad: selectedMunicipality, claveCat, direccion, facturaData: facturaResponse }
       });

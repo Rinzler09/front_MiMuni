@@ -1,81 +1,90 @@
 /* src/style/ImagesStyles/dashboard.css */
 
-/* 0) Elimina scrolls en toda la página */
-html, body, #root {
+
+/* Regla conflictiva para el LoginForm ya que deshabilita los inputs y botones, integrado por Marley   */
+
+/* html,
+body,
+#root {
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
-}
+} */
 
-/* 1) Layout general: header + sidebar + contenido */
 .layout {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
+
 .layout-content {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-/* 2) Área del carrusel: justo debajo del header (56px) y a la derecha del sidebar (240px) */
+
 .main-content.full-carousel-container {
   position: absolute;
-  top: 50px;      /* alto del header */
-  left: 240px;    /* ancho del sidebar */
+  top: 50px;
+
+  left: 240px;
+
   right: 0;
   bottom: 0;
   overflow: hidden;
 }
 
-/* 3) El carousel ocupa TODO el .main-content */
+
 .full-carousel {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-/* 4) Cada slide e imagen siempre llenan todo el área */
+
 .full-carousel .carousel-item {
   height: 100%;
 }
+
 .full-carousel .carousel-item .carousel-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;       /* cubre sin deformar ni dejar franjas */
+  object-fit: cover;
 }
 
-/* 5) Transición cross-fade suave */
+
 .carousel-fade .carousel-item {
   transition: opacity 1s ease-in-out;
 }
 
-/* 6) Indicadores (dots) sobre la imagen */
+
 .carousel-indicators {
   bottom: 10%;
 }
+
 .carousel-indicators button {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: rgba(255,255,255,0.6);
+  background-color: rgba(255, 255, 255, 0.6);
 }
+
 .carousel-indicators .active {
   background-color: #fff;
 }
 
-/* 7) Flechas prev/next en blanco */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   filter: invert(100%);
 }
 
-/* 8) Leyenda con animación “fadeInUp” */
+
 .carousel-caption {
   bottom: 20%;
 }
+
 .carousel-caption h5 {
   background: rgba(0, 0, 0, 0.5);
   display: inline-block;
@@ -86,12 +95,12 @@ html, body, #root {
   margin: 0;
 }
 
-/* 9) Keyframes para la animación de la leyenda */
 @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

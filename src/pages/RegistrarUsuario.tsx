@@ -46,7 +46,7 @@ const RegistrarUsuario: React.FC = () => {
             const response = await registrarSolicitud(formData.nombrecompleto, formData.identidad, formData.rtn, formData.correo, formData.telefono);
             if (typeof response === "object") {
                 toast.success(response.message);
-                setTimeout(() => setShowModalDatos(true), 5000);// Nos ayudara para cuando se termine la confirmacion de de registro registrado, pasara 5 segundo para abrir la ventana modal
+                setTimeout(() => setShowModalDatos(true), 2000);// Nos ayudara para cuando se termine la confirmacion de de registro registrado, pasara 5 segundo para abrir la ventana modal
                 setTempPwd(response.pswdTemp);
             } else {
                 toast.error(response.message);
