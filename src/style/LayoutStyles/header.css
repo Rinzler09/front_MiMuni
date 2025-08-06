@@ -1,6 +1,6 @@
 :root {
   --sidebar-width: 250px;
-  --sidebar-collapsed-width: 60px;
+  --sidebar-collapsed-width: 80px;
 }
 
 .header {
@@ -18,19 +18,22 @@
   z-index: 999;
 }
 
+
+
 .header.collapsed {
   left: var(--sidebar-collapsed-width);
   width: calc(100% - var(--sidebar-collapsed-width));
 }
 
-/* Sección izquierda: hamburger, logo y buscador */
+
+/* Sección izquierda: hamburger */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 40px;
 }
-
-.header-toggle {
+/* Clase de la hamburguesa  */
+.header-hamburger {
   font-size: 1.2em;
   color: #FFFFFF;
   cursor: pointer;
@@ -91,4 +94,27 @@
 .chevron-icon {
   font-size: 0.75em;
   color: #FFFFFF;
+}
+
+/* ========================= MEDIA QUIERIE ==================== */
+
+@media(max-width: 768px){
+  .header.collapsed{
+    left: 0;
+    width: 100%;
+  }
+
+  .user-name{
+    display: none;
+  }
+  .user-icon{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;        /* separa avatar y chevron */
+    margin-right: 0.5rem;
+  
+  }
+   .header-hamburger {
+    margin-left: 0.3rem;
+  }
 }

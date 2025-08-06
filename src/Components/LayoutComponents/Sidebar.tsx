@@ -12,7 +12,8 @@ import {
   faLeaf,
   faChevronDown,
   faRepeat,
-  faBars,
+  faUniversity,
+  faCalculator,
 } from "@fortawesome/free-solid-svg-icons";// Importaciones de iconos de la libreria free.solid.svg.icons
 import "../../style/LayoutStyles/sidebar.css";// Importacion de estilo de sidebar.css
 import { useAuth } from "../../Auth/AuthContext";// Importacion de useAuth de AuthContext.tsx
@@ -20,13 +21,18 @@ import { Toaster, toast } from "sonner";// Importacion de Toast de la libreria s
 import { mensajes } from "../../util/message"//Importacion de mensajes de errores de util/message
 import { MdErrorOutline } from "react-icons/md";// Importacion de MDErrorOutline, esto nos ayuda mostrar graficamente un simbolo de error en la interface donde lo estamos utilizando
 
-// // PROPS para controlar el collapse del sidebar
-export interface SidebarPROPS { //marley lo programo y no supo explicar
-  // isOpen: boolean;
+
+ interface SidebarPROPS { //En este caso usamos una interface para poder pasar los props al sidebar
+   collapsed: boolean;//En este caso el collapsed es un booleano que nos indica que si el sidebar esta colpsado o no queriendo decir 
+                      //que si es true el sidebar esta colpsado y si es false el sidebar esta desplegado correctamente              
 }
 
 
-const Sidebar: React.FC<SidebarPROPS> = () => {
+const Sidebar: React.FC<SidebarPROPS> = ({collapsed}) => {// En este caso vamos declarar el SidebarPROPS para que 
+  console.log("Sidebar PROPS:", collapsed);
+  //poder pasarle lo que esta diciendo que esa esperando un tipo.
+  //Tambien tenemos la parte de ({collapsed}) es la destructuracion de los prop ya que con esta manera podemos acceder directamente el valor
+  //Sin necesidad de usar constante en donde podeamos declarar el prop.collapsed.
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({// Declaramos una contanste en donde contiene openSections, SetOpenSections,
     //donde tambien estamos pasando un generico key:string: booleano, donde nos indica que el estado sera un objeto cuyas claves son string y los valores son booleans
     EstadoCuenta: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
@@ -37,9 +43,6 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
     Publicos: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
     Varios: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
   });
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);/**Estamos usando isSidebarOpen: es la variable que utilizamos del estado si el sidebar esta abierta
-  setIsSidebarOpen: es una funcion en donde podemos permitr el cambio de estado (Si esta abierto o cerrado)
-  useState(false) Esto nos ayuda a poder inicializar el estado a un valor booleano false. */
   const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();/**Tenemos el user  que es un objeto con el dato del usuario que se esta logueando tiene toda su informacion
   SelectedMunicipality: es donde la municipalidad donde el usuario haya seleccionado
   SetSelectedMunicipality: es donde se releja la actualizacion del objeto al momento de cambiar la municipalidad */
@@ -53,9 +56,7 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
     Tambien tenemos el ...prev, donde copia la propiedades existente de openSections ya que cada seccion con su valor es true o false*/
   };
 
-  const toggleSidebar = () => {//tenemos una funcion donde estara la funcionalidad de abrir y cerrar el menu de boton de hamburguesa.
-    setIsSidebarOpen(prev => !prev);
-  };
+
   const gotoMenu = () => navigate("/dashboard");//Tenemos la funcion que es redirigir al usuario a la ruta de dashboard usando el hook navigate.  
 
   const municipalidades = user?.municipalidades || [];//Declaramos una constante con el nombre de municiaplidades.
@@ -106,7 +107,12 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
       <Toaster closeButton position="top-right" richColors />
 
       {/* Contenedor del sidebar */}
-      <div className={`sidebar-container`}>
+       <div className={`sidebar-container ${collapsed ? 'collapsed' : ''}`}>{/* En este caso tenemos un div
+    que contiene una claseName en este caso tenemos una interpolacion valores dinamicos de la cadena.
+    dentro de la interpolarizacion expresa una condicion, si el collapsed es true se le agregar la clase sidebar-container y aplica la parte
+    *de collapsed si es false no se le agregara nada o viene vacia.
+     */}
+        
         {/* <div className={`sidebar-container ${isOpen ? "open" : ""}`}> */}
         {/* ——— Brand / Logo arriba ——— */}
         <div className="sidebar-brand">
@@ -123,9 +129,13 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección de Municipalidades */}
         <div className="sidebar-section">
           <h3 id="btnMunicipalidades" className={`section-title ${openSections.Municipalidades ? "active" : ""}`} onClick={() => toggleSection("Municipalidades")}>
-            Municipalidades <FontAwesomeIcon icon={faChevronDown} />
+            <span className="section-text"><FontAwesomeIcon className="icon" icon={faUniversity} /> Municipalidades</span>
+            <span className="section-icon"><FontAwesomeIcon icon={faUniversity} /></span>
+             <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
+             
           </h3>
-
+          
+        
           <ul className={`menu-list ${openSections.Municipalidades ? "show" : ""}`}>
             {municipalidades.map((mun: string, index: number) => (
               <li key={index}>
@@ -140,8 +150,12 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección Estado de Cuenta */}
         <div className="sidebar-section">
           <h3 className={`section-title ${openSections.EstadoCuenta ? "active" : ""}`} onClick={() => toggleSection("EstadoCuenta")}>
-            Estado de Cuenta <FontAwesomeIcon icon={faChevronDown} />
+          <span className="section-text"><FontAwesomeIcon icon={faCalculator} /> Estado de Cuenta</span>
+           <span className="section-icon"> <FontAwesomeIcon icon={faFileAlt} /></span>
+           <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
+          
+
           <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}>
             <li>
               <Link to="/bienes-inmuebles" {...restrictedLinkProps}>
@@ -185,8 +199,11 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección Servicios Tributarios */}
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Declaraciones")}>
-            Servicios Tributarios <FontAwesomeIcon icon={faChevronDown} />
+             <span className="section-text">Servicios Tributarios</span>
+           <span className="section-icon"> <FontAwesomeIcon icon={faFileAlt} /></span>
+           <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
+          
           <ul className={`menu-list ${openSections.Declaraciones ? "show" : ""}`}>
             <li>
               <Link to="/volumen-ventas" {...restrictedLinkProps}>
@@ -236,8 +253,11 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección Servicios Catastrales */}
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Servicios")}>
-            Servicios Catastrales <FontAwesomeIcon icon={faChevronDown} />
+            <span className="section-text">  Servicios Catastrales</span>
+           <span className="section-icon"> <FontAwesomeIcon icon={faFileAlt} /></span>
+           <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
+
           <ul className={`menu-list ${openSections.Servicios ? "show" : ""}`}>
             <li>
               <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
@@ -269,8 +289,11 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección Servicios Ambientales */}
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Ambientales")}>
-            Servicios Ambientales <FontAwesomeIcon icon={faChevronDown} />
+            <span className="section-text">Servicios Ambientales</span>
+           <span className="section-icon"> <FontAwesomeIcon icon={faFileAlt} /></span>
+           <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
+
           <ul className={`menu-list ${openSections.Ambientales ? "show" : ""}`}>
             <li>
               <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
@@ -296,8 +319,11 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección Servicios Públicos */}
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Publicos")}>
-            Servicios Públicos <FontAwesomeIcon icon={faChevronDown} />
+            <span className="section-text">Servicios Públicos</span>
+           <span className="section-icon"> <FontAwesomeIcon icon={faFileAlt} /></span>
+           <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
+
           <ul className={`menu-list ${openSections.Publicos ? "show" : ""}`}>
             <li>
               <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
@@ -335,8 +361,11 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección Servicios Varios */}
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Varios")}>
-            Servicios Varios <FontAwesomeIcon icon={faChevronDown} />
+            <span className="section-text">Servicios Varios</span>
+           <span className="section-icon"> <FontAwesomeIcon icon={faFileAlt} /></span>
+           <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
+
           <ul className={`menu-list ${openSections.Varios ? "show" : ""}`}>
             <li>
               <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>

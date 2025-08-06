@@ -22,7 +22,7 @@
   width: 80px;
 }
 
-/* ─── Scrollbar WebKit en .sidebar-container ───────────────────────────── */
+/* ─── Scrollbar WebKit en sidebar-container ───────────────────────────── */
 .sidebar-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -40,7 +40,7 @@
   background-color: #555555;         /* gris oscuro al hover */
 }
 
-/* ─── BLOQUE DE MARCA (logo + texto) ────────────────────────────────────── */
+/* ─── BLOQUE DE MARCA (logo + texto)──── */
 .sidebar-brand {
   display: flex;
   align-items: center;
@@ -62,7 +62,6 @@
   font-weight: 600;
   color: #e26c0c;
   white-space: nowrap;
-  
   transition: margin-left 0.4s ease;
   cursor: pointer;
 }
@@ -74,18 +73,20 @@
   padding: 0.5rem 0;
 }
 
-/* ─── Sidebar interior ─────────────────────────────────────────────────── */
+/* ─── Sidebar interior ─── */
 .sidebar {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding-top: 0.25rem;           /* menos espacio arriba */
-  gap: 0.20rem;                   /* espacio uniforme entre secciones/ítems */
+  gap: 0.20rem; 
+  width: 255px;
+  transition: width .3s ease;     /* espacio uniforme entre secciones/ítems */
 }
 
-/* ─── Secciones y títulos ───────────────────────────────────────────────── */
+/* ─── Secciones y títulos ───── */
 .sidebar-section {
-  margin-bottom: 0.5rem;          /* más compacto */
+  margin-bottom: 0.2rem;          /* más compacto */
 }
 .section-title {
   display: flex;
@@ -104,14 +105,9 @@
   background: #ffe698;
   color: #727272;
 }
-.section-title svg {
-  transition: transform 0.3s ease;
-}
-.section-title.active svg {
-  transform: rotate(180deg);
-}
+/* Eliminadas las reglas genéricas que rotaban TODOS los SVG en section-title */
 
-/* ─── Submenús deslizantes ──────────────────────────────────────────────── */
+/* ─── Submenús deslizantes ─── */
 .menu-list {
   list-style: none;
   margin: 0;
@@ -130,7 +126,6 @@
   scrollbar-width: thin;
   scrollbar-color: #888888 #f0f0f0;
 }
-
 /* WebKit en submenús */
 .menu-list.show::-webkit-scrollbar {
   width: 8px;
@@ -149,19 +144,19 @@
   background-color: #555555;
 }
 
-/* ─── Ítems del menú ───────────────────────────────────────────────────── */
+/* ─── Ítems del menú ─── */
 .menu-item {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 105%;
   padding: 0.4rem 0.8rem;         /* padding reducido */
   font-size: 0.9rem;
   color: #3d3d3d;
   background: transparent;
   border: none;
   text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
-  border-radius: 0.375rem;
+  transition: background 1.0s ease, color 0.2s ease;
+  border-radius: 0.275rem;
   cursor: pointer;
 }
 .menu-item svg {
@@ -186,9 +181,9 @@
   pointer-events: none;
 }
 
-/* ─── Ajustes cuando está colapsado ────────────────────────────────────── */
+/* ─── Ajustes cuando está colapsado ────── */
 .sidebar-container.collapsed .menu-icon {
-  margin: 0 auto;
+  margin: 20px auto;
 }
 .sidebar-container.collapsed .menu-item span,
 .sidebar-container.collapsed .menu-list {
@@ -196,35 +191,70 @@
 }
 .sidebar-container.collapsed .section-title {
   justify-content: center;
-  padding: 0.75rem 0;
+  padding: 1.5rem 0;
 }
 .sidebar-container.collapsed .section-title svg {
   margin: 0;
 }
-
-/* ─── Ícono hamburguesa para móvil ──────────────────────────────────────── */
-.hamburger-icon {
+.sidebar-container.collapsed .section-text {
   display: none;
-  position: absolute;
-  top: 1rem;
-  right: -2.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  background: #343a40;
-  border-radius: 0.25rem;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #fff;
-  z-index: 1100;
 }
-@media (max-width: 992px) {
+/* Muestra solo el icono de la sección al colapsar */
+.section-icon {
+  display: none;
+  margin-right: 0.5rem;
+}
+.sidebar-container.collapsed .section-icon {
+  display: inline-block;
+}
+/* Ajusta el chevron centrar */
+.sidebar-container.collapsed .section-title {
+  justify-content: center;
+}
+.sidebar-container.collapsed .section-chev {
+  margin-left: 0;
+  display: none;
+}
+
+/* ─── rotación SOLO al chevron ─── */
+.section-chev {
+  transition: transform 0.3s ease;
+}
+.section-title.active .section-chev {
+  transform: rotate(180deg);
+}
+
+/* ─── Anula cualquier transform en los demás iconos ─── */
+.menu-item svg,
+.menu-icon {
+  transform: none !important;
+}
+
+/* ─── Control extra para colapso/overlay en móviles ─── */
+.sidebar-container
+.sidebar.collapsed {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+/* ─── Ajustes para el contenedor de detalles al colapsar ─── */
+.app-container.sidebar-collapsed .detalles-impuesto-container {
+  padding-left: 20px;
+  padding-right: 30px;
+  margin: 5rem 0 1rem;
+  max-width: none;
+}
+
+
+@media (max-width: 768px) {
+   /* y asegúrate de que la hamburguesa esté encima */
   .hamburger-icon {
-    display: flex;
+    position: relative;
+    z-index: 1100;
   }
   .sidebar-container {
     transform: translateX(-100%);
-    transition: transform 0.4s ease;
+    transition: transform 0.3s ease-in-out;
   }
   .sidebar-container.active {
     transform: translateX(0);

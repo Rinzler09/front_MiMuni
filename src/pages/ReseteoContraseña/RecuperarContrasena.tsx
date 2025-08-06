@@ -2,15 +2,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "../../style/PagesStyles/cambioContraseñaStyles.css";
+import "../../style/PagesStyles/ReseteoContraseñaStyle/recuperarContrasenaStyle.css";
 import type { verificacion, codigoVerificacion } from "../../types/generalForm";
-import ErrorMessage from "../../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import { correoRecuperacionContrasenia, verificacioCodigoServices, } from "../../services/EnvioEmailServices";
 import Modal from "../../Components/ModalComponents/modalComponent";
-import { mensajes } from "../../util/message";
 import { Toaster, toast } from "sonner";
 import { useAuth } from "../../Auth/AuthContext";
 

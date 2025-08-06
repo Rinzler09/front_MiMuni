@@ -3,7 +3,8 @@ import "../../style/UserInfoStyles/historialFacturas.css";//Importacion del esti
 import { GrPowerReset } from "react-icons/gr";//Importancion de icono de refrescar desde la libreria react-icons
 import { LiaFileInvoiceSolid } from "react-icons/lia";//Importacion de icono de factura desde la libreria react-icons
 /* Se define la interface facturas con su tipo de dato */
-
+import Skeleton from "react-loading-skeleton"; //Libreria que viene para utilizar skeleton
+import "react-loading-skeleton/dist/skeleton.css";// Importancion de Skeleton
 interface Facturas {//Esta la funcion de interface que nos ayuda para poder definir un tipo de dato
   id: number; // Idenficador unico para cada factura
   descripcion: string;// Descripcion de la factura
@@ -18,26 +19,20 @@ interface Facturas {//Esta la funcion de interface que nos ayuda para poder defi
 const HistorialPagos: React.FC = () => {
 
   /*Se use el hook de useState para el arreglo de Facturas*/
-  const [factura, setFactura] = useState<Facturas[]>([]);
+  const [historialFacturas, sethistorialFacturas] = useState<Facturas[]>([]);
+  const [loading, setLoading] = useState(true);// se declara un const para loading
   const [paginaActual, setPaginaActual] = useState(1);//Estado para la paginacion actual, con el estado de hook useState
   const registrosPorPagina = 5;//Esta contante utiliza el numero de registro por paginacion
 
   //se calculan los indices para las paginas actuales
   const indUltimoReg = paginaActual * registrosPorPagina;//
   const indPrimerReg = indUltimoReg - registrosPorPagina;
-
-  // Manejador de paginacion Milton Paz
-  const pagsTotales = Math.ceil(factura.length / registrosPorPagina);
-  const handleCambioPag = (numPag: number) => {
-    setPaginaActual(numPag);
-  }
+  const registrosActuales =  historialFacturas.slice(indPrimerReg, indUltimoReg);
+  const pagsTotales = Math.ceil(historialFacturas.length / registrosPorPagina);
+  const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
 
   /* REALIZADO POR MARLEY */
   const [selectedOption, setSelectedOption] = useState(""); // Track selected dropdown option
-
-
-
-
 
   const handleRefreshClick = () => {
     //En esta parte tendra que implementar la logica para refrescar las facturas
@@ -48,6 +43,23 @@ const HistorialPagos: React.FC = () => {
     setSelectedOption(e.target.value); // Update selected option
   };
 
+  //Agregacion de useEffect para poder agregar 
+  useEffect(() => {
+    const fetchHistorialPagos = async () => {
+      
+      setLoading(true);
+      try {
+        
+      } catch (error) {
+        
+      }finally{
+        setLoading(false);
+      }
+
+    };
+
+    fetchHistorialPagos();
+  }, [historialFacturas]);
 
   return (
     <div className="historialFacturas">{/**tenemos la primera parte en donde se muestra la clase principal*/}
@@ -95,23 +107,54 @@ const HistorialPagos: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {/* {registrosActuales.map((registro, indice) => (
-            <tr key={indice}>
- 
-              <td>{registro.id}</td>
-              <td>{registro.descripcion}</td>
-              <td>{registro.tipopago}</td>
-              <td>{registro.subtotal}</td>
-              <td>{registro.valortotal}</td>
-              <td>{new Date(registro.fechapago).toLocaleDateString()}</td>
-              <td>{registro.periodo}</td>
-              <td>{registro.estado}</td>
- 
-            </tr>
- 
-          ))} */}
+          {loading
+              // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
+                ? Array.from({ length: registrosPorPagina }).map((_, i) => (
+                  <tr key={i}>
+                {Array.from({ length: 7 }).map((__, j) => (
+                <td key={j} style={{ textAlign: "center" }}>
+                <Skeleton height={20} />
+                </td>
+                ))}
+                </tr>
+                ))
+
+                : registrosActuales.map((registro, i) => (
+                <tr key={i}>
+    
+                  <td>{registro.id}</td>
+                  <td>{registro.descripcion}</td>
+                  <td>{registro.subtotal}</td>
+                  <td>{registro.valortotal}</td>
+                  <td>{new Date(registro.fechapago).toLocaleDateString()}</td>
+                  <td>{registro.periodo}</td>
+                  <td>{registro.estado}</td>
+    
+                </tr>
+              ))}
+
+              {!loading && historialFacturas.length === 0 && (
+                <tr>
+                  <td colSpan={7} style={{textAlign: "center"}}>
+                    NO HAY DATOS QUE MOSTRAR
+                  </td>
+                </tr>
+              )}
+            
         </tbody>
       </table>
+
+      {pagsTotales > 1 && !loading && (
+        <div className="pagination">
+          {Array.from({length: pagsTotales}, (_, i) => (
+            <button key={i + 1} onClick={() => handleCambioPag(i +1)}>
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
+
+
       <br />
       <nav>
         <ul className="pagination">

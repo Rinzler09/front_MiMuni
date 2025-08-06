@@ -1,7 +1,7 @@
 import React, { FC, Suspense, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Sidebar from '../Components/LayoutComponents/Sidebar';
-import Header from '../Components/LayoutComponents/Header'
+//import Sidebar from '../Components/LayoutComponents/Sidebar';
+import {Header} from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
 import { useAuth } from '../Auth/AuthContext';
 import { useSessionTimeout } from '../hook/UseSessionTimeout';
@@ -94,7 +94,7 @@ const General: FC = () => {
 
     return (
         <div>
-            <Sidebar />
+           
             <Header />
             <div className="generalDiv">
                 <Suspense fallback={<div>Cargando Impuesto ...</div>}>

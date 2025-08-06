@@ -83,6 +83,7 @@ const ResetPwdSession: React.FC = () => {
                 minLength: { value: 8, message: "La contraseña debe contener al menos 8 caracteres.", },
                 maxLength: { value: 50, message: "La contraseña no debe superar los 50 caracteres.", },
                 validate: {
+                  
                   //Valida que contenga al menos digito(acepto mas)
                   hasAtLeastOneDigit: (value: string) => {//La funcion de hasAtLeastOneDigit es donde recibe el valor del campo para validar
                     const digitCount = /\d/g.test(value);//este arreglo en donde devuelve string en donde si no encuentra un caracter
@@ -90,6 +91,8 @@ const ResetPwdSession: React.FC = () => {
                     return (digitCount || "La contraseña debe contener al menos un numero.");// Retorna en la parte de digitCount que nos dice 
                     // que puedes ser mayor o igual a 1 eso nos habla que podemos poner mas numero sin ninguna restrigion 
                   },
+
+                  
                   //Valida que contenga Existente un caracter especial
                   hasOneSpecial: (value: string) => {
                     if (/[^\w-!@#$%^&*()_=+]/.test(value)) {

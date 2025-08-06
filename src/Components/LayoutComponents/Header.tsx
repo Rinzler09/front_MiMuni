@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
-  faBell,
   faRightFromBracket,
   faChevronDown,
   faEdit,
@@ -14,29 +13,49 @@ import "../../style/LayoutStyles/dropDown.css";
 import "../../style/LayoutStyles/header.css";
 import { useAuth } from "../../Auth/AuthContext";
 import { logoutUsuario } from "../../services/EliminacionCookie";
-// import { useSessionTimeout } from "../../hook/UseSessionTimeout";
 
-// Props para controlar el collapse del sidebar
-// interface HeaderProps {  //marley lo programo y no supo explicar
-//   onToggleSidebar: () => void;
-//   collapsed: boolean;
-// }
 
-const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
+
+ interface HeaderProps {  //En esta parte tenemos declara una interface en donde vamos a pasar los props al header que viene del Layout
+  collapsed: boolean;//En este caso el collapsed es un booleano que nos indica que si el sidebar esta colpsado o no queriendo decir 
+                      //que si es true el sidebar esta colpsado y si es false el sidebar esta desplegado correctamente
+   onToggleSidebar: () => void; //En esta parte estamos usando una funcion que se llama onToggleSidebar,
+   //Es una funcion que no recibe parametros y no retorna nada, es un callback que viene de Layout que es el padre
+   //esto es cuando se ejecuta la funcion para que el sidebar colapse o se vuelva desplegar, queriendo decir que no pasa 
+   //Ningun dato solo le dice a Layout que se debe ejecute el estado desde Layout.tsx
+   
+ }
+
+export const Header: React.FC<HeaderProps> = ({ collapsed, onToggleSidebar }) => {{/*En este caso vamos declarar el SidebarPROPS para que 
+  *poder pasarle lo que esta diciendo que esa esperando un tipo.
+  *Tambien tenemos la parte de ({collapsed}) es la destructuracion de los prop ya que con esta manera podemos acceder directamente el valor
+  *Sin necesidad de usar constante en donde podeamos declarar el prop.collapsed.
+  *En este caso tenemos el onToggleSidebar que es una funcion cuando que es de callback que se ejecuta cuando se quiere alternar 
+  El estado de colpasar/expandir el sidebar tipicamente disparada por un evento de clic
+  */}
+  //console.log("Header PROPS:", collapsed, onToggleSidebar); //Esto es para que se pueda ver en la consola los props que se estan pasando al header
+
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);// Estado para el dropdown
   const { user, token, setUser, setToken, setSelectedMunicipality } = useAuth();
-  // const { handleExpire } = useSessionTimeout();
+  
   const userEmail = user?.email ?? "Inicia Sesion";
-  const toggleDropdown = () => setIsOpen((o) => !o);
+
+  const toggleDropdown = () => setOpen(open => !open);//Esta función cambia el estado del dropdown
+  
+  //funcion para manejar el clic en el icono del menú
+  const handleClick = () =>{
+  onToggleSidebar(); 
+  }
+
 
   const handleLogout = async () => {
     try {
       await logoutUsuario(token as string);
     } catch (err) {
-      console.error("Error al hacer logout:", err);
+     // console.error("Error al hacer logout:", err);
     } finally {
-      console.log("Entro a handleLogOut")
+      //console.log("Entro a handleLogOut")
       setUser(null);
       setToken(null);
       setSelectedMunicipality(null);
@@ -46,25 +65,22 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
   };
 
   return (
-    <header className={`header ${collapsed ? "collapsed" : ""}`}>
+    <header className={`header ${collapsed ? "collapsed" : ""}`}>{/* En este caso tenemos un div
+    que contiene una claseName en este caso tenemos una interpolacion valores dinamicos de la cadena.
+    dentro de la interpolarizacion expresa una condicion, si el collapsed es true se le agregar la clase sidebar-container y aplica la parte
+    *de collapsed si es false no se le agregara nada o viene vacia.*/}
       {/* IZQUIERDA: hamburger + logo */}
       <div className="header-left">
-        <FontAwesomeIcon icon={faBars} className="header-toggle" onClick={() => {
-          console.log("hamburguesa clicada en Header");
-          onToggleSidebar();
-        }} />
-
-        {/* Si más adelante quieres el search, descomenta */}
-        {/* <div className="header-search">
-          <input type="text" placeholder="Search..." />
-          <FontAwesomeIcon icon={faSearch} className="fa-search" />
-        </div> */}
+       <FontAwesomeIcon 
+            icon={faBars}
+            className="header-hamburger"
+            onClick={() => {
+              handleClick();
+            }}/>
       </div>
 
-      {/* DERECHA: notificaciones + perfil */}
+     
       <div className="header-right">
-
-
 
         <div
           className="user-profile" onClick={toggleDropdown}>
@@ -72,7 +88,7 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
           <span className="user-name">{userEmail}</span>
           <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
 
-          {isOpen && (
+          {isOpen  && (
 
             <div className="dropdown-menu">
 

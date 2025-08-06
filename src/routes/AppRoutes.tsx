@@ -45,6 +45,7 @@ import General from "../pages/General";
 import CambioContrasena from "../pages/CambioContrasena";
 import RecuperarContrasena from "../pages/ReseteoContraseña/RecuperarContrasena";
 import RestablecerContrasena from "../pages/ReseteoContraseña/RestablecerContrasena";
+import Layout from "../Components/LayoutComponents/Layout";
 
 // Importamos nuestro PrivateRoute
 import PrivateRoute from "./PrivateRoute";
@@ -55,6 +56,7 @@ const AppRoutes: React.FC = () => {
 
     <Router>
       <Routes>
+          
         {/* Ruta de Login */}
         <Route path="/" element={<LoginForm />} />
         {/* Ruta de Registrar Usuario */}
@@ -63,18 +65,21 @@ const AppRoutes: React.FC = () => {
 
         {/* Ruta de enviar codigo */}
         <Route path="/enviar-codigo" element={<RecuperarContrasena />} />
-
-
+        
+  
         {/* Ruta protegida: :tipo */}
-        <Route element={<PrivateRoute />}>
+          <Route element={<PrivateRoute />}>
+          <Route element={<Layout />}>
           <Route path=":tipo" element={<General />} />
+          </Route>
+          
           <Route path="cambio-contrasena" element={<CambioContrasena />} />
           <Route path="restablecer-contrasena" element={<RestablecerContrasena />} />
-        </Route>
-
-      </Routes>
-    </Router>
-  );
-};
-
+          
+          </Route>
+      
+    </Routes>
+  </Router>
+);
+}
 export default AppRoutes;

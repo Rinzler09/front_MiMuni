@@ -1,7 +1,7 @@
 // src/Pages/CambioContraseña.tsx
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "../../style/PagesStyles/cambioContraseñaStyles.css";
+import "../../style/PagesStyles/ReseteoContraseñaStyle/restablecerContrasenaStyle.css";
 import type { cambioContrasena } from "../../types/generalForm";
 import ErrorMessage from "../../Components/ErrorMessage.tsx/MostrarMensajesError";
 import { useForm } from "react-hook-form";
@@ -10,8 +10,7 @@ import { receteoContraServices } from "../../services/EnvioEmailServices";
 //import { cambiarContra } from "../../services/CambioControseñaServices";
 import { useAuth } from "../../Auth/AuthContext";
 import { Toaster, toast } from "sonner";
-import Modal from "../../Components/ModalComponents/modalComponent"
-import { logoutUsuario } from "../../services/EliminacionCookie";
+import Modal from "../../Components/ModalComponents/modalComponent";
 // import { useSessionModal } from "../../hook/UseSessionTimeout";
 import { useSessionTimeout } from "../../hook/UseSessionTimeout";
 

@@ -1,0 +1,281 @@
+.btn-contraseña:hover {
+    background-color: #fa883d;
+}
+
+.form-container-contraseña {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    /*Centra los componentes internos de este div */
+    margin: auto;
+    /*centra el div como tal ya que pone un margin automatico */
+    background-color: rgb(232, 231, 231);
+    padding: 20px 0px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    max-width: fit-content;
+
+}
+
+.form-container-contraseña>div {
+    margin: 0px auto;
+    /*este es el margin de los inputs   */
+    min-width: 80%;
+    /* Este es el width minimo de los inputs de contra  */
+    /*Es el 60% del elemento padre en el cual esta contenido */
+}
+
+.linea {
+    margin: 0px 19px;
+}
+
+.divTitlecontra {
+    display: flex;
+    justify-content: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.logoRegistro {
+    max-width: 500px;
+}
+
+.logoMuni {
+    display: flex;
+    justify-self: center;
+    margin-top: -50px;
+}
+
+/* Código de restablecer contraseña */
+
+.reset-pass-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    padding: 2rem;
+}
+
+/* 2. Card central */
+.reset-pass-container {
+    background: #fff;
+    max-width: 500px;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Logo centrado */
+.logoMuni {
+    text-align: center;
+}
+
+/* Typography */
+h2 {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+p {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* 3. Inputs con estilo y transición */
+.form-control {
+    width: 100%;
+    height: 3rem;
+    font-size: 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 0 0.75rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+    border-color: #c55d0d;
+    box-shadow: 0 0 0 0.2rem rgba(197, 93, 13, 0.25);
+    outline: none;
+}
+
+/* 4. Recaptcha centrado */
+.recaptcha-card {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    /* o flex-start si lo quieres pegado a la izquierda */
+    padding: 1rem;
+    /* quitas el padding lateral excesivo */
+    margin-bottom: 1.5rem;
+}
+
+/* 5. Botones con hover/efecto */
+.btn-contraseña {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 90px;
+    justify-self: center;
+    display: block;
+    min-width: 20%;
+    background-color: #c55d0d;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: background-color 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.btn-contraseña:hover {
+    background-color: #a0480b;
+    transform: translateY(-2px);
+}
+
+/* 6. Row de código temporal */
+.code-validate-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.code-input {
+    flex: 1;
+    height: 3rem;
+    border-radius: 6px;
+}
+
+.validate-btn {
+    flex: 0 0 auto;
+    /* no crece ni encoge */
+    width: auto;
+    /* anula cualquier width:100% heredado */
+    min-width: 120px;
+    /* opcional, para que no quede demasiado pequeñito */
+    height: 3rem;
+    border-radius: 6px;
+}
+
+/* 7. Mensajes de error */
+.ErrorMessage {
+    margin-top: 0.25rem;
+    color: #dc2626;
+    font-size: 0.875rem;
+}
+
+.button-row .btn-contraseña {
+    width: 100%;
+}
+
+.info-text {
+    font-size: 0.9rem;
+    color: #4b5563;
+    /* un gris suave */
+    line-height: 1.4;
+    max-width: 90%;
+    margin: 0 auto;
+    /* centrado */
+}
+
+/* Botones desactivados */
+.btn-contraseña:disabled,
+.validate-btn:disabled {
+    background-color: #cbd5e1;
+    /* gris suave */
+    color: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Inputs desactivados */
+.form-control:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
+/* Si quieres un ligero sombreado en todo el form cuando está bloqueado */
+form:has(input:disabled) {
+    opacity: 0.95;
+}
+
+/* Card un poco más ancha */
+.reset-pass-container {
+    max-width: 480px;
+    margin: 3rem auto;
+}
+
+/* Inputs y botones extra-grandes */
+.form-control-xl {
+    padding: 1rem 1rem;
+    font-size: 1.125rem;
+}
+
+.btn-xl {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.125rem;
+}
+
+/* Párrafo “lead” centrado y espaciamiento suave */
+.lead-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+.reset-pass-container .card-title {
+    text-align: right;
+    white-space: nowrap;
+}
+
+
+/* ————————————————————————————————————
+   NUEVO: Posicionamiento “profesional” de los ojitos
+   usando CSS Grid en cada DIV.mb-3 del formulario
+   ———————————————————————————————————— */
+
+.reset-pass-container form>div.mb-3 {
+    /* convertimos el wrapper en grid */
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "label label"
+        "input icon"
+        "error error";
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.reset-pass-container form>div.mb-3>label.form-label {
+    grid-area: label;
+    margin: 0;
+    /* quitamos el margin-bottom por defecto */
+}
+
+.reset-pass-container form>div.mb-3>.form-control {
+    grid-area: input;
+    width: 100%;
+}
+
+.reset-pass-container form>div.mb-3>span {
+    grid-area: icon;
+    justify-self: end;
+    align-self: center;
+    cursor: pointer;
+    color: #6c757d;
+    /* ajustar si quieres otro tono */
+}
+
+.reset-pass-container form>div.mb-3>span:hover {
+    color: #495057;
+}
+
+.reset-pass-container form>div.mb-3>.ErrorMessage {
+    grid-area: error;
+    margin: 0;
+}

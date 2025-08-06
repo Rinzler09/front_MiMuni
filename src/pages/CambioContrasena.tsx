@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../style/PagesStyles/cambioContraseñaStyles.css";
 import Municipalidad from "../Components/ImagesComponents/Municipalidad";
-import { useEffect } from "react";
 // Importación nuevas al proyecto
 import type { cambioContrasena } from "../types/generalForm";
 import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
@@ -11,7 +10,6 @@ import { cambiarContra } from "../services/CambioControseñaServices";
 import { Toaster, toast } from "sonner";
 import Modal from "../Components/ModalComponents/modalComponent";
 import { useAuth } from "../Auth/AuthContext";
-import { logoutUsuario } from "../services/EliminacionCookie";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importar estilos de bootstrap icons (si no lo has hecho globalmente)
 import { useSessionTimeout } from "../hook/UseSessionTimeout";
 // import { useSessionModal } from "../hook/UseSessionTimeout";

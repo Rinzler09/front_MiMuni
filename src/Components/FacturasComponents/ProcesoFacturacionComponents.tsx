@@ -3,11 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import "../../style/PagesStyles/titulo_TablasStyle.css"
-
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton from "react-loading-skeleton"; //Libreria que viene para utilizar skeleton
+import "react-loading-skeleton/dist/skeleton.css";// Importancion de Skeleton
 
 interface Facturas {
   numFactura: number;
@@ -26,6 +25,7 @@ interface Facturas {
 interface LocationState {
   claveCat: string;
   direccion: string;
+  aldeaFac: string;
 }
 
 const ProceosFacturacion: React.FC = () => {
@@ -40,10 +40,12 @@ const ProceosFacturacion: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+    // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);//Declaracion de los conts para la paginacion
+  const registrosPorPagina = 5;//El registro de la paginas
 
 
-
-
+  //Declaraciones de los const
   const [selectedAmount, setSelectedAmount] = useState(0);
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -87,40 +89,47 @@ const ProceosFacturacion: React.FC = () => {
   /*HOOKS PARA PAGOS A DB GEOREDES*/
   const [facturas, setFacturas] = useState<Facturas[]>([]);
 
-  // Paginación
-  const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 5;
 
 
   // Cálculo de los índices para la paginación
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
+  const pagsTotales = Math.ceil(facturas.length / registrosPorPagina);
+  const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
+
   const { user, selectedMunicipality, token } = useAuth();
 
   // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
   //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo
 
-  useEffect(() => {
-    const fetchFacturas = async () => {
-      try {
-        if (!selectedMunicipality || !user?.token) return;
+useEffect(() => {
+  const fetchFacturas = async () => {
+    setLoading(true);
+    
+    if (!selectedMunicipality || !user?.token) {
+      setLoading(false);
+      return;
+    }
 
-        const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, token);
+    try {
+      
+      const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, token);
 
-        if (respuesta && Array.isArray(respuesta)) {
-          setFacturas(respuesta);
-        } else {
-          console.error("La respuesta de la API no contiene un arreglo:", respuesta);
-        }
-      } catch (error) {
-        //console.error("Error obteniendo registros:", error);
-
+      if (Array.isArray(respuesta)) {
+        setFacturas(respuesta);
       }
-    };
+    } catch (error) {
+     
+    } finally {
+      // 4) siempre bajamos loading cuando termine (éxito o error)
+      setLoading(false);
+    }
+  };
 
-    fetchFacturas();
-  }, [claveCat, selectedMunicipality, user]);
+  fetchFacturas();
+}, [claveCat, selectedMunicipality, user, token]);
+
 
   //Cuando se clickea el boton pagar se ejecuta el metodo handlePayButtonClick
   //el cual mediante fetch usa un post para enviar el json conteniendo la estrucutar del pago de factura  
@@ -205,6 +214,8 @@ const ProceosFacturacion: React.FC = () => {
       setSelectedAmount(prev => prev + valorNumerico);
     }
   }
+  console.log("Aqui estan", facturasActuales);
+  console.log("Facturas que viene de la API de FACTURACIONES:", facturas);
 
   return (
     <div className="detalles-impuesto-container">
@@ -221,15 +232,35 @@ const ProceosFacturacion: React.FC = () => {
             <th>Dirección</th>
           </tr>
         </thead>
+    
         <tbody>
-          <tr>
-            <td style={{ textAlign: "center" }} >{claveCat}</td>
-            <td style={{ textAlign: "center" }}>0801-2001-03973</td>
-            <td style={{ textAlign: "center" }}>{direccion}</td>
+   {loading
+   /**En esta parte tenemos que investigar toda la logica de como agregar el skeleton sin necesidad de poder  */
+      // Mientras carga, renderizas X filas de skeleton
+      ? Array.from({ length: Math.max(facturas.length, 1)  }).map((_, i) => (//Tenemos un arrelgo donde tiene el maximo de facturas 
+        //por ejemplo tenemos tenemos el facturas.length donde es el numero de elementos que hay actualmente el array en facturas
+        // donde tambien le estamos dando un orden de 1 para que no se muestre el skeleton que se muestre una columna.
+        //Al momento de recargar, tambien tenemos el .map que sobre escribe el arreglo de facturas
+        //  y se le da un key={i} para que cada uno de los elementos del arreglo
+          <tr key={i}>
+            {Array.from({ length: 3 }).map((__, j) => (
+              <td key={j} style={{ textAlign: "center" }}>
+                <Skeleton height={20} />
+              </td>
+            ))}
           </tr>
-
-
-        </tbody>
+        ))
+      // Cuando ya no carga, renderizas tus datos reales
+      : (
+        <tr>
+          <td style={{ textAlign: "center" }}>{claveCat}</td>
+          <td style={{ textAlign: "center" }}>0801-2001-03973</td>
+          <td style={{ textAlign: "center" }}>{direccion}</td>
+          {/* …más celdas si tienes… */}
+        </tr>
+      )
+    }
+  </tbody>
       </table>
 
       <br />
@@ -256,31 +287,65 @@ const ProceosFacturacion: React.FC = () => {
         </thead>
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
-          {loading}
+         {loading
+    // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
+      ? Array.from({ length: registrosPorPagina }).map((_, i) => (
+       <tr key={i}>
+      {Array.from({ length: 11 }).map((__, j) => (
+      <td key={j} style={{ textAlign: "center" }}>
+      <Skeleton height={20} />
+      </td>
+      ))}
+      </tr>
+      ))
+                
+    // Cuando ya cargó, mapea las facturas
+    : facturasActuales.map((item, index) => (
+        <tr key={index}> 
+        
+          <td style={{ textAlign: "center" }}> <input  type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
+          <td style={{ textAlign: "center" }}>{item.numFactura}</td>
+          <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
+          <td style={{ textAlign: "center" }}>{item.descripcion}</td>
+          <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
+          <td style={{ textAlign: "center" }}>L{item.descPP}</td>
+          <td style={{ textAlign: "center" }}>L{item.descADM}</td>
+          <td style={{ textAlign: "center" }}>L{item.descAMN}</td>
+          <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
+          <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
+          <td style={{ textAlign: "center" }}>L{item.total}</td>
+        </tr>
+      ))}
+      
 
-          {facturasActuales.map((item, index) => (
-            <tr key={index}>
-              <td style={{ textAlign: "center" }}><input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
-              <td style={{ textAlign: "center" }}>{item.numFactura}</td>
-              <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
-              <td style={{ textAlign: "center" }}>{item.descripcion}</td>
-              <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
-              <td style={{ textAlign: "center" }}>L{item.descPP} </td>
-              <td style={{ textAlign: "center" }}>L{item.descADM}</td>
-              <td style={{ textAlign: "center" }} >L{item.descAMN}</td>
-              <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
-              <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
-              <td style={{ textAlign: "center" }}>L{item.total}</td>
-            </tr>
-          ))}
+      {!loading && facturas.length === 0 && (
+        
+        <tr>
+          <td colSpan={11} style={{textAlign: "center"}}>
+            NO HAY DATOS QUE MOSTRAR
+          </td>
+        </tr>
+      )}
         </tbody>
       </table>
+
+      {pagsTotales > 1 && !loading && (
+        <div className="pagination">
+          {Array.from({length: pagsTotales}, (_, i) => (
+            <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
 
 
 
       {/* Sección de "Mis tarjetas de crédito y débito" */}
       <div className="credit-card-section"> {/*Cambiar la logica a un componente reutilizable*/}
+        
         <h3>Mis tarjetas de credito y debito</h3>
+        
         <div className="add-card">
           <span className="card-icon">💳</span>
           {savedCard ? (
@@ -376,15 +441,7 @@ const ProceosFacturacion: React.FC = () => {
               Debe agregar una tarjeta de crédito o débito antes de proceder el
               pago.
             </p>
-            <button
-              onClick={() => {
-                closeCardRequiredModal();
-                openCardModal();
-              }}
-              className="modal-button"
-            >
-              OK
-            </button>
+            <button onClick={() => { closeCardRequiredModal(); openCardModal();}} className="modal-button">OK</button>
           </div>
         </div>
       )}
