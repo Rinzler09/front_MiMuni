@@ -2,17 +2,9 @@ import React, { useState, useEffect } from "react";// Importaciones de useState,
 import { Link, useNavigate } from "react-router-dom";// en esta parte estamos importando el useNavigate para la rutas de react-route-dom
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";// Importacion de los iconos de la libreria react-fontawesome
 import {
-  faHome,
-  faUser,
-  faBuilding,
-  faIndustry,
-  faTrash,
-  faFileAlt,
-  faSearch,
-  faLeaf,
+  faUniversity,
+  faFileInvoice,
   faChevronDown,
-  faRepeat,
-  faBars,
 } from "@fortawesome/free-solid-svg-icons";// Importaciones de iconos de la libreria free.solid.svg.icons
 import "../../style/LayoutStyles/sidebar.css";// Importacion de estilo de sidebar.css
 import { useAuth } from "../../Auth/AuthContext";// Importacion de useAuth de AuthContext.tsx
@@ -22,11 +14,11 @@ import { MdErrorOutline } from "react-icons/md";// Importacion de MDErrorOutline
 
 // // PROPS para controlar el collapse del sidebar
 export interface SidebarPROPS { //marley lo programo y no supo explicar
-  // isOpen: boolean;
+  collapsed: boolean;
 }
 
 
-const Sidebar: React.FC<SidebarPROPS> = () => {
+const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({// Declaramos una contanste en donde contiene openSections, SetOpenSections,
     //donde tambien estamos pasando un generico key:string: booleano, donde nos indica que el estado sera un objeto cuyas claves son string y los valores son booleans
     EstadoCuenta: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
@@ -45,6 +37,11 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
   SetSelectedMunicipality: es donde se releja la actualizacion del objeto al momento de cambiar la municipalidad */
   //const token = sessionStorage.getItem("access_TKN");
   const navigate = useNavigate();// En esta parte tenemos una constante en donde tenemos el navigate declarado y dentro de eso tenemos el hook de useNavigate() en donde lo utilizamos para poder navegar
+
+  const sbMenEstCuenta: string[] = ['Bienes Inmuebles', 'Impuesto Vecinal', 'Servicios Publicos', 'Impuesto Negocios', 'Multas Municipales', 'Servicios Varios'];//Cadenas de Titulos para subMenu correspondiente 
+  // const sbMenEstCuenta_I: any[] = [faHome, faUser, faBuilding, faIndustry, faBuilding, faBuilding]; //Iconos para subMenu correspondiente
+  const sbMenEstCuenta_R: string[] = ['/bienes-inmuebles', '/impuesto-personal', '/servicios-publicos', '/industria-comercio', '/otras-tasas', '/otras-tasas'];//Cadenas de Rutas para subMenu correspondiente 
+  const [selectedSubMenuIdx, setSelectedSubMenuIdx] = useState<number | null>(null);
 
 
   const toggleSection = (section: string) => {/**En este apartado tenemos una funcion donde funciona para poder abrir y cerrar dinamicamente una seccion con el estado de
@@ -106,7 +103,7 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
       <Toaster closeButton position="top-right" richColors />
 
       {/* Contenedor del sidebar */}
-      <div className={`sidebar-container`}>
+      <div className={`sidebar-container ${collapsed ? 'collapsed' : ''}`}>
         {/* <div className={`sidebar-container ${isOpen ? "open" : ""}`}> */}
         {/* ——— Brand / Logo arriba ——— */}
         <div className="sidebar-brand">
@@ -123,7 +120,9 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección de Municipalidades */}
         <div className="sidebar-section">
           <h3 id="btnMunicipalidades" className={`section-title ${openSections.Municipalidades ? "active" : ""}`} onClick={() => toggleSection("Municipalidades")}>
-            Municipalidades <FontAwesomeIcon icon={faChevronDown} />
+            <span className="section-text"><FontAwesomeIcon className="subMenuIcon" icon={faUniversity} />Municipalidades</span>
+            <span className="section-icon"><FontAwesomeIcon icon={faUniversity} /></span>
+            <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
 
           <ul className={`menu-list ${openSections.Municipalidades ? "show" : ""}`}>
@@ -140,100 +139,75 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
         {/* Sección Estado de Cuenta */}
         <div className="sidebar-section">
           <h3 className={`section-title ${openSections.EstadoCuenta ? "active" : ""}`} onClick={() => toggleSection("EstadoCuenta")}>
-            Estado de Cuenta <FontAwesomeIcon icon={faChevronDown} />
+            <span className="section-text"><FontAwesomeIcon className="subMenuIcon" icon={faFileInvoice} />Estado de Cuenta </span>
+            <span className="section-icon"><FontAwesomeIcon icon={faFileInvoice} /></span>
+            <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
-          <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}>
-            <li>
-              <Link to="/bienes-inmuebles" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faHome} className="menu-icon" />
-                Bienes Inmuebles
-              </Link>
-            </li>
-            <li>
-              <Link to="/impuesto-personal" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faUser} className="menu-icon" />
-                Impuesto Vecinal
-              </Link>
-            </li>
-            <li>
-              <Link to="/servicios-publicos" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faBuilding} className="menu-icon" />
-                Servicios Públicos
-              </Link>
-            </li>
-            <li>
-              <Link to="/industria-comercio" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faIndustry} className="menu-icon" />
-                Impuesto Negocios
-              </Link>
-            </li>
-            <li>
-              <Link to="/otras-tasas" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faTrash} className="menu-icon" />
-                Multas Municipales
-              </Link>
-            </li>
-            <li>
-              <Link to="/otras-tasas" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faTrash} className="menu-icon" />
-                Servicios Varios
-              </Link>
-            </li>
+          <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}> {/*show sirve para mostrar el despliegue del dropdown*/}
+            {sbMenEstCuenta.map((item, index) => (
+              <li key={index}>
+                <Link to={sbMenEstCuenta_R[index]}
+                  {...restrictedLinkProps} //restrictedProps ya usa clase menu-item 
+                  className={` ${restrictedLinkProps.className === "menu-item disabled" ? restrictedLinkProps.className : "menu-item"}
+                   ${selectedSubMenuIdx === index ? "selected" : ""} `}
+                  onClick={() => {
+                    console.log("El valor de selectedSubMenuIdx: ", selectedSubMenuIdx);
+                    console.log("el className de restrictedprops: ", restrictedLinkProps.className);
+                    setSelectedSubMenuIdx(index); //se guarda el numero de indice para cada subMenu de la lista el cual debe hacer match con el indice actual que se clickea
+                  }}
+                >
+                  {/* <FontAwesomeIcon icon={sbMenEstCuenta_I[index]} className="menu-icon" /> */}
+                  {item}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
-        {/* Sección Servicios Tributarios */}
-        <div className="sidebar-section">
+        {/* <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Declaraciones")}>
             Servicios Tributarios <FontAwesomeIcon icon={faChevronDown} />
           </h3>
           <ul className={`menu-list ${openSections.Declaraciones ? "show" : ""}`}>
             <li>
               <Link to="/volumen-ventas" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faFileAlt} className="menu-icon" />
                 Solvencia Vecinal
               </Link>
             </li>
             <li>
               <Link to="/renovaciones" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                 Permiso operación negocios
               </Link>
             </li>
             <li>
               <Link to="/renovaciones" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                 Impuesto volumen ventas
               </Link>
             </li>
             <li>
               <Link to="/renovaciones" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                 Cambio de propietario
               </Link>
             </li>
             <li>
               <Link to="/renovaciones" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                 Cambio de giro negocio
               </Link>
             </li>
             <li>
               <Link to="/renovaciones" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                 Cambio de negocio
               </Link>
             </li>
             <li>
               <Link to="/renovaciones" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faRepeat} className="menu-icon" />
                 Planes de Pago
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
-        {/* Sección Servicios Catastrales */}
+        {/* Sección Servicios Catastrales
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Servicios")}>
             Servicios Catastrales <FontAwesomeIcon icon={faChevronDown} />
@@ -264,9 +238,9 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
-        {/* Sección Servicios Ambientales */}
+        {/* Sección Servicios Ambientales
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Ambientales")}>
             Servicios Ambientales <FontAwesomeIcon icon={faChevronDown} />
@@ -291,9 +265,9 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
-        {/* Sección Servicios Públicos */}
+        {/* Sección Servicios Públicos
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Publicos")}>
             Servicios Públicos <FontAwesomeIcon icon={faChevronDown} />
@@ -330,9 +304,9 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
-        {/* Sección Servicios Varios */}
+        {/* Sección Servicios Varios
         <div className="sidebar-section">
           <h3 className="section-title" onClick={() => toggleSection("Varios")}>
             Servicios Varios <FontAwesomeIcon icon={faChevronDown} />
@@ -381,9 +355,9 @@ const Sidebar: React.FC<SidebarPROPS> = () => {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
-    </div>
+    </div >
 
   );
 };

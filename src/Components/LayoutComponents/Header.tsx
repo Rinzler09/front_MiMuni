@@ -17,12 +17,13 @@ import { logoutUsuario } from "../../services/EliminacionCookie";
 // import { useSessionTimeout } from "../../hook/UseSessionTimeout";
 
 // Props para controlar el collapse del sidebar
-// interface HeaderProps {  //marley lo programo y no supo explicar
-//   onToggleSidebar: () => void;
-//   collapsed: boolean;
-// }
+interface HeaderProps {
+  collapsed: boolean;
+  onToggleSidebar: () => void;
 
-const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
+}
+
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { user, token, setUser, setToken, setSelectedMunicipality } = useAuth();
@@ -51,10 +52,11 @@ const Header: React.FC<any> = ({ onToggleSidebar, collapsed }) => {
     <header className={`header ${collapsed ? "collapsed" : ""}`}>
       {/* IZQUIERDA: hamburger + logo */}
       <div className="header-left">
-        <FontAwesomeIcon icon={faBars} className="header-toggle" onClick={() => {
-          console.log("hamburguesa clicada en Header");
-          onToggleSidebar();
-        }} />
+        <FontAwesomeIcon icon={faBars}
+          className="header-hamburger"
+          onClick={() => {
+            onToggleSidebar();
+          }} />
 
         {/* Si más adelante quieres el search, descomenta */}
         {/* <div className="header-search">

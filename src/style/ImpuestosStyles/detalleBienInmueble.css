@@ -32,10 +32,12 @@
   font-weight: bold;
   color: black;
   margin: auto 5px;
+  transition: all 0.2s;
 }
 
 
 .btnFacturas:hover {
+  transform: scale(1.1, 1.1);
   /* width: calc(85%); */
   background-color: #c4751a;
 }
@@ -159,6 +161,13 @@
   border-bottom: 1px dashed #ddd;
   color: #333;
 }
+
+/* PAGINACION */
+
+.pagination {
+  margin-top: 20px;
+}
+
 
 /* ----------------------------------------
    MEDIA QUERIES

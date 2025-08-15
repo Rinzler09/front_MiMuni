@@ -1,10 +1,10 @@
-import React, { FC, Suspense, useEffect } from 'react'
+import React, { FC, Suspense, useState, useEffect } from 'react'
 import { replace, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../Components/LayoutComponents/Sidebar';
 import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
 import { useAuth } from '../Auth/AuthContext';
-import { useSessionTimeout } from '../hook/UseSessionTimeout';
+import { useSessionTimeout } from '../TimeOut/UseSessionTimeout';
 //me quede por aqui ya que sera aqui en donde se implementara la logica 
 // de los eventos mas la logica de las modales
 
@@ -30,7 +30,7 @@ const Components: Components = {
     'ambientales': React.lazy(() => import('../Components/ServiciosComponents/Ambientes')),
 
     //Componentes de Pantalla Periodos de Facturas
-    'facturas-BI': React.lazy(() => import('../Components/FacturasComponents/ProcesoFacturacionComponents')),
+    'facturas-BI': React.lazy(() => import('../Components/FacturasComponents/BI-Facturacion')),
 
     //Componentes de tarjetas
     'tarjetas-guardadas': React.lazy(() => import('../Components/TarjetasComponents/TarjetasGuardadas')),
@@ -57,7 +57,8 @@ const General: FC = () => {
 
     //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
 
-    const navigate = useNavigate();
+    const [collapsed, setCollapsed] = useState(false)
+    const handleToggleSidebar = () => setCollapsed(c => !c);
 
 
     //Se configura el hook de sesion con callbacks
@@ -92,9 +93,10 @@ const General: FC = () => {
     //los timers internos de la funcion son los que cambian la funcion de resetSessionTimers como tal no
 
     return (
-        <div>
-            <Sidebar />
-            <Header />
+
+        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
+            <Sidebar collapsed={collapsed} />
+            <Header collapsed={collapsed} onToggleSidebar={handleToggleSidebar} />
             <div className="generalDiv">
                 <Suspense fallback={<div>Cargando Impuesto ...</div>}>
                     {Componente ? (

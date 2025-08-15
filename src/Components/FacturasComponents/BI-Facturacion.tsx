@@ -41,7 +41,7 @@ const ProceosFacturacion: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-
+  const registrosPorPagina = 5;
 
 
 
@@ -90,13 +90,17 @@ const ProceosFacturacion: React.FC = () => {
 
   // Paginación
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 5;
 
 
   // Cálculo de los índices para la paginación
+
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
+  const pagsTotales = Math.ceil(facturas.length / registrosPorPagina);
+  const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
+
+
   const { user, selectedMunicipality, token } = useAuth();
 
   // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
@@ -104,6 +108,14 @@ const ProceosFacturacion: React.FC = () => {
 
   useEffect(() => {
     const fetchFacturas = async () => {
+
+      setLoading(true);
+
+      if (!selectedMunicipality) {
+        setLoading(false);
+        return;
+      }
+
       try {
 
         if (!selectedMunicipality) {
@@ -120,6 +132,8 @@ const ProceosFacturacion: React.FC = () => {
         }
       } catch (error) {
         console.log("Error obteniendo registros:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -226,19 +240,29 @@ const ProceosFacturacion: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td style={{ textAlign: "center" }} >{claveCat}</td>
-            <td style={{ textAlign: "center" }}>0801-2001-03973</td>
-            <td style={{ textAlign: "center" }}>{direccion}</td>
-          </tr>
 
+          {loading ? Array.from({ length: Math.max(facturas.length, 1) }).map((_, i) => (//Tenemos un arrelgo donde tiene el maximo de facturas 
+            <tr key={i}>
+              {Array.from({ length: 3 }).map((__, j) => (
+                <td key={j} style={{ textAlign: "center" }}>
+                  <Skeleton height={20} />
+                </td>
+              ))}
+            </tr>
+          ))
+            : (
+              <tr>
+                <td style={{ textAlign: "center" }}>{claveCat}</td>
+                <td style={{ textAlign: "center" }}>0801-2001-03973</td>
+                <td style={{ textAlign: "center" }}>{direccion}</td>
+              </tr>
+            )
+          }
 
         </tbody>
       </table>
 
       <br />
-
-
       <br />
 
       {/* Datos de las Tablas*/}
@@ -258,28 +282,57 @@ const ProceosFacturacion: React.FC = () => {
             <th>Total</th>
           </tr>
         </thead>
+
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
-          {loading}
+          {loading
+            // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
+            ? Array.from({ length: registrosPorPagina }).map((_, i) => (
+              <tr key={i}>
+                {Array.from({ length: 11 }).map((__, j) => (
+                  <td key={j} style={{ textAlign: "center" }}>
+                    <Skeleton height={20} />
+                  </td>
+                ))}
+              </tr>
+            ))
 
-          {facturasActuales.map((item, index) => (
-            <tr key={index}>
-              <td style={{ textAlign: "center" }}><input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
-              <td style={{ textAlign: "center" }}>{item.numFactura}</td>
-              <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
-              <td style={{ textAlign: "center" }}>{item.descripcion}</td>
-              <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
-              <td style={{ textAlign: "center" }}>L{item.descPP} </td>
-              <td style={{ textAlign: "center" }}>L{item.descADM}</td>
-              <td style={{ textAlign: "center" }} >L{item.descAMN}</td>
-              <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
-              <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
-              <td style={{ textAlign: "center" }}>L{item.total}</td>
+            // Cuando ya cargó, mapea las facturas
+            : facturasActuales.map((item, index) => (
+              <tr key={index}>
+                <td style={{ textAlign: "center" }}> <input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
+                <td style={{ textAlign: "center" }}>{item.numFactura}</td>
+                <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
+                <td style={{ textAlign: "center" }}>{item.descripcion}</td>
+                <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
+                <td style={{ textAlign: "center" }}>L{item.descPP}</td>
+                <td style={{ textAlign: "center" }}>L{item.descADM}</td>
+                <td style={{ textAlign: "center" }}>L{item.descAMN}</td>
+                <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
+                <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
+                <td style={{ textAlign: "center" }}>L{item.total}</td>
+              </tr>
+            ))}
+
+          {!loading && facturas.length === 0 && (
+            <tr>
+              <td colSpan={11} style={{ textAlign: "center" }}>
+                NO HAY DATOS QUE MOSTRAR
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
+      {pagsTotales > 1 && !loading && (   //me quede por aqui
+        <div className="pagination">
+          {Array.from({ length: pagsTotales }, (_, i) => (
+            <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
 
 
       {/* Sección de "Mis tarjetas de crédito y débito" */}

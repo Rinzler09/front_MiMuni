@@ -156,6 +156,10 @@ const LoginForm: React.FC = () => {
       <div className="background">
         {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast*/}
         <Toaster closeButton position="top-right" richColors />
+        <div className="circle circle1"></div>{/*Estos circulos son para el efecto de foco detras del Login Form*/}
+        <div className="circle circle2"></div>
+        <div className="circle circle3"></div>
+
 
         <div className="container min-vh-100 d-flex justify-content-center align-items-center">
           {/* Aquí sólo cambio la clase del wrapper */}
@@ -164,7 +168,7 @@ const LoginForm: React.FC = () => {
 
             {/* Panel izquierdo: carrusel */}
             <div className="col-md-5 d-none d-md-flex flex-column">
-              <h2 className="titu">MiMuni en Línea</h2>
+              <h2 className="titu">Mi Muni en Línea</h2>
               <div className="carousel-content">
                 <img src={slides[currentSlide].image} alt={slides[currentSlide].description} className="illustration" />
                 <p className="slide-description">

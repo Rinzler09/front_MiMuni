@@ -1,5 +1,5 @@
 /* ======================================================
-   Fondo y círculos animados
+   Fondo y círculos para mostrar efecto difuminado en Login
    ====================================================== */
 .background {
   position: fixed;
@@ -11,6 +11,38 @@
   overflow: hidden;
   z-index: -1;
 }
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(120px);
+}
+
+.circle1 {
+  width: 500px;
+  height: 500px;
+  background-color: #FF6600;
+  top: 10%;
+  left: 15%;
+}
+
+.circle2 {
+  width: 500px;
+  height: 500px;
+  background-color: #0e3475;
+  bottom: 10%;
+  right: 10%;
+}
+
+.circle3 {
+  width: 300px;
+  height: 400px;
+  background-color: #FF6600;
+  bottom: 30%;
+}
+
+/*Media Queries*/
 
 
 @keyframes float {

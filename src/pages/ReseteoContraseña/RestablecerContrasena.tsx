@@ -13,7 +13,7 @@ import { Toaster, toast } from "sonner";
 import Modal from "../../Components/ModalComponents/modalComponent"
 import { logoutUsuario } from "../../services/EliminacionCookie";
 // import { useSessionModal } from "../../hook/UseSessionTimeout";
-import { useSessionTimeout } from "../../hook/UseSessionTimeout";
+import { useSessionTimeout } from "../../TimeOut/UseSessionTimeout";
 
 const RestablecerContrasena: React.FC = () => {
   const navigate = useNavigate();

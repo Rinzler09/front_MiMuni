@@ -1,9 +1,13 @@
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  height: auto;        /* que el body crezca con el contenido */
-  overflow-y: auto;    /* scroll del navegador si hace falta */
-  box-sizing: border-box;
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    /* que el body crezca con el contenido */
+    overflow-y: auto;
+    /* scroll del navegador si hace falta */
+    box-sizing: border-box;
 }
 
 
@@ -52,7 +56,8 @@ html, body, #root {
     margin-left: 20%;
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
-    margin-top: 55px; /* Modificar la posicion del Container de la pagina*/
+    margin-top: 55px;
+    /* Modificar la posicion del Container de la pagina*/
 
 }
 
@@ -382,3 +387,10 @@ html, body, #root {
 }
 
 /* TERMINA MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */
+
+
+/* PAGINACION */
+
+.pagination {
+    margin-top: 20px;
+}

@@ -37,6 +37,7 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
     const warningTimer = useRef<ReturnType<typeof setTimeout> | null>(null); //este es el hook con el temporizador para mostrar la ventana de warning
     // const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const expireTimer = useRef<ReturnType<typeof setTimeout> | null>(null); //este es el hook con el temporizador para salir de la sesion al login form
+    const expireInterval = useRef<ReturnType<typeof setInterval> | null>(null); //este es el hook con el temporizador para salir de la sesion al login form
     const countdownInterval = useRef<ReturnType<typeof setInterval> | null>(null); //este es el hook con el temporizador dentro del warningTimer que actura como contador
     const showWarningRef = useRef(showWarning);
     const countdownRef = useRef(countdown);
@@ -58,6 +59,11 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
             clearInterval(countdownInterval.current);           // Si existe uno activo entonces lo limpia
             countdownInterval.current = null;                    // Y de igual forma pone la referencia en null
         }
+
+        // if (expireInterval.current) { //se agrego para limpiar el nuevo expireInterval 
+        //     clearInterval(expireInterval.current);
+        //     expireInterval.current = null;
+        // }
     }, []);// se cambio clearAll a una funcion que usa useCallback para memorizar 
 
     const handleExpire = useCallback(() => {
@@ -165,13 +171,24 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
                 console.log("Entro al expireTimer de initializeOTSession que ejecuta handleExpire()");
                 console.log("El valor de showWarningRef en expireTimer: ", showWarningRef,
                     " el de CountDownRef es: ", countdownRef, " y el de hasAcceptedOTRef es: ", hasAcceptedOTRef);
+                console.log('visibilityState:', document.visibilityState); // 'visible' | 'hidden' | 'prerender'
 
-                if ((showWarningRef.current === true && countdownRef.current <= 1) ||
-                    (hasAcceptedOTRef.current === true && countdownRef.current <= 1)) { //se tiene que usar .current para acceder al valor del useRef ya que si solo se compara countdownRef se estaria comparando todo el objeto al numero 1 lo cual genera un ERROR
+                if ((showWarningRef.current === true && countdownRef.current <= 2) ||
+                    (hasAcceptedOTRef.current === true && countdownRef.current <= 2)) { //se tiene que usar .current para acceder al valor del useRef ya que si solo se compara countdownRef se estaria comparando todo el objeto al numero 1 lo cual genera un ERROR
                     handleExpire();
                 } else {
-                    console.log("No esta mostrando la venta modal de alerta de sesionOT, no se va a ejecutar el codigo de handleExpire().");
-                    return;
+                    if (document.visibilityState === "visible") {// Si el usuario esta en la pantalla de MML
+                        console.log("El documento esta visible")
+                        console.log("No esta mostrando la venta modal de alerta de sesionOT, no se va a ejecutar el codigo de handleExpire().");
+                        return;
+                    } else { // si el documento esta hidden o prerender como en caso de que el user bloquee el OS
+                        console.log("El documento NO esta visible")
+                        if (showWarningRef.current === true) { //showWarningRef.current === true solo ese atributo es necesario ya que countdownref varia mucho (que siempre el countdown es menor a 30s cuando se congela) cuando el doc esta hidden
+                            console.log("Entrara a handleExpire con el documento hidden")
+                            handleExpire();
+                        }
+                    }
+
                 }
 
             }, (expTKN_ms - Date.now())); //se ejecutara handleExpire cuando se cumpla el tiempo de vencimiento del token
@@ -185,7 +202,7 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
     const initializeRFSession = useCallback(() => {
         setCanRenewTKN(true);
         clearAll(); // limpia temporizadores anteriores usados para las ventanas modales
-        const delay = 240_000;                  // 4 minutos para mostrar la venta modal tras inactividad
+        const delay = 240_000; // 4 minutos para ejecutar el expireTimer 
         const deadline = Date.now() + delay; // toma los milisegundos de la fecha actual y le suma los milisegundos de delay
 
         // Tras 4 min de inactividad el warning y empieza conteo
@@ -198,20 +215,48 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
                 const secs = Math.max(Math.ceil(remainingMs / 1000), 0);
                 setCountdown(secs);
             }, 1000);
+
+            //Este bloque se agregara como metodo de prueba
+            // expireInterval.current = setInterval(() => {
+            //     console.log("Entro al expireInterval de initializeRFSession que ejecuta handleExpire()");
+            //     console.log("El valor de showWarningRef en expireInterval: ", showWarningRef, " y el de CountDown es: ", countdownRef);
+            //     if (showWarningRef.current === true && countdownRef.current <= 1) { //se tiene que usar .current para acceder al valor del useRef ya que si solo se compara countdownRef se estaria comparando todo el objeto al numero 1 lo cual genera un ERROR
+            //         handleExpire();
+            //     } else {
+            //         console.log("No esta mostrando la venta modal de alerta de sesionRF, no se va a ejecutar el codigo de handleExpire(). ");
+            //         return;
+            //     }
+            // }, 1000);//aqui se esta usando la funcion handleexpire la cual se ejecutara 4 min despues de inactividad
+            //Bloque de prueba termina aqui 
+
+
         }, delay - 60_000);//se mostrara el warning al minuto 3 de inactividad 
 
         // console.log("El ultimo warning timer que se agendo fue el ID: ", warningTimer.current)
 
-        // Y a la misma vez se agenda el logout
+        // Y a la misma vez se agenda el expireTimer
         expireTimer.current = setTimeout(
             () => {
                 console.log("Entro al expireTimer de initializeRFSession que ejecuta handleExpire()");
                 console.log("El valor de showWarningRef en expireTimer: ", showWarningRef, " y el de CountDown es: ", countdownRef);
-                if (showWarningRef.current === true && countdownRef.current <= 1) { //se tiene que usar .current para acceder al valor del useRef ya que si solo se compara countdownRef se estaria comparando todo el objeto al numero 1 lo cual genera un ERROR
+                // Chequear el estado inicial
+                console.log('visibilityState:', document.visibilityState); // 'visible' | 'hidden' | 'prerender'
+                // // Para saber si el documento tiene foco
+                // console.log('hasFocus() en el documento a la hora de ejecutarse el expireTimer:', document.hasFocus()); // true | false
+                if (showWarningRef.current === true && countdownRef.current <= 2) { //se tiene que usar .current para acceder al valor del useRef ya que si solo se compara countdownRef se estaria comparando todo el objeto al numero 1 lo cual genera un ERROR
                     handleExpire();
                 } else {
-                    console.log("No esta mostrando la venta modal de alerta de sesionRF, no se va a ejecutar el codigo de handleExpire(). ");
-                    return;
+                    if (document.visibilityState === "visible") {// Si el usuario esta en la pantalla de MML
+                        console.log("El documento esta visible")
+                        console.log("No esta mostrando la venta modal de alerta de sesionRF, no se va a ejecutar el codigo de handleExpire(). ");
+                        return;
+                    } else {// si el documento esta hidden o prerender como en caso de que el user bloquee el OS 
+                        console.log("El documento NO esta visible")
+                        if (showWarningRef.current === true) { //showWarningRef.current === true solo ese atributo es necesario ya que countdownref varia mucho (que siempre el countdown es menor a 30s cuando se congela) cuando el doc esta hidden
+                            console.log("Entrara a handleExpire con el documento hidden")
+                            handleExpire();
+                        }
+                    }
                 }
 
             }, delay);//aqui se esta usando la funcion handleexpire la cual se ejecutara 4 min despues de inactividad
