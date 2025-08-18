@@ -17,6 +17,7 @@ export const facturaBienesInmueble = async (
         },
       }
     );
+    // console.log("Facturas Recibidas: ", response.data);
     return response.data;
   } catch (error: any) {
     throw new Error(

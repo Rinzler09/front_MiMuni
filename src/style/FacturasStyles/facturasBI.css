@@ -1,9 +1,13 @@
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  height: auto;        /* que el body crezca con el contenido */
-  overflow-y: auto;    /* scroll del navegador si hace falta */
-  box-sizing: border-box;
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    /* que el body crezca con el contenido */
+    overflow-y: auto;
+    /* scroll del navegador si hace falta */
+    box-sizing: border-box;
 }
 
 
@@ -52,7 +56,8 @@ html, body, #root {
     margin-left: 20%;
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
-    margin-top: 55px; /* Modificar la posicion del Container de la pagina*/
+    margin-top: 55px;
+    /* Modificar la posicion del Container de la pagina*/
 
 }
 
@@ -381,31 +386,11 @@ html, body, #root {
     height: 35px;
 }
 
-.pagination{
+/* TERMINA MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */
+
+
+/* PAGINACION */
+
+.pagination {
     margin-top: 20px;
-}
-
-@media (max-width: 768px) {  
-  .detalles-impuesto-container {
-    flex: 1;
-    width: calc(100% -2rem);
-    padding: 1rem;
-    margin: 4rem auto 1.5rem;
-    max-width: none;
-    box-sizing: border-box;
-  }
-
-   .details-table {
-    /* elimina width y padding aquí */
-    width: 100% !important;   /* o simplemente bórralo */
-    max-width: 100%;
-    font-size: 0.9rem;
-  }
-
-  .table-responsive {
-    width: 100%;
-    overflow-x: auto;
-}
-
-
 }

@@ -4,3 +4,23 @@
     justify-content: center;
     align-items: center;
 }
+
+.app-container.sidebar-collapsed .detalles-impuesto-container {
+    /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
+    margin-left: calc(var(--sidebar-collapsed-width) + 15px);
+    /* haz que pueda crecer más si es necesario, quitando el max-width fijo */
+    max-width: none;
+    margin-right: 15px;
+
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: relative;
+    }
+}

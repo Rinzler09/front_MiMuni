@@ -1,9 +1,9 @@
 // src/components/DetallesImpuesto.tsx
 import React, { useState, useEffect } from "react";//Estamos declarando el hook de useState para poder integrar la parte de boolean
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import Skeleton from "react-loading-skeleton";// En este caso estamos usando la libreria de skeleton que con esto se dibuja los rectangulos animados en lugar de tus datos reales.
-import "react-loading-skeleton/dist/skeleton.css";//En este caso se define los colores y animaciones de brillo en pedazos de bloques.
+import { Toaster, toast } from "sonner";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
 import { clavesCatastrales } from "../../services/claveCatastral";
 import { facturaBienesInmueble } from "../../services/facturasBI";
@@ -114,7 +114,7 @@ const DetallesImpuesto: React.FC = () => {
         claveCat,
         token
       );
-      toast.success("Factura generada para proceso de pago");
+      toast.success("Factura generada para proceso de pago.");
       navigate("/facturas-BI", {
         state: { municipalidad: selectedMunicipality, claveCat, direccion, facturaData: facturaResponse }
       });

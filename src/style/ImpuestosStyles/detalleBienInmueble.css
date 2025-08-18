@@ -35,10 +35,12 @@
   font-weight: bold;
   color: black;
   margin: auto 5px;
+  transition: all 0.2s;
 }
 
 
 .btnFacturas:hover {
+  transform: scale(1.1, 1.1);
   /* width: calc(85%); */
   background-color: #c4751a;
 }
@@ -163,22 +165,10 @@
   color: #333;
 }
 
-.pagination{
+/* PAGINACION */
+
+.pagination {
   margin-top: 20px;
-}
-
-.table-responsive {
-  overflow-x: auto;
-}
-
-.details-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.details-table th,
-.details-table td {
-  white-space: nowrap;  /* evita que el texto baje de línea */
 }
 
 

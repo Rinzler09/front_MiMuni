@@ -1,16 +1,17 @@
 import React from "react";
 import Municipalidad from "../ImagesComponents/Municipalidad";
+import "../../style/ImpuestosStyles/industriaComercio.css";
 
 const ProceosFacturacion: React.FC = () => {
 
 
   return (
     <div className="detalles-impuesto-container">
-      <div className="title">ESTADO DE CUENTA DE INDUSTRIAS, CS</div>   
-      
+      <div className="title">ESTADO DE CUENTA DE INDUSTRIAS, C y S</div>
+
       <br />
       <p> <strong>EN PROCESO DE MANTENIMIENTO</strong></p>
-      <Municipalidad/>
+      <Municipalidad />
     </div>
   )
 };

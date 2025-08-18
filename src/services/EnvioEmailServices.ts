@@ -68,8 +68,8 @@ export const receteoContraServices = async (n_psswd: string, token: string) => {
                 }
             }
         );
-        const headers = response.headers as AxiosResponseHeaders;
-        const viaGet = headers.get("authorization") ?? headers.get("Authorization");
+        // const headers = response.headers as AxiosResponseHeaders;
+        // const viaGet = headers.get("authorization") ?? headers.get("Authorization"); dead code no se utiliza la const viaGet
         return response.data;
     } catch (error: any) {
         throw new Error(

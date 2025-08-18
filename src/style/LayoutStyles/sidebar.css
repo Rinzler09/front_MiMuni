@@ -8,16 +8,19 @@
   height: 100vh;
   width: 255px;
   background: #e2d4c9;
-  overflow-x: hidden;            /* permite scroll vertical */
+  overflow-x: hidden;
+  /* permite scroll vertical */
   overflow-y: auto;
   z-index: 1000;
   transition: width 0.5s ease;
-  box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
 
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: #888888 #dddddd;  /* thumb gris, track claro */
+  scrollbar-color: #888888 #dddddd;
+  /* thumb gris, track claro */
 }
+
 .sidebar-container.collapsed {
   width: 80px;
 }
@@ -26,48 +29,71 @@
 .sidebar-container::-webkit-scrollbar {
   width: 8px;
 }
+
 .sidebar-container::-webkit-scrollbar-track {
-  background: #dddddd;               /* gris muy claro */
+  background: #dddddd;
+  /* gris muy claro */
   border-radius: 4px;
 }
+
 .sidebar-container::-webkit-scrollbar-thumb {
-  background-color: #888888;         /* gris medio */
+  background-color: #888888;
+  /* gris medio */
   border-radius: 4px;
-  border: 2px solid #e2d4c9;         /* mantiene el borde del sidebar */
+  border: 2px solid #e2d4c9;
+  /* mantiene el borde del sidebar */
   transition: background-color 0.2s ease;
 }
+
 .sidebar-container::-webkit-scrollbar-thumb:hover {
-  background-color: #555555;         /* gris oscuro al hover */
+  background-color: #555555;
+  /* gris oscuro al hover */
 }
 
 /* ─── BLOQUE DE MARCA (logo + texto)──── */
 .sidebar-brand {
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;           /* más pegado arriba */
+  padding: 0.5rem 1rem;
+  /* más pegado arriba */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .sidebar-logo {
   width: 42px;
   height: 42px;
   object-fit: contain;
   margin-right: 0.45rem;
 }
+
 @keyframes blink-logo {
-  1%, 80%, 100% { opacity: 1; }
-  70%, 75%     { opacity: 0; }
+
+  1%,
+  80%,
+  100% {
+    opacity: 1;
+  }
+
+  70%,
+  75% {
+    opacity: 0;
+  }
 }
+
 .sidebar-brand-text {
   font-size: 1.25rem;
   font-weight: 600;
   color: #e26c0c;
   white-space: nowrap;
+
   transition: margin-left 0.4s ease;
   cursor: pointer;
 }
+
 .sidebar-container.collapsed .sidebar-brand-text {
   display: none;
 }
+
 .sidebar-container.collapsed .sidebar-brand {
   justify-content: center;
   padding: 0.5rem 0;
@@ -78,21 +104,24 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-top: 0.25rem;           /* menos espacio arriba */
-  gap: 0.20rem; 
-  width: 255px;
-  transition: width .3s ease;     /* espacio uniforme entre secciones/ítems */
+  padding-top: 0.25rem;
+  /* menos espacio arriba */
+  gap: 0.20rem;
+  /* espacio uniforme entre secciones/ítems */
 }
 
 /* ─── Secciones y títulos ───── */
 .sidebar-section {
-  margin-bottom: 0.2rem;          /* más compacto */
+  margin-bottom: 0.5rem;
+  /* más compacto */
 }
+
 .section-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.6rem 0.8rem;         /* reduce padding */
+  padding: 0.6rem 0.8rem;
+  /* reduce padding */
   font-size: 0.95rem;
   font-weight: 600;
   color: #4a3b2f;
@@ -100,12 +129,13 @@
   transition: background 0.2s ease, color 0.2s ease;
   border-radius: 0.375rem;
 }
+
 .section-title:hover,
 .section-title.active {
   background: #ffe698;
   color: #727272;
 }
-/* Eliminadas las reglas genéricas que rotaban TODOS los SVG en section-title */
+
 
 /* ─── Submenús deslizantes ─── */
 .menu-list {
@@ -117,8 +147,10 @@
   opacity: 0;
   transition: max-height 0.4s ease, opacity 0.4s ease;
 }
+
 .menu-list.show {
-  max-height: 60vh;               /* limita la altura y deja espacio para scroll */
+  max-height: 60vh;
+  /* limita la altura y deja espacio para scroll */
   overflow-y: auto;
   opacity: 1;
 
@@ -130,16 +162,19 @@
 .menu-list.show::-webkit-scrollbar {
   width: 8px;
 }
+
 .menu-list.show::-webkit-scrollbar-track {
   background: #f0f0f0;
   border-radius: 4px;
 }
+
 .menu-list.show::-webkit-scrollbar-thumb {
   background-color: #888888;
   border-radius: 4px;
   border: 2px solid #e2d4c9;
   transition: background-color 0.2s ease;
 }
+
 .menu-list.show::-webkit-scrollbar-thumb:hover {
   background-color: #555555;
 }
@@ -148,34 +183,41 @@
 .menu-item {
   display: flex;
   align-items: center;
-  width: 105%;
-  padding: 0.4rem 0.8rem;         /* padding reducido */
+  width: 100%;
+  padding: 0.4rem 0.8rem;
+  /* padding reducido */
   font-size: 0.9rem;
   color: #3d3d3d;
   background: transparent;
   border: none;
   text-decoration: none;
-  transition: background 1.0s ease, color 0.2s ease;
-  border-radius: 0.275rem;
+  transition: background 0.2s ease, color 0.5s ease;
+  /* background es lo que tardara en aplicarse el efecto y color es para el color de la fuente*/
+  border-radius: 0.375rem;
   cursor: pointer;
 }
+
 .menu-item svg {
   margin-right: 0.75rem;
   font-size: 1.1em;
   min-width: 1.1em;
   transition: color 0.2s ease;
 }
+
 .menu-item:hover {
   background: #495057;
   color: #fff;
 }
+
 .menu-item:hover svg {
   color: #fff;
 }
+
 .menu-item.selected {
   background: #e26c0c;
   color: #fff;
 }
+
 .menu-item.disabled {
   opacity: 0.6;
   pointer-events: none;
@@ -185,14 +227,17 @@
 .sidebar-container.collapsed .menu-icon {
   margin: 20px auto;
 }
+
 .sidebar-container.collapsed .menu-item span,
 .sidebar-container.collapsed .menu-list {
   display: none;
 }
+
 .sidebar-container.collapsed .section-title {
   justify-content: center;
   padding: 1.5rem 0;
 }
+
 .sidebar-container.collapsed .section-title svg {
   margin: 0;
 }
@@ -245,17 +290,96 @@
   max-width: none;
 }
 
+/* Efectos para los iconos de los submenus
 
-@media (max-width: 768px) {
-   /* y asegúrate de que la hamburguesa esté encima */
+/* rotación solo al chevron  */
+/* .section-chev {
+  transition: transform 0.3s ease;
+} */
+
+/* .section-title.active .section-chev {
+  transform: rotate(180deg);
+} */
+
+/*  Anula cualquier transform en los demás iconos ─── */
+/* .menu-item svg,
+.menu-icon {
+  transform: none !important;
+} */
+
+/* clases para iconos de subMenus */
+.subMenuIcon {
+  margin-right: 1rem;
+}
+
+/* ─── Ajustes cuando está colapsado ────── */
+.sidebar-container.collapsed .menu-icon {
+  margin: 20px auto;
+}
+
+.sidebar-container.collapsed .menu-item span,
+.sidebar-container.collapsed .menu-list {
+  display: none;
+}
+
+.sidebar-container.collapsed .section-title {
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
+.sidebar-container.collapsed .section-title svg {
+  margin: 0;
+}
+
+.sidebar-container.collapsed .section-text {
+  display: none;
+}
+
+/* Muestra solo el icono de la sección al colapsar */
+.section-icon {
+  display: none;
+  margin-right: 0.5rem;
+}
+
+.sidebar-container.collapsed .section-icon {
+  display: inline-block;
+}
+
+/* Ajusta el chevron centrar */
+.sidebar-container.collapsed .section-title {
+  justify-content: center;
+}
+
+.sidebar-container.collapsed .section-chev {
+  margin-left: 0;
+  display: none;
+}
+
+.sidebar-container .sidebar.collapsed {
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+/* ─── Ajustes para el contenedor de detalles al colapsar ─── */
+.app-container.sidebar-collapsed .detalles-impuesto-container {
+  padding-left: 20px;
+  padding-right: 30px;
+  margin: 5rem 0 1rem;
+  max-width: none;
+}
+
+
+@media (max-width: 992px) {
   .hamburger-icon {
     position: relative;
     z-index: 1100;
   }
+
   .sidebar-container {
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
   }
+
   .sidebar-container.active {
     transform: translateX(0);
   }

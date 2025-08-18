@@ -7,14 +7,15 @@
   position: fixed;
   top: 0;
   left: var(--sidebar-width);
-  width: calc(100% - var(--sidebar-width));
+  right: 0;
   height: 50px;
   background-color: #e26c0c;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  transition: left 0.3s ease, width 0.3s ease;
+  /* transition: left 0.3s ease, width 0.3s ease; */
+  transition: left 0.5s ease;
   z-index: 999;
 }
 
@@ -22,7 +23,7 @@
 
 .header.collapsed {
   left: var(--sidebar-collapsed-width);
-  width: calc(100% - var(--sidebar-collapsed-width));
+  /* width: calc(100% - var(--sidebar-collapsed-width)); */
 }
 
 
@@ -32,12 +33,18 @@
   align-items: center;
   gap: 40px;
 }
-/* Clase de la hamburguesa  */
+
 .header-hamburger {
   font-size: 1.2em;
   color: #FFFFFF;
   cursor: pointer;
 }
+
+/* .header-toggle {
+  font-size: 1.2em;
+  color: #FFFFFF;
+  cursor: pointer;
+} */
 
 .header-logo {
   font-size: 1.25em;
@@ -96,25 +103,35 @@
   color: #FFFFFF;
 }
 
-/* ========================= MEDIA QUIERIE ==================== */
+/* ========================= MEDIA QUERY ==================== */
 
-@media(max-width: 768px){
-  .header.collapsed{
+@media(max-width: 768px) {
+  .header {
     left: 0;
     width: 100%;
+    transition: left 0.1s ease, width 0.2s ease;
   }
 
-  .user-name{
+  .header.collapsed {
+    left: 0;
+    width: 100%;
+    transition: left 0.1s ease, width 0.2s ease;
+  }
+
+  .user-name {
     display: none;
   }
-  .user-icon{
+
+  .user-icon {
     display: flex;
     align-items: center;
-    gap: 0.5rem;        /* separa avatar y chevron */
+    gap: 0.5rem;
+    /* separa avatar y chevron */
     margin-right: 0.5rem;
-  
+
   }
-   .header-hamburger {
+
+  .header-hamburger {
     margin-left: 0.3rem;
   }
 }

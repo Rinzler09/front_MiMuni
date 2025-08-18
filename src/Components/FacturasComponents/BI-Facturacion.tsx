@@ -5,8 +5,14 @@ import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import "../../style/PagesStyles/titulo_TablasStyle.css"
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
 import Skeleton from "react-loading-skeleton"; //Libreria que viene para utilizar skeleton
 import "react-loading-skeleton/dist/skeleton.css";// Importancion de Skeleton
+=======
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { toast } from "sonner";
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
 
 interface Facturas {
   numFactura: number;
@@ -40,10 +46,14 @@ const ProceosFacturacion: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
     // Paginación
   const [paginaActual, setPaginaActual] = useState(1);//Declaracion de los conts para la paginacion
   const registrosPorPagina = 5;//El registro de la paginas
 
+=======
+  const registrosPorPagina = 5;
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
 
   //Declaraciones de los const
   const [selectedAmount, setSelectedAmount] = useState(0);
@@ -89,20 +99,31 @@ const ProceosFacturacion: React.FC = () => {
   /*HOOKS PARA PAGOS A DB GEOREDES*/
   const [facturas, setFacturas] = useState<Facturas[]>([]);
 
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
+=======
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
 
 
   // Cálculo de los índices para la paginación
+
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
   const pagsTotales = Math.ceil(facturas.length / registrosPorPagina);
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
 
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
+=======
+
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
   const { user, selectedMunicipality, token } = useAuth();
 
   // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
   //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo
 
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
 useEffect(() => {
   const fetchFacturas = async () => {
     setLoading(true);
@@ -118,6 +139,36 @@ useEffect(() => {
 
       if (Array.isArray(respuesta)) {
         setFacturas(respuesta);
+=======
+  useEffect(() => {
+    const fetchFacturas = async () => {
+
+      setLoading(true);
+
+      if (!selectedMunicipality) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+
+        if (!selectedMunicipality) {
+          toast.error("No se ha seleccionado una Municipalidad, no cargara registros de facturas.");
+          return;
+        }
+
+        const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, token);
+
+        if (respuesta && Array.isArray(respuesta)) {
+          setFacturas(respuesta);
+        } else {
+          console.error("La respuesta de la API no contiene un arreglo:", respuesta);
+        }
+      } catch (error) {
+        console.log("Error obteniendo registros:", error);
+      } finally {
+        setLoading(false);
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
       }
     } catch (error) {
      
@@ -234,6 +285,7 @@ useEffect(() => {
         </thead>
     
         <tbody>
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
    {loading
    /**En esta parte tenemos que investigar toda la logica de como agregar el skeleton sin necesidad de poder  */
       // Mientras carga, renderizas X filas de skeleton
@@ -261,11 +313,31 @@ useEffect(() => {
       )
     }
   </tbody>
+=======
+
+          {loading ? Array.from({ length: Math.max(facturas.length, 1) }).map((_, i) => (//Tenemos un arrelgo donde tiene el maximo de facturas 
+            <tr key={i}>
+              {Array.from({ length: 3 }).map((__, j) => (
+                <td key={j} style={{ textAlign: "center" }}>
+                  <Skeleton height={20} />
+                </td>
+              ))}
+            </tr>
+          ))
+            : (
+              <tr>
+                <td style={{ textAlign: "center" }}>{claveCat}</td>
+                <td style={{ textAlign: "center" }}>0801-2001-03973</td>
+                <td style={{ textAlign: "center" }}>{direccion}</td>
+              </tr>
+            )
+          }
+
+        </tbody>
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
       </table>
 
       <br />
-
-
       <br />
 
       {/* Datos de las Tablas*/}
@@ -285,8 +357,10 @@ useEffect(() => {
             <th>Total</th>
           </tr>
         </thead>
+
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
          {loading
     // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
       ? Array.from({ length: registrosPorPagina }).map((_, i) => (
@@ -332,13 +406,60 @@ useEffect(() => {
       {pagsTotales > 1 && !loading && (
         <div className="pagination">
           {Array.from({length: pagsTotales}, (_, i) => (
+=======
+          {loading
+            // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
+            ? Array.from({ length: registrosPorPagina }).map((_, i) => (
+              <tr key={i}>
+                {Array.from({ length: 11 }).map((__, j) => (
+                  <td key={j} style={{ textAlign: "center" }}>
+                    <Skeleton height={20} />
+                  </td>
+                ))}
+              </tr>
+            ))
+
+            // Cuando ya cargó, mapea las facturas
+            : facturasActuales.map((item, index) => (
+              <tr key={index}>
+                <td style={{ textAlign: "center" }}> <input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
+                <td style={{ textAlign: "center" }}>{item.numFactura}</td>
+                <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
+                <td style={{ textAlign: "center" }}>{item.descripcion}</td>
+                <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
+                <td style={{ textAlign: "center" }}>L{item.descPP}</td>
+                <td style={{ textAlign: "center" }}>L{item.descADM}</td>
+                <td style={{ textAlign: "center" }}>L{item.descAMN}</td>
+                <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
+                <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
+                <td style={{ textAlign: "center" }}>L{item.total}</td>
+              </tr>
+            ))}
+
+          {!loading && facturas.length === 0 && (
+            <tr>
+              <td colSpan={11} style={{ textAlign: "center" }}>
+                NO HAY DATOS QUE MOSTRAR
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {pagsTotales > 1 && !loading && (   //me quede por aqui
+        <div className="pagination">
+          {Array.from({ length: pagsTotales }, (_, i) => (
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
             <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
               {i + 1}
             </button>
           ))}
         </div>
       )}
+<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
 
+=======
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
 
 
       {/* Sección de "Mis tarjetas de crédito y débito" */}

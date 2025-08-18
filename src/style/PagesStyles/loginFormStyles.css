@@ -1,43 +1,60 @@
 /* ======================================================
-   Fondo y círculos animados
+   Fondo y círculos para mostrar efecto difuminado en Login
    ====================================================== */
 .background {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: #e0e2e5;
   overflow: hidden;
   z-index: -1;
 }
+
 .circle {
   position: absolute;
   border-radius: 50%;
   opacity: 0.3;
   filter: blur(120px);
-  animation: float 8s ease-in-out infinite;
-}
-.circle1 {
-  width: 400px; height: 400px;
-  top: 10%; left: 15%;
-  background: #F0F0F0;
-}
-.circle2 {
-  width: 300px; height: 300px;
-  bottom: 10%; right: 20%;
-  background: #F0F0F0;
-  animation-duration: 10s;
-}
-.circle3 {
-  width: 200px; height: 200px;
-  bottom: 30%; left: 30%;
-  background: #F0F0F0;
-  animation-duration: 6s;
-  animation-direction: reverse;
 }
 
+.circle1 {
+  width: 500px;
+  height: 500px;
+  background-color: #FF6600;
+  top: 10%;
+  left: 15%;
+}
+
+.circle2 {
+  width: 500px;
+  height: 500px;
+  background-color: #0e3475;
+  bottom: 10%;
+  right: 10%;
+}
+
+.circle3 {
+  width: 300px;
+  height: 400px;
+  background-color: #FF6600;
+  bottom: 30%;
+}
+
+/*Media Queries*/
+
+
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(20px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(20px);
+  }
 }
 
 /* ======================================================
@@ -46,40 +63,66 @@
 .login-wrapper {
   background: #fff;
   border-radius: 32px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   display: flex;
-  width: 85%; max-width: 1000px; min-height: 500px;
+  width: 85%;
+  max-width: 1000px;
+  min-height: 500px;
   animation: fadeIn 0.6s ease both;
 }
 
+
+/* .login-wrapper>.row {
+  background: #fff;
+  border-radius: 32px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  width: 85%;
+  max-width: 1000px;
+  min-height: 500px;
+  animation: fadeIn 0.6s ease both;
+} */
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to   { opacity: 1; transform: scale(1);    }
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ======================================================
    Panel izquierdo (carrusel)
    ====================================================== */
 .col-md-5 {
-  background: linear-gradient(
-    to right,
-    rgb(248, 160, 88) 100%,
-    rgba(248, 160, 88) 100%,
-    rgb(248, 160, 88) 100%
-  ) !important;
+  background: linear-gradient(to right,
+      rgb(248, 160, 88) 100%);
   background-size: 200% 200%;
   animation: gradientShift 10s ease infinite;
   display: flex;
   flex-direction: column;
   padding: 2rem 1.5rem;
-  color: #F0F0F0;
+
 }
 
 @keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .col-md-5 .titu {
@@ -138,18 +181,23 @@
   cursor: pointer;
   transition: background 0.3s, border-color 0.3s;
   background: #fff;
-  border: 2px solid #c4c4c4; /* borde oscuro */
+  border: 2px solid #c4c4c4;
+  /* borde oscuro */
 }
 
 .slide-title.active {
-  background: #F0F0F0;   /* activo en naranja */
-  border-color: #757575;     /* mismo borde oscuro */
+  background: #F0F0F0;
+  /* activo en naranja */
+  border-color: #757575;
+  /* mismo borde oscuro */
 }
 
 /* Flechas de navegación */
 .carousel-nav {
   position: absolute;
-  top: 50%; left: 0; right: 0;
+  top: 50%;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);
@@ -159,9 +207,10 @@
 
 .carousel-nav button {
   pointer-events: auto;
-  background: rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.6);
   border: none;
-  width: 32px; height: 32px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -173,7 +222,7 @@
 }
 
 .carousel-nav button:hover {
-  background: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 /* ======================================================
@@ -184,7 +233,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-left: 1px solid rgba(0,0,0,0.04);
+  border-left: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .col-md-7 .titu {
@@ -199,7 +248,7 @@
   color: #F0F0F0;
 }
 
-.col-md-7 > span {
+.col-md-7>span {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 1.5rem;
@@ -233,7 +282,7 @@
 }
 
 .input-group:focus-within {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transform: translateY(-1px);
 }
 
@@ -310,7 +359,7 @@ a.forgot-password:hover {
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
-  box-shadow: 0 3px 8px rgba(246,112,3,0.3);
+  box-shadow: 0 3px 8px rgba(246, 112, 3, 0.3);
   transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
   margin-top: 0rem;
 }
@@ -318,12 +367,13 @@ a.forgot-password:hover {
 .login-btn:hover:not(:disabled) {
   background: #e65b00;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(246,112,3,0.35);
+  box-shadow: 0 6px 16px rgba(246, 112, 3, 0.35);
 }
 
 .login-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+<<<<<<< HEAD
 }
 
 @media (max-width: 768px) {
@@ -353,4 +403,6 @@ a.forgot-password:hover {
   .titu{
     align-items: center;
   }
+=======
+>>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8
 }

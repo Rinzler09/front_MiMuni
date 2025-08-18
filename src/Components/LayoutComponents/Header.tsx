@@ -13,28 +13,16 @@ import "../../style/LayoutStyles/dropDown.css";
 import "../../style/LayoutStyles/header.css";
 import { useAuth } from "../../Auth/AuthContext";
 import { logoutUsuario } from "../../services/EliminacionCookie";
+// import { useSessionTimeout } from "../../hook/UseSessionTimeout";
 
+// Props para controlar el collapse del sidebar
+interface HeaderProps {
+  collapsed: boolean;
+  onToggleSidebar: () => void;
 
+}
 
- interface HeaderProps {  //En esta parte tenemos declara una interface en donde vamos a pasar los props al header que viene del Layout
-  collapsed: boolean;//En este caso el collapsed es un booleano que nos indica que si el sidebar esta colpsado o no queriendo decir 
-                      //que si es true el sidebar esta colpsado y si es false el sidebar esta desplegado correctamente
-   onToggleSidebar: () => void; //En esta parte estamos usando una funcion que se llama onToggleSidebar,
-   //Es una funcion que no recibe parametros y no retorna nada, es un callback que viene de Layout que es el padre
-   //esto es cuando se ejecuta la funcion para que el sidebar colapse o se vuelva desplegar, queriendo decir que no pasa 
-   //Ningun dato solo le dice a Layout que se debe ejecute el estado desde Layout.tsx
-   
- }
-
-export const Header: React.FC<HeaderProps> = ({ collapsed, onToggleSidebar }) => {{/*En este caso vamos declarar el SidebarPROPS para que 
-  *poder pasarle lo que esta diciendo que esa esperando un tipo.
-  *Tambien tenemos la parte de ({collapsed}) es la destructuracion de los prop ya que con esta manera podemos acceder directamente el valor
-  *Sin necesidad de usar constante en donde podeamos declarar el prop.collapsed.
-  *En este caso tenemos el onToggleSidebar que es una funcion cuando que es de callback que se ejecuta cuando se quiere alternar 
-  El estado de colpasar/expandir el sidebar tipicamente disparada por un evento de clic
-  */}
-  //console.log("Header PROPS:", collapsed, onToggleSidebar); //Esto es para que se pueda ver en la consola los props que se estan pasando al header
-
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);// Estado para el dropdown
   const { user, token, setUser, setToken, setSelectedMunicipality } = useAuth();
@@ -60,7 +48,9 @@ export const Header: React.FC<HeaderProps> = ({ collapsed, onToggleSidebar }) =>
       setToken(null);
       setSelectedMunicipality(null);
       // handleExpire(); me genera problemas porque carga dos veces el useSessionTimeOut en la misma pantalla que es General.tsx
-      navigate("/");
+      navigate("/"); //navigate si esta funcionando aqui no es necesario el .reload(), probablemente por el finally
+      //window.location.reload(); //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
+
     }
   };
 
@@ -71,12 +61,17 @@ export const Header: React.FC<HeaderProps> = ({ collapsed, onToggleSidebar }) =>
     *de collapsed si es false no se le agregara nada o viene vacia.*/}
       {/* IZQUIERDA: hamburger + logo */}
       <div className="header-left">
-       <FontAwesomeIcon 
-            icon={faBars}
-            className="header-hamburger"
-            onClick={() => {
-              handleClick();
-            }}/>
+        <FontAwesomeIcon icon={faBars}
+          className="header-hamburger"
+          onClick={() => {
+            onToggleSidebar();
+          }} />
+
+        {/* Si más adelante quieres el search, descomenta */}
+        {/* <div className="header-search">
+          <input type="text" placeholder="Search..." />
+          <FontAwesomeIcon icon={faSearch} className="fa-search" />
+        </div> */}
       </div>
 
      
@@ -110,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ collapsed, onToggleSidebar }) =>
                   <span onClick={handleLogout}
                     className="menu-link" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                     <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
-                    <span className="ms-2">Salir</span>
+                    <span className="ms-2">Cerrar sesión</span>
                   </span>
                 </li>
               </ul>

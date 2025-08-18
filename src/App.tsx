@@ -5,7 +5,6 @@ import AppRoutes from "./routes/AppRoutes";
 import "./style/PagesStyles/loginFormStyles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import Layout from "./Components/LayoutComponents/Layout";
 const App: React.FC = () => {
   
 

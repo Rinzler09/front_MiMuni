@@ -1,10 +1,10 @@
-import React, { FC, Suspense, useEffect } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-//import Sidebar from '../Components/LayoutComponents/Sidebar';
-import {Header} from '../Components/LayoutComponents/Header'
+import React, { FC, Suspense, useState, useEffect } from 'react'
+import { replace, useLocation, useNavigate, useParams } from 'react-router-dom';
+import Sidebar from '../Components/LayoutComponents/Sidebar';
+import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
 import { useAuth } from '../Auth/AuthContext';
-import { useSessionTimeout } from '../hook/UseSessionTimeout';
+import { useSessionTimeout } from '../TimeOut/UseSessionTimeout';
 //me quede por aqui ya que sera aqui en donde se implementara la logica 
 // de los eventos mas la logica de las modales
 
@@ -30,7 +30,7 @@ const Components: Components = {
     'ambientales': React.lazy(() => import('../Components/ServiciosComponents/Ambientes')),
 
     //Componentes de Pantalla Periodos de Facturas
-    'facturas-BI': React.lazy(() => import('../Components/FacturasComponents/ProcesoFacturacionComponents')),
+    'facturas-BI': React.lazy(() => import('../Components/FacturasComponents/BI-Facturacion')),
 
     //Componentes de tarjetas
     'tarjetas-guardadas': React.lazy(() => import('../Components/TarjetasComponents/TarjetasGuardadas')),
@@ -57,13 +57,12 @@ const General: FC = () => {
 
     //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
 
-    const navigate = useNavigate();
-    const location = useLocation();//se necesita para validar si el expireTimer se aplicara o no
-    const notGeneralLocations = ['/', '/registrar-usuario', '/enviar-codigo', '/cambio-contrasena', '/restablecer-contrasena'];//Las rutas en donde el expireTimer de General no tendra efecto
-    // const { refreshToken } = useAuth();
+    const [collapsed, setCollapsed] = useState(false)
+    const handleToggleSidebar = () => setCollapsed(c => !c);
+
 
     //Se configura el hook de sesion con callbacks
-    const { Modals, initializeRFSession } = useSessionTimeout({//se importan las modales del sesionTimeOut y tambien la funcion resetSession la 
+    const { Modals, SsExpiredModal, initializeRFSession } = useSessionTimeout({//se importan las modales del sesionTimeOut y tambien la funcion resetSession la 
         // cual limpia y reprograma sus timers basados en el atributo "exp" del JWT lo cual reinicia el reloj de advertencia cuando el 
         // usuario tiene interaccion con la pantalla
 
@@ -72,7 +71,8 @@ const General: FC = () => {
             // if (!notGeneralLocations.includes(location.pathname)) {
             //     console.log("Location: ", location.pathname);
             //     console.log("Navego a '/' ya que esta en una ruta que se carga en General.tsx")
-            navigate('/'); //si expira la sesion y la ruta actual NO es una ruta contenida en el arreglo de rutas que no se cargan en General entonces se navega al index
+            window.location.reload(); //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
+            //navigate('/'); //si expira la sesion y la ruta actual NO es una ruta contenida en el arreglo de rutas que no se cargan en General entonces se navega al index
             // } else {
             //     console.log("NO navego a '/' ya que esta en una ruta que NO se carga en General.tsx")
             // }
@@ -93,9 +93,10 @@ const General: FC = () => {
     //los timers internos de la funcion son los que cambian la funcion de resetSessionTimers como tal no
 
     return (
-        <div>
-           
-            <Header />
+
+        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
+            <Sidebar collapsed={collapsed} />
+            <Header collapsed={collapsed} onToggleSidebar={handleToggleSidebar} />
             <div className="generalDiv">
                 <Suspense fallback={<div>Cargando Impuesto ...</div>}>
                     {Componente ? (
@@ -106,7 +107,8 @@ const General: FC = () => {
                     }
                 </Suspense>
             </div>
-            {Modals} {/* Este hook se coloca al final del render para que las advertencias o expiraciones aparezcan sobre el layout*/}
+            {Modals} {/* Este hook se coloca al final del render para que las advertencias aparezcan sobre el layout*/}
+            {SsExpiredModal}  {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
         </div>
     )
 }
