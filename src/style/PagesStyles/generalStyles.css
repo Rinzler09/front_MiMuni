@@ -13,6 +13,23 @@
     margin-right: 15px;
 
 }
+.app-container.sidebar-collapsed .historialFacturas {
+    /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
+    margin-left: calc(var(--sidebar-collapsed-width) + 15px);
+    /* haz que pueda crecer más si es necesario, quitando el max-width fijo */
+    max-width: none;
+    margin-right: 15px;
+
+}
+.app-container.sidebar-collapsed .password-change-container {
+    /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
+    margin-left: calc(var(--sidebar-collapsed-width) + 15px);
+    /* haz que pueda crecer más si es necesario, quitando el max-width fijo */
+    max-width: none;
+    margin-right: 15px;
+}
+
+
 
 @media (max-width: 768px) {
     .app-container {

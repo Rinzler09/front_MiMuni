@@ -32,6 +32,7 @@ body,
   right: 0;
   bottom: 0;
   overflow: hidden;
+  transition: max-width 0.2s ease, margin-left 0.1s ease;
 }
 
 
@@ -102,22 +103,34 @@ body,
 
 /* REGLAS CSS DE CAROUSEL EN EL MODO DE COLAPSO */
 .full-carousel-container {
-  position: absolute;
-  top: 56px;
-  /* alto de tu header */
-  left: 240px;
-  /* ancho desplegado del sidebar */
+ position: fixed;                      /* ocupa viewport bajo el header */
+  top: var(--header-height);            /* 50px */
+  left: var(--sidebar-width);           /* 250px */
   right: 0;
   bottom: 0;
-  transition: left .5s ease;
+  overflow: hidden;
+  transition: left .5s ease;            /* suave al colapsar/expandir */
+  z-index: 1;                           /* por debajo del header */
 }
 
 /* Carrusel en estado “collapsed” */
 .app-container.sidebar-collapsed .full-carousel-container {
-  left: 60px;
+  left: var(--sidebar-collapsed-width);
 
   /* ancho colapsado del sidebar */
 }
+
+.full-carousel,
+.full-carousel .carousel-item {
+  width: 100%;
+  height: 100%;
+}
+.full-carousel .carousel-item .carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
 
 @keyframes fadeInUp {
@@ -132,7 +145,7 @@ body,
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) and (max-width: 990px) {
 
   /* 1) Oculta el sidebar */
   .sidebar-container {
@@ -143,7 +156,7 @@ body,
   .main-content.full-carousel-container {
     position: fixed;
     /* saca del flujo, cubre viewport */
-    top: 56px;
+    top: 60px;
     /* altura real de tu header */
     left: 0;
     right: 0;
@@ -152,6 +165,58 @@ body,
     /* que no asome nada fuera */
     z-index: 10;
     /* por encima de contenido */
+    transition: max-width 0.2s ease, margin-left 0.2s ease;
+  }
+
+  /* 3) El carousel rellena ese espacio */
+  .full-carousel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .full-carousel .carousel-item {
+    height: 100%;
+  }
+
+  .full-carousel .carousel-item .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 4) Flechas y dots visibles */
+  .carousel-control-prev,
+  .carousel-control-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 990px) {
+
+ /* 1) Oculta el sidebar */
+  .sidebar-container {
+    display: none !important;
+  }
+
+  /* 2) Fija el carousel como “pantalla completa” bajo el header */
+  .main-content.full-carousel-container {
+    position: fixed;
+    /* saca del flujo, cubre viewport */
+    top: 50px;
+    /* altura real de tu header */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    /* que no asome nada fuera */
+    z-index: 10;
+    /* por encima de contenido */
+    transition: max-width 0.1s ease, margin-left 0.2s ease;
   }
 
   /* 3) El carousel rellena ese espacio */

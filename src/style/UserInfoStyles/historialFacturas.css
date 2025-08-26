@@ -1,21 +1,47 @@
 .historialFacturas {
-
-    /*Alinea el componente de historial factura a una posicion relativa a otro componente*/
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* Alinea el contenido hacia la parte superior */
     padding: 20px;
     background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 3px 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: none;
-    width: 78%;
+    border-radius: 10px;
+    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.1);
+    gap: 1rem;
+    margin-top: -535px;
+    /* Ajusta este valor para mover el contenedor hacia arriba o abajo según sea necesario */
+    width: 98%;
+    /* Toma casi todo el ancho disponible, ajusta según sea necesario */
+    max-width: 1000px;
     /* Limita el ancho máximo */
-    height: 100%;
-    left: 30px;
+    height: 98%;
     /* Ajusta la altura según el contenido */
-    margin-left: 15%;
+    margin-left: 20%;
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
-    margin-top: 65px;
+    /* Borde gris claro */
+    margin-top: 63px;
+    transition: max-width 0.2s ease, margin-left 0.1s ease;
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    font-weight: bold;
+    color: #3B1F2B;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    width: 101%;
+    padding: 20px 200px;
+    max-width: 950px;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
 }
 
 .buttonReset {
@@ -40,7 +66,6 @@
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-    ;
     color: white;
     margin-left: 13px;
 }
@@ -55,46 +80,19 @@
     justify-content: center;
 }
 
-.date-range-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-}
-
-.date-range-filter {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 170px;
-}
-
-.date-inicio {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 210px;
-}
-
+.selectInvoice,
+.date-inicio,
 .date-final {
-    padding: 5px;
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    width: 210px;
-    margin-left: 10px;
+    width: 100%; /* 100% del grid cell */
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-.selectInvoice {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 250px;
-    margin-right: 10px;
-}
 
 /* Se utilizara estas reglas CSS para la tabla que se cargue en historial Facturas */
-
 
 .details-table {
     width: 101%;
@@ -111,7 +109,6 @@
     text-align: left;
     border-bottom: 1px solid #ddd;
     font-size: 12px;
-
 }
 
 .details-table td {
@@ -128,43 +125,82 @@
     text-align: center;
 }
 
-.details-table tr:hover {
-    background-color: #f0f0f0;
+.details-table tr:hover { background-color: #f0f0f0; }
+.details-table tbody tr:nth-child(even) { background-color: #f9f9f9; }
 
+.row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; }
+.row:last-child { border-bottom: none; }
+.column { width: 30%; }
+.column label { display: block; font-weight: bold; color: #555; margin-bottom: 5px; }
+.column p { margin: 0; padding: 5px 0; border-bottom: 1px dashed #ddd; color: #333; }
+
+.historial-facturacion-container,
+.date-range-container {
+    width: 100%;
 }
 
-.details-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    align-items: center;
+}
+
+.table-responsive{
+    width: 100%;
 }
 
 
+/* ================================
+        MEDIA QUERY
+===================================*/
 
-.row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+@media (max-width: 768px){
+    .historialFacturas{
+        flex: 1;
+        width: calc(100% -2rem);
+        padding: 1rem;
+        margin: 4rem auto 1;
+        max-width: none;
+        box-sizing: border-box;
+    }
+
+    .details-table{
+        width: 100% !important;
+        max-width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .table-responsive{
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .title{
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
 }
 
-.row:last-child {
-    border-bottom: none;
+.historial-facturacion-container{
+    flex: 1;
+    width: calc(100% -2rem);
+    padding: 1rem;
+    margin: 4rem auto 1;
+    max-width: none;
+    box-sizing: border-box;
+ }
 }
 
-.column {
-    width: 30%;
-    /*Toma el 30% del ancho de la pantalla*/
-}
-
-.column label {
-    display: block;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-.column p {
-    margin: 0;
-    padding: 5px 0;
-    border-bottom: 1px dashed #ddd;
-    color: #333;
+@media (min-width: 769px) and (max-width: 1024px) {
+    .historialFacturas{
+        flex: 1;
+        width: calc(100% -2rem);
+        padding: 1rem;
+        margin: 4rem auto 1.5rem;
+        max-width: none;
+        box-sizing: border-box;
+    }
 }

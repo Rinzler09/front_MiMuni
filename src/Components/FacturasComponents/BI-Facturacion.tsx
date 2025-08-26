@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useMemo } from "react";
+import { Link, useLocation } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import "../../style/PagesStyles/titulo_TablasStyle.css"
+
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
-import Skeleton from "react-loading-skeleton"; //Libreria que viene para utilizar skeleton
-import "react-loading-skeleton/dist/skeleton.css";// Importancion de Skeleton
-=======
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "sonner";
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
 
 interface Facturas {
   numFactura: number;
@@ -31,7 +27,6 @@ interface Facturas {
 interface LocationState {
   claveCat: string;
   direccion: string;
-  aldeaFac: string;
 }
 
 const ProceosFacturacion: React.FC = () => {
@@ -43,21 +38,13 @@ const ProceosFacturacion: React.FC = () => {
   };
   const { state } = useLocation() as { state: LocationState };
   const { claveCat, direccion } = state;
-  const location = useLocation();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
-    // Paginación
-  const [paginaActual, setPaginaActual] = useState(1);//Declaracion de los conts para la paginacion
-  const registrosPorPagina = 5;//El registro de la paginas
-
-=======
   const registrosPorPagina = 5;
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
 
-  //Declaraciones de los const
-  const [selectedAmount, setSelectedAmount] = useState(0);
-  const [selectedYears, setSelectedYears] = useState<number[]>([]);
+
+
+
+
   const [showModal, setShowModal] = useState(false);
   const [showCheckboxModal, setShowCheckboxModal] = useState(false);
   const [showCardModal, setShowCardModal] = useState(false);
@@ -79,67 +66,43 @@ const ProceosFacturacion: React.FC = () => {
     expiry: string;
   } | null>(null);
   //Cambiar los colores
-  const [cardColor, setCardColor] = useState(""); // Estado para el color de la tarjeta
+  //const [cardColor, setCardColor] = useState(""); // Estado para el color de la tarjeta
 
-  const handleCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    amount: number,
-    year: number
-  ) => {
-    if (event.target.checked) {
-      setSelectedAmount(selectedAmount + amount);
-      setSelectedYears([...selectedYears, year].sort());
-    } else {
-      setSelectedAmount(selectedAmount - amount);
-      setSelectedYears(selectedYears.filter((y) => y !== year));
-    }
-  };
+  // const handleCheckboxChange = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  //   amount: number,
+  //   year: number
+  // ) => {
+  //   if (event.target.checked) {
+  //     setSelectedAmount(selectedAmount + amount);
+  //     setSelectedYears([...selectedYears, year].sort());
+  //   } else {
+  //     setSelectedAmount(selectedAmount - amount);
+  //     setSelectedYears(selectedYears.filter((y) => y !== year));
+  //   }
+  // };
 
 
   /*HOOKS PARA PAGOS A DB GEOREDES*/
   const [facturas, setFacturas] = useState<Facturas[]>([]);
 
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
-=======
   // Paginación
   const [paginaActual, setPaginaActual] = useState(1);
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
 
 
   // Cálculo de los índices para la paginación
-
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
-  const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
+  const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);//Este es el codigo donde se hace la facilita, y lo vamos utilizar para el movimiento.
   const pagsTotales = Math.ceil(facturas.length / registrosPorPagina);
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
 
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
-=======
 
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
   const { user, selectedMunicipality, token } = useAuth();
 
-  // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
+  // Declaramos la clave catastral en el estado o la recibimos de alguna parte
   //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo
 
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
-useEffect(() => {
-  const fetchFacturas = async () => {
-    setLoading(true);
-    
-    if (!selectedMunicipality || !user?.token) {
-      setLoading(false);
-      return;
-    }
-
-    try {
-      
-      const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, token);
-
-      if (Array.isArray(respuesta)) {
-        setFacturas(respuesta);
-=======
   useEffect(() => {
     const fetchFacturas = async () => {
 
@@ -168,22 +131,14 @@ useEffect(() => {
         console.log("Error obteniendo registros:", error);
       } finally {
         setLoading(false);
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
       }
-    } catch (error) {
-     
-    } finally {
-      // 4) siempre bajamos loading cuando termine (éxito o error)
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchFacturas();
-}, [claveCat, selectedMunicipality, user, token]);
-
+    fetchFacturas();
+  }, [claveCat, selectedMunicipality, user]);
 
   //Cuando se clickea el boton pagar se ejecuta el metodo handlePayButtonClick
-  //el cual mediante fetch usa un post para enviar el json conteniendo la estrucutar del pago de factura  
+  //el cual mediante fetch usa un post para enviar el json conteniendo la estrucutar del pago de factura
   const handlePayButtonClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
 
     if (!savedCard) {
@@ -230,52 +185,82 @@ useEffect(() => {
     closeCardModal();
   };
 
+
   //Implementacion para la seleccion de checkbox en la facturas
   const [selectItems, setSelectedItems] = useState<number[]>([]);
   //vereficacion si se han seleccionado todas la facturas
-  const allSelected = facturasActuales.length > 0 && selectItems.length === facturasActuales.length;
+  //const allSelected = facturasActuales.length > 0 && facturasActuales.every(f => selectItems.includes(f.numFactura));
+
+
+//Codigo implementado y estudiado para migrar
+  const seleccionCantidad = React.useMemo(() => {
+  const selected = new Set(selectItems.map(String)); //Convertimos todos los ID seleccionado a string
+  //evitar problemas en este caso se podria decir en un (1 vs '1') que significa que uno es un numb y el otro
+  //es una cadena
+  return facturas.reduce((cantidad, cantidadFacturas) => {
+  return selected.has(String(cantidadFacturas.numFactura)) ? cantidad + (cantidadFacturas.total) : cantidad;
+    }, 0);
+  }, [selectItems, facturas]);
+
 
   //Seleccion global de todas las facturas
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const allIndices = facturasActuales.map((_, index) => index);
-      setSelectedItems(allIndices);
+//   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+//   const checked = e.target.checked;
+//   const idsPagina = facturasActuales.map(f => f.numFactura);
 
-      // Calcular el total de las facturas seleccionadas
-      const totalSum = facturasActuales.reduce((acc, item) => {
-        return acc + Number(item.total);
-      }, 0);
-      setSelectedAmount(totalSum);
-    } else {
-      setSelectedItems([]);
-      setSelectedAmount(0);
-    }
-  };
+//   setSelectedItems(prev =>
+//     checked
+//       ? Array.from(new Set([...prev, ...idsPagina]))     // agrega sin duplicados
+//       : prev.filter(id => !idsPagina.includes(id))       // quita los de la página
+//   );
+// };
 
-  //Seleccion individual de cada factura
-  const handleRowSelect = (index: number) => {
-    //se utiliza el array de facturasActuales
-    const factura = facturasActuales[index];
-    const valorNumerico = Number(factura.total);
-    if (selectItems.includes(index)) {
-      setSelectedItems(prev => prev.filter(i => i !== index));
-      setSelectedAmount(prev => prev - valorNumerico);
-    } else {
-      setSelectedItems(prev => [...prev, index]);
-      setSelectedAmount(prev => prev + valorNumerico);
-    }
-  }
-  console.log("Aqui estan", facturasActuales);
-  console.log("Facturas que viene de la API de FACTURACIONES:", facturas);
+  //Codigo de implementacod 
+  const seleccionFilas = (item: Facturas) => {
+  const id = item.numFactura;
+  setSelectedItems(prev =>
+    prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+  );
+};
+
+// Seleccionar/deseleccionar SOLO la página visible
+// const handleSelectAllPage = (checked: boolean) => {
+//   setSelectedItems(prev =>
+//     checked
+//       ? Array.from(new Set([...prev, ...idsPagina])) // agrega ids de esta página
+//       : prev.filter(id => !idsPagina.includes(id))   // quita ids de esta página
+//   );
+// };
+
+// Seleccionar/deseleccionar TODO el dataset (todas las páginas) //Esto lo tengo que estudiar si o si
+const seleccionGlobalmente = (checked: boolean) => {
+  setSelectedItems(checked ? idsGlobal : []);
+};
+
+//Momento de seleccionar las facturas
+//const idsPagina  = useMemo(() => facturasActuales.map(f => f.numFactura), [facturasActuales]);
+
+
+//Codigo para migracion tengo que estudiarlo & metodos de usuarlos
+const idsGlobal = useMemo(() => facturas.map(f => f.numFactura), [facturas]);
+const pageAllSelected = facturasActuales.length > 0 && facturasActuales.every(f => selectItems.includes(f.numFactura));
+
+// const pageSomeSelected =
+//   facturasActuales.some(f => selectItems.includes(f.numFactura)) && !pageAllSelected;
+
+// ¿Todo el dataset seleccionado?
+// const allResultsSelected =
+//   facturas.length > 0 && facturas.every(f => selectItems.includes(f.numFactura));
 
   return (
     <div className="detalles-impuesto-container">
+      <div className="title" style={{ textAlign: "center" }}> ESTADO DE CUENTA BIENES INMUEBLES</div>  
+         <h2 className="subTitles">Datos del Inmueble</h2>
+      
+      
 
-      <div className="title" style={{ textAlign: "center" }}> ESTADO DE CUENTA BIENES INMUEBLES</div>
-
-      <h2 className="subTitles">Datos del Inmueble</h2>
-
-      <table className="details-table">
+      
+        <table className="details-table table table-hover table-sm align-middle w-100">
         <thead>
           <tr>
             <th>Clave Catastral</th>
@@ -283,39 +268,9 @@ useEffect(() => {
             <th>Dirección</th>
           </tr>
         </thead>
-    
         <tbody>
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
-   {loading
-   /**En esta parte tenemos que investigar toda la logica de como agregar el skeleton sin necesidad de poder  */
-      // Mientras carga, renderizas X filas de skeleton
-      ? Array.from({ length: Math.max(facturas.length, 1)  }).map((_, i) => (//Tenemos un arrelgo donde tiene el maximo de facturas 
-        //por ejemplo tenemos tenemos el facturas.length donde es el numero de elementos que hay actualmente el array en facturas
-        // donde tambien le estamos dando un orden de 1 para que no se muestre el skeleton que se muestre una columna.
-        //Al momento de recargar, tambien tenemos el .map que sobre escribe el arreglo de facturas
-        //  y se le da un key={i} para que cada uno de los elementos del arreglo
-          <tr key={i}>
-            {Array.from({ length: 3 }).map((__, j) => (
-              <td key={j} style={{ textAlign: "center" }}>
-                <Skeleton height={20} />
-              </td>
-            ))}
-          </tr>
-        ))
-      // Cuando ya no carga, renderizas tus datos reales
-      : (
-        <tr>
-          <td style={{ textAlign: "center" }}>{claveCat}</td>
-          <td style={{ textAlign: "center" }}>0801-2001-03973</td>
-          <td style={{ textAlign: "center" }}>{direccion}</td>
-          {/* …más celdas si tienes… */}
-        </tr>
-      )
-    }
-  </tbody>
-=======
 
-          {loading ? Array.from({ length: Math.max(facturas.length, 1) }).map((_, i) => (//Tenemos un arrelgo donde tiene el maximo de facturas 
+          {loading ? Array.from({ length: Math.max(facturas.length, 1) }).map((_, i) => (//Tenemos un arrelgo donde tiene el maximo de facturas
             <tr key={i}>
               {Array.from({ length: 3 }).map((__, j) => (
                 <td key={j} style={{ textAlign: "center" }}>
@@ -334,17 +289,16 @@ useEffect(() => {
           }
 
         </tbody>
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
       </table>
-
       <br />
       <br />
 
       {/* Datos de las Tablas*/}
-      <table className="details-table">
+      <div className="table-responsive">
+        <table className="details-table details-table table table-hover table-sm align-middle w-100">
         <thead>
           <tr>
-            <th><input type="checkbox" checked={allSelected} onChange={handleSelectAll} /></th>
+            <th><input type="checkbox" checked={pageAllSelected} onChange={(e) => seleccionGlobalmente(e.target.checked)} /></th>
             <th>N° Factura</th>
             <th>Fecha Vence</th>
             <th>Descripción</th>
@@ -360,53 +314,6 @@ useEffect(() => {
 
         <tbody>
           {/* se mapea el arreglo facturas y luego se desglosa cada factura */}
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
-         {loading
-    // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
-      ? Array.from({ length: registrosPorPagina }).map((_, i) => (
-       <tr key={i}>
-      {Array.from({ length: 11 }).map((__, j) => (
-      <td key={j} style={{ textAlign: "center" }}>
-      <Skeleton height={20} />
-      </td>
-      ))}
-      </tr>
-      ))
-                
-    // Cuando ya cargó, mapea las facturas
-    : facturasActuales.map((item, index) => (
-        <tr key={index}> 
-        
-          <td style={{ textAlign: "center" }}> <input  type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
-          <td style={{ textAlign: "center" }}>{item.numFactura}</td>
-          <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
-          <td style={{ textAlign: "center" }}>{item.descripcion}</td>
-          <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
-          <td style={{ textAlign: "center" }}>L{item.descPP}</td>
-          <td style={{ textAlign: "center" }}>L{item.descADM}</td>
-          <td style={{ textAlign: "center" }}>L{item.descAMN}</td>
-          <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
-          <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
-          <td style={{ textAlign: "center" }}>L{item.total}</td>
-        </tr>
-      ))}
-      
-
-      {!loading && facturas.length === 0 && (
-        
-        <tr>
-          <td colSpan={11} style={{textAlign: "center"}}>
-            NO HAY DATOS QUE MOSTRAR
-          </td>
-        </tr>
-      )}
-        </tbody>
-      </table>
-
-      {pagsTotales > 1 && !loading && (
-        <div className="pagination">
-          {Array.from({length: pagsTotales}, (_, i) => (
-=======
           {loading
             // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
             ? Array.from({ length: registrosPorPagina }).map((_, i) => (
@@ -422,7 +329,7 @@ useEffect(() => {
             // Cuando ya cargó, mapea las facturas
             : facturasActuales.map((item, index) => (
               <tr key={index}>
-                <td style={{ textAlign: "center" }}> <input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
+                <td style={{ textAlign: "center" }}> <input type="checkbox" checked={selectItems.includes(item.numFactura)} onChange={() => seleccionFilas(item)} /></td>
                 <td style={{ textAlign: "center" }}>{item.numFactura}</td>
                 <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
                 <td style={{ textAlign: "center" }}>{item.descripcion}</td>
@@ -445,28 +352,24 @@ useEffect(() => {
           )}
         </tbody>
       </table>
+        </div>
 
       {pagsTotales > 1 && !loading && (   //me quede por aqui
         <div className="pagination">
           {Array.from({ length: pagsTotales }, (_, i) => (
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
             <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
               {i + 1}
             </button>
           ))}
         </div>
       )}
-<<<<<<< HEAD:src/Components/FacturasComponents/ProcesoFacturacionComponents.tsx
 
-=======
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8:src/Components/FacturasComponents/BI-Facturacion.tsx
+
 
 
       {/* Sección de "Mis tarjetas de crédito y débito" */}
       <div className="credit-card-section"> {/*Cambiar la logica a un componente reutilizable*/}
-        
         <h3>Mis tarjetas de credito y debito</h3>
-        
         <div className="add-card">
           <span className="card-icon">💳</span>
           {savedCard ? (
@@ -486,28 +389,24 @@ useEffect(() => {
                 openCardModal();
               }}
             >
-              Agregar una tarjeta de credito o debito
+             Agregar una nueva tarjeta
             </a>
           )}
           <p className="card-info">
-            Aceptamos las principales tarjetas de credito
-          </p>
+            Aceptamos las principales tarjetas</p>
         </div>
       </div>
 
       {/* Total y botones */}
       <div className="payment-summary">
-        <p>Total a Pagar: LPS {selectedAmount.toLocaleString()}</p>
+        <p>Total a Pagar: LPS {seleccionCantidad.toLocaleString()}</p>
         <button className="button-cancel">Cancelar</button>
         <Link
           to="/Proceso-Tarjeta"
           className="button-links"
-          onClick={handlePayButtonClick}
-        >
+          onClick={handlePayButtonClick}>
           Pagar
         </Link>
-
-
       </div>
 
       {/* Modal de advertencia */}
@@ -562,7 +461,15 @@ useEffect(() => {
               Debe agregar una tarjeta de crédito o débito antes de proceder el
               pago.
             </p>
-            <button onClick={() => { closeCardRequiredModal(); openCardModal();}} className="modal-button">OK</button>
+            <button
+              onClick={() => {
+                closeCardRequiredModal();
+                openCardModal();
+              }}
+              className="modal-button"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

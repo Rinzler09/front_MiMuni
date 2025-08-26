@@ -1,24 +1,36 @@
 .password-change-container {
-  max-width: 580px;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: min(100%, 720px);
+  margin: 63px auto 1.5rem; /* centrado: elimina margin-left fijo */
+  padding: clamp(16px, 2.5vw, 24px);
   background: #ffffff;
-  padding: 40px;
-  border-radius: 2px;
+  border: 1px solid #d3d3d3;
+  border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: 98%;
+  margin-left: 20%;
+  margin-top: 63%;
+  transition: max-width 0.2s ease, margin-left 0.1s ease;
+   
 }
 
 .password-toggle {
-  position: absolute;
-  top: 50%;
-  right: 15px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #555;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
 }
 
 .validations li {
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
 }
 
 .validations li.text-success i {
@@ -31,18 +43,30 @@
 
 .button{
     width: 100%;
-  background: #D65D00;
-  color: #fff;
-  border: none;
-  padding: 0.6rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  box-shadow: 0 3px 8px rgba(246,112,3,0.3);
-  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-  margin-top: 0rem;
+    background: #D65D00;
+    color: #fff;
+    border: none;
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(246,112,3,0.3);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    margin-top: 0rem;
 }
 
 .button:hover{
     background-color: #FF7D19;
 }
+
+/* 
+===================================================
+              MEDIA QUERY
+===================================================
+*/
+
+@media (max-width: 768px){
+    .password-change-container{
+    }
+
+  }

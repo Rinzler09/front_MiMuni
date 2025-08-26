@@ -35,7 +35,6 @@ body,
 }
 
 .detalles-impuesto-container {
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -393,4 +392,43 @@ body,
 
 .pagination {
     margin-top: 20px;
+}
+@media(max-width: 768px){
+    .detalles-impuesto-container{
+        flex: 1;
+        width: calc(100% -2rem);
+        padding: 1rem;
+        margin: 4rem auto 1.5rem;
+        max-width: none;
+        box-sizing: border-box;
+    }
+
+    .credit-card-section{
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        width: 110%;
+        max-width: 100%;
+        text-align: center;
+        margin-left: 83%;
+    }
+
+    .payment-summary{
+        font-size: 0.2rem;
+        padding: 0.5rem 1rem;
+        margin-left: 38%;
+    }
+
+    .button-cancel,
+    .button-pay {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 5px;
+        width: 180px;
+      
+}
+
+  
 }

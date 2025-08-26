@@ -290,6 +290,8 @@
   max-width: none;
 }
 
+
+
 /* Efectos para los iconos de los submenus
 
 /* rotación solo al chevron  */
@@ -360,13 +362,6 @@
   transition: transform 0.3s ease;
 }
 
-/* ─── Ajustes para el contenedor de detalles al colapsar ─── */
-.app-container.sidebar-collapsed .detalles-impuesto-container {
-  padding-left: 20px;
-  padding-right: 30px;
-  margin: 5rem 0 1rem;
-  max-width: none;
-}
 
 
 @media (max-width: 992px) {
@@ -384,3 +379,5 @@
     transform: translateX(0);
   }
 }
+
+/* Probando el MEDIA QUERY */

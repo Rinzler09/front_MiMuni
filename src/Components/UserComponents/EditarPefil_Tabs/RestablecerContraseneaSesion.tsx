@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';//Libreria para validar los campos del
 import ErrorMessage from '../../ErrorMessage.tsx/MostrarMensajesError'; //Importacion del componenete que viene el mensaje del error
 import { resetPwdSessionService } from '../../../services/RstPwdSessionService'; //Servicio para enviar la solicitud de cambio de contraseña
 import type { resetPwdSession } from '../../../types/generalForm'//Importancion del type para el manejo de los datos del formulario
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import { useAuth } from '../../../Auth/AuthContext';
 import Modal from '../../ModalComponents/modalComponent';
 import { useNavigate } from 'react-router-dom';

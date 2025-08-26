@@ -1,7 +1,7 @@
 // src/components/DetallesImpuesto.tsx
 import React, { useState, useEffect } from "react";//Estamos declarando el hook de useState para poder integrar la parte de boolean
 import { useNavigate } from "react-router-dom";
-import { Toaster, toast } from "sonner";
+import {  toast } from "sonner";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
@@ -126,7 +126,7 @@ const DetallesImpuesto: React.FC = () => {
   return (
     <div className="detalles-impuesto-container">
 
-      <h2 className="title" style={{ textAlign: "center" }}>LISTADO DE BIENES INMUEBLES</h2>      
+      <h2 className="title">LISTADO DE BIENES INMUEBLES</h2>      
 
     <div className="table-responsive">
         <table className="details-table table table-hover table-sm align-middle w-100">
