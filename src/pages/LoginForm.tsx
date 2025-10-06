@@ -9,7 +9,7 @@ import { login } from "../services/loginFormServices";
 import { Toaster, toast } from "sonner";
 
 // Manejo de errores con react-hook-form
-import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
+import ErrorMessage from "../Components/ErrorMessage/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import type { confirmacionLogin } from "../types/generalForm";
 
@@ -52,7 +52,7 @@ const LoginForm: React.FC = () => {
 
   //Verificacion de token
   const navigate = useNavigate();
-  const { setUser, setToken, setTokenOT /*setSessionCounter, sessionCounter*/ } = useAuth();
+  const { setUser, setToken, setTokenOT } = useAuth();
 
   // React Hook Form
   const {

@@ -5,7 +5,7 @@ import Municipalidad from "../Components/ImagesComponents/Municipalidad";
 import { useEffect } from "react";
 // Importación nuevas al proyecto
 import type { cambioContrasena } from "../types/generalForm";
-import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
+import ErrorMessage from "../Components/ErrorMessage/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import { cambiarContra } from "../services/CambioControseñaServices";
 import { Toaster, toast } from "sonner";

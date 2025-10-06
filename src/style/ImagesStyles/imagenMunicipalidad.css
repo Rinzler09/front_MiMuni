@@ -4,5 +4,6 @@
     max-height: 30px;
     /* flex - direction hace que la imagen hija no se salga del Div*/
     /* max-width: 330px; */
-    max-width: 60px;
+    max-width: 120px;
+    margin-bottom: 3rem;
 }

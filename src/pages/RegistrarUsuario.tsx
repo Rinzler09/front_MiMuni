@@ -6,7 +6,7 @@ import type { registroSolicitud } from '../types/generalForm';
 import Municipalidad from '../Components/ImagesComponents/Municipalidad';
 
 //Nuevas Importaciones al proyecto
-import ErrorMessage from '../Components/ErrorMessage.tsx/MostrarMensajesError';
+import ErrorMessage from '../Components/ErrorMessage/MostrarMensajesError';
 import { registrarSolicitud } from '../services/RegistroUsuarioServices';
 import { Toaster, toast } from 'sonner';
 import Modal from '../Components/ModalComponents/modalComponent';

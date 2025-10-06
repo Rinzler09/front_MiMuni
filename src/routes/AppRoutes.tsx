@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import NotFound from "../Components/ErrorMessage/NotFound";
 import LoginForm from "../pages/LoginForm";
 import RegistrarUsuario from "../pages/RegistrarUsuario";
 import General from "../pages/General";
@@ -11,6 +12,7 @@ import RestablecerContrasena from "../pages/ReseteoContraseña/RestablecerContra
 // Importamos nuestro PrivateRoute
 import PrivateRoute from "./PrivateRoute";
 import PublicRoutes from "./PublicRoutes";
+
 
 
 const AppRoutes: React.FC = () => {
@@ -34,6 +36,9 @@ const AppRoutes: React.FC = () => {
           <Route path="cambio-contrasena" element={<CambioContrasena />} />
           <Route path="restablecer-contrasena" element={<RestablecerContrasena />} />
         </Route>
+
+        {/* Ruta de pagina no encontrada
+        <Route element={<NotFound />} /> */}
 
       </Routes>
     </Router>

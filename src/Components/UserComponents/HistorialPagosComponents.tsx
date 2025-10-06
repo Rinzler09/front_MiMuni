@@ -40,6 +40,28 @@ const HistorialPagos: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState(""); // Track selected dropdown option
 
   const handleRefreshClick = () => {
+    setHistorialFacturas(
+      [
+        {
+          id: 22,
+          descripcion: "Impuesto Bien Inmueble Periodo 2016",
+          subtotal: 390.73,
+          valortotal: 410.73,
+          fechapago: "08/09/16",
+          periodo: 2016,
+          estado: "P",
+        },
+        {
+          id: 23,
+          descripcion: "Impuesto Bien Inmueble Periodo 2017",
+          subtotal: 415.39,
+          valortotal: 450.60,
+          fechapago: "12/12/17",
+          periodo: 2017,
+          estado: "P",
+        }
+      ]
+    )
     //En esta parte tendra que implementar la logica para refrescar las facturas
   };
 

@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
   //const token = sessionStorage.getItem("access_TKN");
   const navigate = useNavigate();// En esta parte tenemos una constante en donde tenemos el navigate declarado y dentro de eso tenemos el hook de useNavigate() en donde lo utilizamos para poder navegar
 
-  const sbMenEstCuenta: string[] = ['Bienes Inmuebles', 'Impuesto Vecinal', 'Servicios Publicos', 'Impuesto Negocios', 'Multas Municipales', 'Servicios Varios'];//Cadenas de Titulos para subMenu correspondiente 
+  const sbMenEstCuenta: string[] = ['Bienes Inmuebles', 'Impuesto Vecinal / Personal', 'Servicios Publicos', 'Impuesto Industria, C y S', 'Multas Municipales', 'Servicios Varios'];//Cadenas de Titulos para subMenu correspondiente 
   // const sbMenEstCuenta_I: any[] = [faHome, faUser, faBuilding, faIndustry, faBuilding, faBuilding]; //Iconos para subMenu correspondiente
   const sbMenEstCuenta_R: string[] = ['/bienes-inmuebles', '/impuesto-personal', '/servicios-publicos', '/industria-comercio', '/otras-tasas', '/otras-tasas'];//Cadenas de Rutas para subMenu correspondiente 
   const [selectedSubMenuIdx, setSelectedSubMenuIdx] = useState<number | null>(null);
@@ -66,6 +66,10 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
     e.stopPropagation();//hace que no se duplique el evento al momento de seleccionarlo en este caso como los tast
     setSelectedMunicipality(municipality);//En este el setSelectedMunicipality(municipality) acualiza el estado de la municipalidad.
     toast.success(`${municipality} seleccionada.`);// Muestra el mensaje de exito al momento de seleccionar una municpalidad.
+    if (window.location.pathname !== "/dashboard") {
+      gotoMenu();
+      setSelectedSubMenuIdx(null);
+    }
   };
 
   const handleRestrictedClick = (e: React.MouseEvent) => {//Esta funcion sirve para el bloqueo de todas las secciones, si al momento no se le selecciono una municipalidad

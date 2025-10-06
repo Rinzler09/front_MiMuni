@@ -5,6 +5,7 @@ import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
 import { useAuth } from '../Auth/AuthContext';
 import { useSessionTimeout } from '../TimeOut/UseSessionTimeout';
+import NotFound from '../Components/ErrorMessage/NotFound';
 //me quede por aqui ya que sera aqui en donde se implementara la logica 
 // de los eventos mas la logica de las modales
 
@@ -41,12 +42,9 @@ const Components: Components = {
     'historial-pagos': React.lazy(() => import('../Components/UserComponents/HistorialPagosComponents')),
     //'cambio-contraseña': React.lazy(() => import('../pages/CambioContraseña')),
 
-
-
 };
 
 const General: FC = () => {
-
     // Extraemos el parámetro "tipo" de la URL, por ejemplo: /impuesto-bienes-inmuebles
     const { tipo } = useParams<{ tipo: string }>();
     //console.log("Este es el tipo en general.tsx, ", tipo);
@@ -54,9 +52,7 @@ const General: FC = () => {
     // Buscamos el componente correspondiente al servicio solicitado.
     const Componente = tipo ? Components[tipo] : null;
 
-
     //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
-
     const [collapsed, setCollapsed] = useState(false)
     const handleToggleSidebar = () => setCollapsed(c => !c);
 
@@ -102,14 +98,14 @@ const General: FC = () => {
                     {Componente ? (
                         <Componente />
                     ) : (
-                        <div>Componente no encontrado</div>
+                        <NotFound />
                     )
                     }
                 </Suspense>
-            </div>
+            </div >
             {Modals} {/* Este hook se coloca al final del render para que las advertencias aparezcan sobre el layout*/}
-            {SsExpiredModal}  {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
-        </div>
+            {SsExpiredModal} {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
+        </div >
     )
 }
 

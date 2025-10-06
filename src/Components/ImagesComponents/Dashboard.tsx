@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="carousel-item">
                 <img
-                  src="/img/noticias.jpg"
+                  src="/img/ValleDeAngeles.jpg"
                   className="d-block carousel-image"
                   alt="Noticias"
                 />

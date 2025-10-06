@@ -586,6 +586,7 @@ const ProceosFacturacion: React.FC = () => {
                   type="text"
                   placeholder="•••• •••• •••• ••••"
                   onChange={handleCardNumberChange}
+                  minLength={13}
                   maxLength={19}
                   onFocus={() => setIsBackView(false)}
                 />
@@ -608,6 +609,7 @@ const ProceosFacturacion: React.FC = () => {
                       placeholder="123"
                       onChange={handleCardCVVChange}
                       maxLength={3}
+                      minLength={3}
                       onFocus={() => setIsBackView(true)}
                       onBlur={() => setIsBackView(false)}
                     />
@@ -619,6 +621,14 @@ const ProceosFacturacion: React.FC = () => {
                   type="text"
                   placeholder="Nombre completo"
                   onChange={handleCardNameChange}
+                  maxLength={50}
+                  onFocus={() => setIsBackView(false)} />
+                <label className="textoPrincial">Direccion de la tarjeta</label>
+                <input
+                  type="text"
+                  placeholder="Calle, Colonia, Ciudad"
+                  onChange={handleCardNameChange}
+                  maxLength={100}
                   onFocus={() => setIsBackView(false)} />
                 <button
                   type="button"
