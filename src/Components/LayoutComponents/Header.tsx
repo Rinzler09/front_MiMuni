@@ -26,10 +26,19 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const { user, token, setUser, setToken, setSelectedMunicipality } = useAuth();
-  // const { handleExpire } = useSessionTimeout();
+  const { user, token, setUser, setToken, setSelectedMunicipality, selectedMunicipality } = useAuth();
   const userEmail = user?.email ?? "Inicia Sesion";
   const toggleDropdown = () => setIsOpen((o) => !o);
+
+  const handleRestrictedClick = (e: React.MouseEvent) => {//Esta funcion sirve para el bloqueo de submenus en el dropdown si no se selecciono una municipalidad
+    if (!selectedMunicipality) {
+      e.preventDefault();// No se puede selecionar ningun submenu al momento de no tenenr una municipalidad seleccionada
+    }
+  };
+
+  const restrictedLinkProps = !selectedMunicipality/**En este caso restrictedLinkProps sera un objeto con propiedades*/
+    ? { onClick: handleRestrictedClick, className: "menu-link disabled" }//Asigna un manejador que ejecuta e.preventDefault() si el usuario intenta hacer clic sin haber elegido municipio, bloqueando la acción (por ejemplo, evitar la navegación).
+    : { className: "menu-link" }; //Esto es para que menu-item, sin handler extra ni estilo de “deshabilitado” el enlace o botón funciona como normal.
 
   const handleLogout = async () => {
     try {
@@ -41,9 +50,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
       setUser(null);
       setToken(null);
       setSelectedMunicipality(null);
-      // handleExpire(); me genera problemas porque carga dos veces el useSessionTimeOut en la misma pantalla que es General.tsx
       navigate("/"); //navigate si esta funcionando aqui no es necesario el .reload(), probablemente por el finally
-      //window.location.reload(); //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
 
     }
   };
@@ -58,18 +65,10 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
             onToggleSidebar();
           }} />
 
-        {/* Si más adelante quieres el search, descomenta */}
-        {/* <div className="header-search">
-          <input type="text" placeholder="Search..." />
-          <FontAwesomeIcon icon={faSearch} className="fa-search" />
-        </div> */}
       </div>
 
-      {/* DERECHA: notificaciones + perfil */}
+
       <div className="header-right">
-
-
-
         <div
           className="user-profile" onClick={toggleDropdown}>
           <img src="/img/usuarios.png" alt="User" className="user-icon" />
@@ -88,15 +87,19 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
                   </Link>
                 </li>
 
-                <li>
-                  <Link to="/historial-pagos" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
+                <li title={`${restrictedLinkProps.className === "menu-link disabled" ? "Por favor, selecciona una municipalidad para comenzar." : ""}`}>
+                  <Link to="/historial-pagos"
+                    {...restrictedLinkProps}
+                    // className="menu-link" previously before changed 
+                    className={` ${restrictedLinkProps.className === "menu-link disabled" ? restrictedLinkProps.className : "menu-link"}`}
+                    style={{ display: 'flex', alignItems: 'center' }}>
                     <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
-                    <span className="ms-2">Historial Pagos</span>
+                    <span className="ms-2">Historial de Pagos</span>
                   </Link>
                 </li>
                 <li style={{ padding: 0 }}>
                   <span onClick={handleLogout}
-                    className="menu-link" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                    className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
                     <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
                     <span className="ms-2">Cerrar sesión</span>
                   </span>

@@ -13,7 +13,7 @@ import Modal from "../Components/ModalComponents/modalComponent";
 import { useAuth } from "../Auth/AuthContext";
 import { logoutUsuario } from "../services/EliminacionCookie";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importar estilos de bootstrap icons (si no lo has hecho globalmente)
-import { useSessionTimeout } from "../TimeOut/UseSessionTimeout";
+import { useSessionTimeout } from "../util/UseSessionTimeout";
 // import { useSessionModal } from "../hook/UseSessionTimeout";
 
 const CambioContrasena: React.FC = () => {

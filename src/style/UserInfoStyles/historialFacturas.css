@@ -18,7 +18,7 @@
     margin-top: 65px;
 }
 
-.buttonReset {
+.buttonSearch {
     background-color: #D65D00;
     border: none;
     padding: 5px 10px;
@@ -28,7 +28,7 @@
     margin-left: 10px;
 }
 
-.buttonReset:hover {
+.buttonSearch:hover {
     background-color: #efefef;
     color: black;
 }
@@ -48,6 +48,26 @@
 .buttonInvoices:hover {
     background-color: #efefef;
     color: black;
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    font-weight: bold;
+    justify-content: center;
+    color: #3B1F2B;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    width: 101%;
+    padding: 20px 200px;
+    max-width: 950px;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
 }
 
 .logoMuni {

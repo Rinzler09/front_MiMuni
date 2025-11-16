@@ -26,7 +26,7 @@ interface JwtPayload { //interfaz que se usara para decodificar el exp del token
 export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeoutOptions = {}) { /*= {} significa que si no se le pasa nada por defecto sera un objeto vacio*/
 
     const [showWarning, setShowWarning] = useState(false);    // Muestra modal de advertencia
-    const [countdown, setCountdown] = useState(0);            // Segundos restantes
+    const [countdown, setCountdown] = useState(60);            // Segundos restantes
     const [isOTSession, setIsOTSession] = useState(false); // hook para manejar mensaje de ventana modal
     const [canRenewTKN, setCanRenewTKN] = useState(true); // hook para la logica de renovacion del TKN 
     const { refreshToken, tokenOT, token } = useAuth();
@@ -48,6 +48,7 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
     useEffect(() => { hasAcceptedOTRef.current = hasAcceptedOT; }, [hasAcceptedOT]);
 
     const clearAll = useCallback(() => {// se declara una funcion que se utilizara para cancelar todos los temporizadores activos
+        // console.log("Se utilizo clear all para los timers e intervals");
         [warningTimer, /*refreshTimer,*/ expireTimer].forEach(ref => {//forEach crea un arreglo con las tres refs de los setTimeout y recorre cada una
             if (ref.current) { //si existe un setTimeout con el ID que se itera 
                 // console.log("Limpiando Timer con ID (ClearAll): ", ref.current, " y es de tipo(ref): ", typeof ref.current);
@@ -59,7 +60,7 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
             clearInterval(countdownInterval.current);           // Si existe uno activo entonces lo limpia
             countdownInterval.current = null;                    // Y de igual forma pone la referencia en null
         }
-
+        //countdownInterval.current = null;                    // Y de igual forma pone la referencia en null
         // if (expireInterval.current) { //se agrego para limpiar el nuevo expireInterval 
         //     clearInterval(expireInterval.current);
         //     expireInterval.current = null;
@@ -210,8 +211,10 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
         warningTimer.current = setTimeout(() => {
             setShowWarning(true);
             console.log("Ahora debe mostrar ventana modal de inactividad");
-
+            // let counter = 0;
             countdownInterval.current = setInterval(() => {
+                // counter += 1;
+                // console.log("el countdownInterval del warning alert: ", counter);
                 const remainingMs = deadline - Date.now();
                 const secs = Math.max(Math.ceil(remainingMs / 1000), 0);
                 setCountdown(secs);
@@ -338,6 +341,7 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
                         if (!isOTSession) { // si no es una sesion de uso unico entonces que pueda ejecutar bloque que refresca el token
                             console.log("evento onClick y es un RFsession");
                             initializeRFSession(); //Inicializa la sesion de nuevo en caso de que el usuario este ahi
+                            setCountdown(60);
                         } else {
                             console.log("evento onClick y es una OTsession");
                             setHasAcceptedOT(true); //En caso de que le haya aparecido el mensaje de "Entendido" en el boton de la modal si es una OTsession

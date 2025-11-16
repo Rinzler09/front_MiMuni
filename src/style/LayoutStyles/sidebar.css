@@ -222,6 +222,7 @@
 .menu-item.disabled {
   opacity: 0.6;
   pointer-events: none;
+  /* este parametro de ponter es el que hace que no se pueda seleccionar el submenu */
 }
 
 /* ─── Ajustes cuando está colapsado ────────────────────────────────────── */
@@ -260,22 +261,6 @@
   z-index: 1100;
 }
 
-/* Efectos para los iconos de los submenus
-
-/* rotación solo al chevron  */
-/* .section-chev {
-  transition: transform 0.3s ease;
-} */
-
-/* .section-title.active .section-chev {
-  transform: rotate(180deg);
-} */
-
-/*  Anula cualquier transform en los demás iconos ─── */
-/* .menu-item svg,
-.menu-icon {
-  transform: none !important;
-} */
 
 /* clases para iconos de subMenus */
 .subMenuIcon {

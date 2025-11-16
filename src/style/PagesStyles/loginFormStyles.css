@@ -130,6 +130,8 @@
   font-weight: 600;
   margin-bottom: 1.5rem;
   color: #F0F0F0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .carousel-wrapper {
@@ -241,6 +243,7 @@
   font-weight: 600;
   color: #333;
   margin-bottom: 1.75rem;
+
 }
 
 .titu {
@@ -373,4 +376,36 @@ a.forgot-password:hover {
 .login-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    min-height: auto;
+  }
+
+  .col-md-5,
+  .col-md-7 {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .carousel-wrapper {
+    margin-bottom: 1.5rem;
+  }
+
+  .carousel-content {
+    align-items: center;
+  }
+
+  .illustration {
+    max-width: 150px;
+  }
+
+  .titu {
+    align-items: center;
+  }
+
 }

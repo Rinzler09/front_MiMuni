@@ -174,6 +174,7 @@ const LoginForm: React.FC = () => {
                 <p className="slide-description">
                   {slides[currentSlide].description}
                 </p>
+
               </div>
               <div className="slide-titles">
                 {slides.map((_, idx) => (
@@ -181,11 +182,19 @@ const LoginForm: React.FC = () => {
                     onClick={() => setCurrentSlide(idx)} />
                 ))}
               </div>
+
+              <img alt="LogoBancoAtlantida"
+                src="../../../public/img/LogocompletoBALinea.png"
+                style={{
+                  width: "220px",
+                  margin: "auto",
+                  marginTop: "40px"
+                }} />
             </div>
 
             {/* Panel derecho: formulario */}
             <div className="col-12 col-md-7 d-flex flex-column justify-content-center align-items-start">
-              <h2 className="titu">LOGIN</h2>
+              {/* <h2 className="titu">Mi Muni en Línea</h2> */}
               <span>
                 Actíva y accede a todos los servicios en línea que tu municipalidad pone a tu disposición.{" "}
                 <a href="#" className="forgot-password" onClick={handleRegister}>
@@ -241,6 +250,24 @@ const LoginForm: React.FC = () => {
                   {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
                 </button>
               </form>
+              <div style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "280px",
+                margin: "70px auto -40px auto"
+              }}>
+                <span style={{
+                  margin: "10px 10px 0 0"
+                }}>Powered by</span>
+                <img
+                  style={{
+                    width: "160px",
+                  }}
+                  alt="LogoGeoRedes"
+                  src="../../../public/img/LetrasGeoRedes.png"
+                />
+              </div>
+
             </div>
 
             {/* </div> */}

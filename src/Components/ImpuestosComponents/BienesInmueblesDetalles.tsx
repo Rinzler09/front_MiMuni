@@ -9,6 +9,11 @@ import { clavesCatastrales } from "../../services/claveCatastral";
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
 import { mensajes } from "../../util/message";
+import { PaginationControl } from 'react-bootstrap-pagination-control';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import { biHeaders } from "../../util/headerDescrip";
+
 
 interface Claves {
   prop: string;
@@ -19,6 +24,7 @@ interface Claves {
   aldea: string;
   barrio: string;
   direccion: string;
+  dni: string
 }
 
 const DetallesImpuesto: React.FC = () => {
@@ -26,11 +32,15 @@ const DetallesImpuesto: React.FC = () => {
   const { user, selectedMunicipality, token } = useAuth();
   // const token = user?.token;
 
-
   const [claves, setClaves] = useState<Claves[]>([]);
   const [loading, setLoading] = useState(true);
-  const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 5;
+
+  const biTableHeaders = ['Propietario', 'Clave Catastral', 'Valor Impuesto', 'Uso', 'Sub Uso', 'Aldea', 'Barrio/Caserio', 'Dirección'] as const; //Tupla en vez de arreglo
+  const renderTooltip = (displayedText: string, props?: any) => (
+    <Tooltip className="tooltip-BI" {...props}>
+      {displayedText}
+    </Tooltip>
+  );
 
   useEffect(() => {
     if (!selectedMunicipality || !token) return;
@@ -80,14 +90,14 @@ const DetallesImpuesto: React.FC = () => {
   }, [selectedMunicipality]);
 
   // Paginación
-  const indUltimoReg = paginaActual * registrosPorPagina;
-  const indPrimerReg = indUltimoReg - registrosPorPagina;
-  const registrosActuales = claves.slice(indPrimerReg, indUltimoReg);
-  const pagsTotales = Math.ceil(claves.length / registrosPorPagina);
-
+  const [paginaActual, setPaginaActual] = useState(1);
+  const registrosPorPagina = 5;
+  const indUltimoReg = paginaActual * registrosPorPagina; //si estoy en la pagina 2 el indUltimoReg seria 10 ya que se utiliza 2*5=10, tambien se usa para lo que se mostrara en la tabla
+  const indPrimerReg = indUltimoReg - registrosPorPagina; //si estoy en la pagina 2 el indPrimerReg seria 5 ya que se utiliza 10-5 = 5, tambien se usa para lo que se mostrara en la tabla
+  const registrosActuales = claves.slice(indPrimerReg, indUltimoReg); //son los registros que se muestran en la pagina Actual es decir del 5 - 9 si estamos en la pag 2 , tambien se usa para lo que se mostrara en la tabla
+  // console.log("La lontitug de claves: ", claves.length);
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
-
-  const handleVerFacturas = async (claveCat: string, direccion: string) => {
+  const handleVerFacturas = async (claveCat: string, direccion: string, dni: string) => {
     if (!selectedMunicipality || !token) {
       toast.error("Debe iniciar sesión y seleccionar municipalidad.");
       return;
@@ -114,67 +124,92 @@ const DetallesImpuesto: React.FC = () => {
         LISTADO DE BIENES INMUEBLES
       </h2>
 
-      <table className="details-table">
-        <thead>
-          <tr>
-            <th>Propietario</th><th>Clave Catastral</th><th>Valor Impuesto</th>
-            <th>Uso</th><th>Sub Uso</th><th>Aldea</th><th>Barrio/Caserio</th>
-            <th>Dirección</th><th>Ver Facturas</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading
-            // Mientras carga, mostramos skeletons
-            ? Array.from({ length: registrosPorPagina }).map((_, i) => (
-              <tr key={i}>
-                {Array.from({ length: 9 }).map((__, j) => (
-                  <td key={j} style={{ textAlign: "center" }}>
-                    <Skeleton height={20} />
-                  </td>
-                ))}
-              </tr>
-            ))
-            // Una vez cargado, los datos reales
-            : registrosActuales.map((item, i) => (
-              <tr key={i}>
-                <td style={{ textAlign: "center" }}>{item.prop}</td>
-                <td style={{ textAlign: "center" }}>{item.claveCat}</td>
-                <td style={{ textAlign: "center" }}>L{item.valorImp}</td>
-                <td style={{ textAlign: "center" }}>{item.uso}</td>
-                <td style={{ textAlign: "center" }}>{item.subUso}</td>
-                <td style={{ textAlign: "center" }}>{item.aldea}</td>
-                <td style={{ textAlign: "center" }}>{item.barrio}</td>
-                <td style={{ textAlign: "center" }}>{item.direccion}</td>
-                <td>
-                  <button
-                    className="btnFacturas"
-                    onClick={() => handleVerFacturas(item.claveCat, item.direccion)}
+      <div className="table-responsives">
+        <table className="details-table table table-hover table-sm align-middle w-100">
+          <thead className="table-light" >
+            <tr >
+              {biTableHeaders.map((item, idx) => (
+                <th key={idx}>
+                  {item}  &nbsp;
+                  <OverlayTrigger
+                    placement="top"
+                    delay={{ show: 200, hide: 500 }} //show es lo que tarda en mostrarse y delay en ocultarse
+                    overlay={renderTooltip(biHeaders[item]?.def)}
+                  //container={document.body}
+                  // transition={false}
+                  // popperConfig={{
+                  //   strategy: 'fixed',
+                  //   modifiers: [
+                  //     { name: 'computeStyles', options: { adaptive: false } }
+                  //   ]
+                  // }}
                   >
-                    Facturas
-                  </button>
+                    <i className="bi bi-question-circle"></i>
+                  </OverlayTrigger>
+                </th>
+              ))}
+              <th>Ver Facturas </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading
+              // Mientras carga, mostramos skeletons
+              ? Array.from({ length: registrosPorPagina }).map((_, i) => (
+                <tr key={i}>
+                  {Array.from({ length: 9 }).map((__, j) => (
+                    <td key={j} style={{ textAlign: "center" }}>
+                      <Skeleton height={20} />
+                    </td>
+                  ))}
+                </tr>
+              ))
+              // Una vez cargado, los datos reales
+              : registrosActuales.map((item, i) => (
+                <tr key={i} className="table-hovers">
+                  <td style={{ textAlign: "center" }}>{item.prop}</td>
+                  <td style={{ textAlign: "center" }}>{item.claveCat}</td>
+                  <td style={{ textAlign: "center" }}>L{item.valorImp}</td>
+                  <td style={{ textAlign: "center" }}>{item.uso}</td>
+                  <td style={{ textAlign: "center" }}>{item.subUso}</td>
+                  <td style={{ textAlign: "center" }}>{item.aldea}</td>
+                  <td style={{ textAlign: "center" }}>{item.barrio}</td>
+                  <td style={{ textAlign: "center" }}>{item.direccion}</td>
+                  <td style={{ textAlign: "center" }}>
+                    <button
+                      className="btnFacturas"
+                      onClick={() => handleVerFacturas(item.claveCat, item.direccion, item.dni)}
+                    >
+                      Facturas
+                    </button>
+                  </td>
+                </tr>
+              ))}
+
+            {!loading && claves.length === 0 && (
+              <tr>
+                <td colSpan={9} style={{ textAlign: "center" }}>
+                  No hay datos que mostrar
                 </td>
               </tr>
-            ))}
+            )}
+          </tbody>
+        </table>
 
-          {!loading && claves.length === 0 && (
-            <tr>
-              <td colSpan={9} style={{ textAlign: "center" }}>
-                No hay datos que mostrar
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      </div>
 
-      {pagsTotales > 1 && !loading && (
-        <div className="pagination">
-          {Array.from({ length: pagsTotales }, (_, i) => (
-            <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
-              {i + 1}
-            </button>
-          ))}
-        </div>
+      {claves.length > registrosPorPagina && !loading && (
+
+        <PaginationControl
+
+          page={paginaActual}
+          total={claves.length}
+          between={2}
+          changePage={(page: number) => handleCambioPag(page)}
+          limit={registrosPorPagina}
+        />
+
       )}
+
     </div>
   );
 };

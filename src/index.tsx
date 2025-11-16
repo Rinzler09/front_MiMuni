@@ -3,7 +3,7 @@
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import * as Sentry from '@sentry/react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 
 // Inicializa Sentry lo antes posible

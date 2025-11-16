@@ -1,12 +1,13 @@
 export type registroSolicitud = {
-    nombrecompleto: string
+    // nombrecompleto: string
     identidad: string
     rtn: string
     correo: string
     telefono: string
 }
 
-export type RegisterForm = Pick<registroSolicitud, 'nombrecompleto' | 'identidad' | 'correo' | 'telefono'> & {}
+// export type RegisterForm = Pick<registroSolicitud, 'nombrecompleto' | 'identidad' | 'correo' | 'telefono'> & {}
+export type RegisterForm = Pick<registroSolicitud, 'identidad' | 'correo' | 'telefono'> & {}
 
 // cambio de contraseñas
 export type cambioContrasena = {
@@ -16,8 +17,8 @@ export type cambioContrasena = {
 export type cambioContra = Pick<cambioContrasena, 'contrasena' | 'confirmaContra'> & {}
 
 //Cambio de contraseña para sesion
-export type resetPwdSession ={
-    contrasenaAnterior: string 
+export type resetPwdSession = {
+    contrasenaAnterior: string
     contrasena: string
     confirmaContra: string
 }

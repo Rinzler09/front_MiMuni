@@ -19,15 +19,32 @@ body,
     max-width: 700px;
     max-height: 90%;
     /*La altura maxima sera del 90% del dispositivo que la visualiza*/
-    overflow-y: auto;
+    /* overflow-y: auto; */
     /* Añade una barra lateral si el contenido en Y se sale de la modal*/
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow-x: hidden;
 }
+
+.exitoPago {
+    display: flex;
+    flex-direction: column;
+}
+
+.exitoPago img {
+    margin: auto;
+}
+
+.exitoPago span {
+    margin: 2rem auto;
+}
+
 
 .pagoBotones {
     display: flex;
     flex-wrap: nowrap;
+    justify-content: center;
+
 }
 
 .pagoBotones button {
@@ -389,8 +406,53 @@ body,
 /* TERMINA MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */
 
 
-/* PAGINACION */
+/* PAGINACION, clases por default de React*/
 
 .pagination {
     margin-top: 20px;
+}
+
+.page-item.active .page-link {
+    background-color: #9b3900;
+}
+
+.pagination>li>a {
+    color: #000;
+}
+
+/* Codigo de hover de las tablas de bienes inmuebles */
+
+.table-hovers:hover {
+    transform: scale(1.01);
+    /* Agrandar un 2% */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Sombra para el efecto de elevación */
+    position: relative;
+    /* Asegura que la sombra y la transformación no se recorten por elementos vecinos */
+    z-index: 1;
+    /* Asegura que la fila hovered esté por encima de las otras */
+    border-radius: 20px;
+    /* Bordes redondeados como en la imagen */
+}
+
+.table-hovers:hover td:first-child {
+    border-top-left-radius: 8px;
+    /* Bordes redondeados en la primera celda */
+    border-bottom-left-radius: 8px;
+    /* Bordes redondeados en la primera celda */
+}
+
+.table-hovers:hover td:last-child {
+    border-top-right-radius: 8px;
+    /* Bordes redondeados en la última celda */
+    border-bottom-right-radius: 8px;
+    /* Bordes redondeados en la última celda */
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }

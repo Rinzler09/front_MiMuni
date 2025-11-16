@@ -3,14 +3,19 @@ import auth from "../Auth/auth";
 const API_URL = "/activacion/activarUser";
 
 // Función para registrar un usuario
-export const registrarSolicitud = async (nombre: string, identidad: string, registrotributario: string, email: string, telefono: string) => {
+// export const registrarSolicitud = async (nombre: string, identidad: string, registrotributario: string, email: string, telefono: string) => {
+export const registrarSolicitud = async (identidad: string, registrotributario: string, email: string, telefono: string) => {
+
   try {
     const response = await auth.post(API_URL, {
-      nombre, identidad, registrotributario, email, telefono
+      // nombre, identidad, registrotributario, email, telefono
+      dni: identidad,
+      rtn: registrotributario,
+      email,
+      telefono
     });
     return response.data; // Devuelve los datos del usuario registrado
   } catch (error: any) {
-    throw new Error( error.response?.data?.message || "Error al registrar solicitud, estamos trabajando para solucionar este inconveniente"
-    );
+    throw new Error(error.response?.data?.message);
   }
 };

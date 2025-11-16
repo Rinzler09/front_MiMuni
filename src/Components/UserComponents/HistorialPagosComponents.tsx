@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";//Importacioon de libreria de React y sus hooks useState y useEffect
 import "../../style/UserInfoStyles/historialFacturas.css";//Importacion del estilo historialFacturas.css
-import { GrPowerReset } from "react-icons/gr";//Importancion de icono de refrescar desde la libreria react-icons
+import { FaSearch } from "react-icons/fa";
 import { LiaFileInvoiceSolid } from "react-icons/lia";//Importacion de icono de factura desde la libreria react-icons
 import Skeleton from "react-loading-skeleton"; //Libreria que viene para utilizar skeleton
 import "react-loading-skeleton/dist/skeleton.css";// Importancion de Skeleton
@@ -49,7 +49,7 @@ const HistorialPagos: React.FC = () => {
           valortotal: 410.73,
           fechapago: "08/09/16",
           periodo: 2016,
-          estado: "P",
+          estado: "PAGADA",
         },
         {
           id: 23,
@@ -58,7 +58,7 @@ const HistorialPagos: React.FC = () => {
           valortotal: 450.60,
           fechapago: "12/12/17",
           periodo: 2017,
-          estado: "P",
+          estado: "PAGADA",
         }
       ]
     )
@@ -90,7 +90,7 @@ const HistorialPagos: React.FC = () => {
 
   return (
     <div className="historialFacturas">{/**tenemos la primera parte en donde se muestra la clase principal*/}
-      <h2 className="title">HISTORIAL DE FACTURACION</h2>{/**El titulo que se muestra en la parte de facturacion*/}
+      <h2 className="title">HISTORICO DE PAGOS</h2>{/**El titulo que se muestra en la parte de facturacion*/}
 
       {/* Date Range Filter */}
       <div className="historial-facturacion-container">{/**En este apartado tenemos el contenedor de los  bloques de los filtros de busqueda y por fechas*/}
@@ -111,10 +111,10 @@ const HistorialPagos: React.FC = () => {
 
             <input type="date" defaultValue="yyy-mm-dd" className="date-final" />{/**En esta parte tambien tenemos un input con el type de fecha*/}
 
-            <button className="buttonReset" title="Buscar Facturas"
-              onClick={handleRefreshClick}><GrPowerReset /></button>{/**Este boton nos ayuda poder refrescar la factuaras actuales*/}
+            <button className="buttonSearch" title="Buscar Facturas"
+              onClick={handleRefreshClick}><FaSearch /></button>{/**Este boton nos ayuda poder refrescar la factuaras actuales*/}
 
-            <button className="buttonInvoices" title="Descargar PDF"><LiaFileInvoiceSolid /></button>{/**Tenemos el segundo boton en donde podemos descargar sin ningun problema los documentos*/}
+            {/* <button className="buttonInvoices" title="Descargar PDF"><LiaFileInvoiceSolid /></button>*Tenemos el segundo boton en donde podemos descargar sin ningun problema los documentos */}
           </div>
         </div>
       </div>

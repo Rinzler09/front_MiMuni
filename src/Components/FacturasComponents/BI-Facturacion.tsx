@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css"
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
 import "../../style/PagesStyles/titulo_TablasStyle.css"
-
+import { PaginationControl } from 'react-bootstrap-pagination-control';
 import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "sonner";
+import Spinner from 'react-bootstrap/Spinner';
+import { FaDownload } from "react-icons/fa";
+import ReportBI from "../PDF/reporteBI";
 
 interface Facturas {
   numFactura: number;
@@ -27,17 +30,22 @@ interface Facturas {
 interface LocationState {
   claveCat: string;
   direccion: string;
+  dni: string;
 }
 
 const ProceosFacturacion: React.FC = () => {
 
   /*Se incializan los hook States de los parametros para la factura*/
   const [modalDetPago, setModalDetPago] = useState(false);
+  const [modalProPay, setModalProPay] = useState(false);
+  const [pagoExitoso, setPagoExitoso] = useState(false);
+
   const closeModalDetPago = () => {
     setModalDetPago(false);
   };
+
   const { state } = useLocation() as { state: LocationState };
-  const { claveCat, direccion } = state;
+  const { claveCat, direccion, dni } = state;
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -188,41 +196,63 @@ const ProceosFacturacion: React.FC = () => {
     closeCardModal();
   };
 
+  const processPayment = () => {
+    setModalProPay(true);
+    setTimeout(() => {
+      setPagoExitoso(true);
+      setModalProPay(false);
+    }, 3000)
+  }
+
   //Implementacion para la seleccion de checkbox en la facturas
   const [selectItems, setSelectedItems] = useState<number[]>([]);
+
   //vereficacion si se han seleccionado todas la facturas
-  const allSelected = facturasActuales.length > 0 && selectItems.length === facturasActuales.length;
+  //const allSelected = facturasActuales.length > 0 && selectItems.length === facturasActuales.length;
 
-  //Seleccion global de todas las facturas
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const allIndices = facturasActuales.map((_, index) => index);
-      setSelectedItems(allIndices);
+  //Se realiza el calculo total de las facturas selecionadas
+  const seleccionCantidad = React.useMemo(() => {
+    const selected = new Set(selectItems.map(String)); //Convertimos todos los ID seleccionado a string
 
-      // Calcular el total de las facturas seleccionadas
-      const totalSum = facturasActuales.reduce((acc, item) => {
-        return acc + Number(item.total);
-      }, 0);
-      setSelectedAmount(totalSum);
-    } else {
-      setSelectedItems([]);
-      setSelectedAmount(0);
-    }
+    return facturas.reduce((cantidad, cantidadFacturas) => {
+      return selected.has(String(cantidadFacturas.numFactura))
+        ? cantidad + cantidadFacturas.total
+        : cantidad;
+    }, 0);
+  }, [selectItems, facturas]);
+
+  //Codigo de implementaco
+  const seleccionFilas = (item: Facturas) => {
+    const id = item.numFactura;
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
   };
 
-  //Seleccion individual de cada factura
-  const handleRowSelect = (index: number) => {
-    //se utiliza el array de facturasActuales
-    const factura = facturasActuales[index];
-    const valorNumerico = Number(factura.total);
-    if (selectItems.includes(index)) {
-      setSelectedItems(prev => prev.filter(i => i !== index));
-      setSelectedAmount(prev => prev - valorNumerico);
-    } else {
-      setSelectedItems(prev => [...prev, index]);
-      setSelectedAmount(prev => prev + valorNumerico);
-    }
-  }
+  // Seleccionar/deseleccionar TODO el dataset (todas las páginas)
+  const seleccionGlobalmente = (checked: boolean) => {
+    setSelectedItems(checked ? idsGlobal : []);
+  };
+
+  //Codigo para seleccionar todas las facturas
+  const idsGlobal = useMemo(
+    () => facturas.map((f) => f.numFactura),
+    [facturas]
+  );
+
+  //Logica para poder seleecionar las 5 facturas actuales y no seleccionar el checkbox de todas las facturas
+  const pageAllSelected = useMemo(
+    () =>
+      facturas.length > 0 &&
+      facturas.every((f) => selectItems.includes(f.numFactura)),
+    [facturas, selectItems]
+  );
+  const [headerClicked, setHeaderClicked] = useState(false);
+
+  useEffect(() => {
+    if (!pageAllSelected && headerClicked) setHeaderClicked(false);
+  }, [pageAllSelected, headerClicked]);
+
 
   return (
     <div className="detalles-impuesto-container">
@@ -253,7 +283,8 @@ const ProceosFacturacion: React.FC = () => {
             : (
               <tr>
                 <td style={{ textAlign: "center" }}>{claveCat}</td>
-                <td style={{ textAlign: "center" }}>0801-2001-03973</td>
+                {/* <td style={{ textAlign: "center" }}>{dni || "EN DESARROLLO"}</td> */}
+                <td style={{ textAlign: "center" }}>{dni || "0801-2000-23308"}</td>
                 <td style={{ textAlign: "center" }}>{direccion}</td>
               </tr>
             )
@@ -266,10 +297,26 @@ const ProceosFacturacion: React.FC = () => {
       <br />
 
       {/* Datos de las Tablas*/}
-      <table className="details-table">
-        <thead>
+      <table className="details-table table table-hover table-sm align-middle w-100">
+        <thead className="table-light">
           <tr>
-            <th><input type="checkbox" checked={allSelected} onChange={handleSelectAll} /></th>
+            <th>
+              <input
+                type="checkbox"
+                checked={pageAllSelected || headerClicked}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setHeaderClicked(checked);
+                  seleccionGlobalmente(checked);
+                }}
+                aria-checked={
+                  pageAllSelected || headerClicked
+                    ? "true"
+                    : selectItems.length
+                      ? "mixed"
+                      : "false"
+                } />
+            </th>
             <th>N° Factura</th>
             <th>Fecha Vence</th>
             <th>Descripción</th>
@@ -298,9 +345,15 @@ const ProceosFacturacion: React.FC = () => {
             ))
 
             // Cuando ya cargó, mapea las facturas
-            : facturasActuales.map((item, index) => (
-              <tr key={index}>
-                <td style={{ textAlign: "center" }}> <input type="checkbox" checked={selectItems.includes(index)} onChange={() => handleRowSelect(index)} /></td>
+            : facturasActuales.map((item) => (
+              <tr key={item.numFactura} className="table-hovers">
+                <td style={{ textAlign: "center" }}>
+                  <input
+                    type="checkbox"
+                    checked={selectItems.includes(item.numFactura)}
+                    onChange={() => seleccionFilas(item)}
+                  />
+                </td>
                 <td style={{ textAlign: "center" }}>{item.numFactura}</td>
                 <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
                 <td style={{ textAlign: "center" }}>{item.descripcion}</td>
@@ -324,14 +377,16 @@ const ProceosFacturacion: React.FC = () => {
         </tbody>
       </table>
 
-      {pagsTotales > 1 && !loading && (   //me quede por aqui
-        <div className="pagination">
-          {Array.from({ length: pagsTotales }, (_, i) => (
-            <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
-              {i + 1}
-            </button>
-          ))}
-        </div>
+      {facturas.length > registrosPorPagina && !loading && (
+
+        <PaginationControl
+          page={paginaActual}
+          total={facturas.length}
+          between={2}
+          changePage={(page: number) => handleCambioPag(page)}
+          limit={registrosPorPagina}
+        />
+
       )}
 
 
@@ -368,7 +423,7 @@ const ProceosFacturacion: React.FC = () => {
 
       {/* Total y botones */}
       <div className="payment-summary">
-        <p>Total a Pagar: LPS {selectedAmount.toLocaleString()}</p>
+        <p>Total a Pagar: LPS {seleccionCantidad.toLocaleString()}</p>
         <button className="button-cancel">Cancelar</button>
         <Link
           to="/Proceso-Tarjeta"
@@ -504,15 +559,15 @@ const ProceosFacturacion: React.FC = () => {
               <tbody>
                 <tr>
                   <td><strong>Subtotal</strong></td>
-                  <td>5,528.00 LPS.</td>
+                  <td>LPS. {seleccionCantidad.toLocaleString()}</td>
                 </tr>
                 <tr>
                   <td><strong>Comisión por Servicio Web</strong></td>
-                  <td>30.00 LPS.</td>
+                  <td>LPS. 20.00 </td>
                 </tr>
                 <tr>
                   <td><strong>Valor Neto</strong></td>
-                  <td>5,558.00 LPS.</td>
+                  <td>LPS. {(seleccionCantidad + 20.00).toLocaleString()}</td>
                 </tr>
               </tbody>
             </table>
@@ -526,7 +581,7 @@ const ProceosFacturacion: React.FC = () => {
               <br />
               <strong>
                 Por favor, revise cuidadosamente los detalles antes de
-                proceder."
+                proceder
               </strong>
             </p>
 
@@ -534,7 +589,7 @@ const ProceosFacturacion: React.FC = () => {
               <button
                 onClick={() => {
                   closeModalDetPago();
-                  //hacerCobro();
+                  processPayment();
                 }}
                 className="modal-button"
               >
@@ -550,6 +605,46 @@ const ProceosFacturacion: React.FC = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {modalProPay && (
+        <div className="modal-overlay ">
+          <div className="modalPago">
+            <h3 className="modal-title" style={{ textAlign: "center" }}>
+              Procesando Pago
+            </h3><br />
+            <Spinner animation="border" variant="success" />
+          </div>
+        </div>
+      )}
+      {/* {pagoExitoso && <ReportBI />} */}
+      {pagoExitoso && (
+        <div className="modal-overlay ">
+          <div className="modalPago exitoPago">
+            <img src="public/img/procesado.svg" alt="Success" className="modal-icon" />
+            <h2 className="modal-title" style={{ textAlign: "center" }}>
+              Pago Realizado Exitosamente
+            </h2>
+            <span>Su codigo de referencia es <strong>90223</strong></span>
+            <div className="pagoBotones">
+              {/* <button className="modal-button"
+                onClick={() => {
+                  setPagoExitoso(false);
+                  navigate("/bienes-inmuebles");
+                }}
+              >
+                <FaDownload /> &nbsp; Descargar Comprobante</button> */}
+              <button
+                className="modal-button"
+                onClick={() => {
+
+                  setPagoExitoso(false);
+                  navigate("/bienes-inmuebles");
+                }}>Volver </button>
+            </div>
+          </div>
+
         </div>
       )}
 

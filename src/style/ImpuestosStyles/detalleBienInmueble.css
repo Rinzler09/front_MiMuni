@@ -27,19 +27,24 @@
 
 
 .btnFacturas {
-  border-radius: 30px;
+  border-radius: 5px;
   background-color: #ff8a04;
   font-weight: bold;
   color: black;
-  margin: auto 5px;
+  margin: auto 10px;
   transition: all 0.2s;
+  height: 30px;
+  border: none;
 }
-
 
 .btnFacturas:hover {
   transform: scale(1.1, 1.1);
   /* width: calc(85%); */
   background-color: #c4751a;
+}
+
+.bi-question-circle {
+  cursor: pointer;
 }
 
 
@@ -104,7 +109,11 @@
   text-align: left;
   border-bottom: 1px solid #ddd;
   font-size: 12px;
-
+  width: 500px;
+  /*Width para el  encabezado donde se desplegara el tooltip del signo de interrogacion*/
+  background-color: #9b3900;
+  color: white;
+  text-align: center;
 }
 
 .details-table td {
@@ -115,12 +124,6 @@
 }
 
 
-.details-table th {
-  background-color: #9b3900;
-  color: white;
-  text-align: center;
-}
-
 .details-table tr:hover {
   background-color: #f0f0f0;
 
@@ -130,13 +133,12 @@
   background-color: #f9f9f9;
 }
 
-
-
 .row {
   display: flex;
   justify-content: space-between;
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 
 .row:last-child {
@@ -162,12 +164,48 @@
   color: #333;
 }
 
-/* PAGINACION */
+/* PAGINACION, clases por default de React*/
 
 .pagination {
   margin-top: 20px;
 }
 
+.page-item.active .page-link {
+  background-color: #9b3900;
+}
+
+.pagination>li>a {
+  color: #000;
+}
+
+/* Codigo de hover de las tablas de bienes inmuebles */
+
+.table-hovers:hover {
+  transform: scale(1.01);
+  /* Agrandar un 2% */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Sombra para el efecto de elevación */
+  position: relative;
+  /* Asegura que la sombra y la transformación no se recorten por elementos vecinos */
+  z-index: 1;
+  /* Asegura que la fila hovered esté por encima de las otras */
+  border-radius: 20px;
+  /* Bordes redondeados como en la imagen */
+}
+
+.table-hovers:hover td:first-child {
+  border-top-left-radius: 8px;
+  /* Bordes redondeados en la primera celda */
+  border-bottom-left-radius: 8px;
+  /* Bordes redondeados en la primera celda */
+}
+
+.table-hovers:hover td:last-child {
+  border-top-right-radius: 8px;
+  /* Bordes redondeados en la última celda */
+  border-bottom-right-radius: 8px;
+  /* Bordes redondeados en la última celda */
+}
 
 /* ----------------------------------------
    MEDIA QUERIES

@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
   const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();/**Tenemos el user  que es un objeto con el dato del usuario que se esta logueando tiene toda su informacion
   SelectedMunicipality: es donde la municipalidad donde el usuario haya seleccionado
   SetSelectedMunicipality: es donde se releja la actualizacion del objeto al momento de cambiar la municipalidad */
-  //const token = sessionStorage.getItem("access_TKN");
+
   const navigate = useNavigate();// En esta parte tenemos una constante en donde tenemos el navigate declarado y dentro de eso tenemos el hook de useNavigate() en donde lo utilizamos para poder navegar
 
   const sbMenEstCuenta: string[] = ['Bienes Inmuebles', 'Impuesto Vecinal / Personal', 'Servicios Publicos', 'Impuesto Industria, C y S', 'Multas Municipales', 'Servicios Varios'];//Cadenas de Titulos para subMenu correspondiente 
@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
     contadorNota += 1;
     if (contadorNota <= 1) {
       setTimeout(() => {
-        toast.info(<span style={{ color: "blue", fontSize: "1.1em" }}>{mensajes["!Tomar Nota!"]?.mensaje || "!Tomar Nota!"} </span>, { // Mensaje que se le muestra en la parte de entrada
+        toast.info(<span style={{ color: "blue", fontSize: "1.1em" }}>Importante</span>, { // Mensaje que se le muestra en la parte de entrada
           description: (<span>Por favor, selecciona una municipalidad para comenzar.</span>),//Descripcion del mensaje que se le muestra al usuario (Contrituyete)
           icon: <MdErrorOutline style={{ color: "blue", fontSize: "1.2em" }} />//Icono de informacion para que el usuario (Contribuyente) pueda saber que el mensaje es importante
         }
@@ -113,10 +113,6 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
         <div className="sidebar-brand">
           <img
             src="../../public/img/Muni.png" alt="Mi Muni En Línea" className="sidebar-logo" />
-          {/* sólo mostrar texto cuando NO esté colapsado */}
-          {/* {!isOpen && (
-            <span className="sidebar-brand-text" onClick={gotoMenu}>Mi Muni En Línea</span>
-          )} */}
           {(
             <span className="sidebar-brand-text" onClick={gotoMenu}>Mi Muni En Línea</span>
           )}
@@ -147,7 +143,9 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
             <span className="section-icon"><FontAwesomeIcon icon={faFileInvoice} /></span>
             <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
-          <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}> {/*show sirve para mostrar el despliegue del dropdown*/}
+          <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}
+            title={`${restrictedLinkProps.className === "menu-item disabled" ? "Por favor, selecciona una municipalidad para comenzar." : ""}`}
+          > {/*show sirve para mostrar el despliegue del dropdown*/}
             {sbMenEstCuenta.map((item, index) => (
               <li key={index}>
                 <Link to={sbMenEstCuenta_R[index]}

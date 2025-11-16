@@ -4,7 +4,7 @@ import Sidebar from '../Components/LayoutComponents/Sidebar';
 import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
 import { useAuth } from '../Auth/AuthContext';
-import { useSessionTimeout } from '../TimeOut/UseSessionTimeout';
+import { useSessionTimeout } from '../util/UseSessionTimeout';
 import NotFound from '../Components/ErrorMessage/NotFound';
 //me quede por aqui ya que sera aqui en donde se implementara la logica 
 // de los eventos mas la logica de las modales
@@ -77,7 +77,8 @@ const General: FC = () => {
     });
 
     useEffect(() => {
-        const events = ["mousemove", "keydown", "touchstart", "scroll"] as const; //se añade as const para que TS 
+        const events = ["mousemove", "touchstart", "scroll"] as const; //se añade as const para que TS 
+        // const events = ["mousemove", "keydown", "touchstart", "scroll"] as const; //se añade as const para que TS 
         // infiera una tupla de literales en lugar de un arreglo tipo string "string[]" generico por ende ahora events es inmutable 
         // no se puede alterar ya que es de tipo readonly definiendolo como "as const"
         const onActivity = () => initializeRFSession(); //cada vez que ocurra uno de los eventos de "events" llamamos a
