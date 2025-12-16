@@ -1,28 +1,51 @@
-import React, { useState, useEffect } from "react";//Importacioon de libreria de React y sus hooks useState y useEffect
+import React, { useState, useEffect, useCallback } from "react";//Importacioon de libreria de React y sus hooks useState y useEffect
 import "../../style/UserInfoStyles/historialFacturas.css";//Importacion del estilo historialFacturas.css
-import { FaSearch } from "react-icons/fa";
-import { LiaFileInvoiceSolid } from "react-icons/lia";//Importacion de icono de factura desde la libreria react-icons
+import { FaSearch, FaEye } from "react-icons/fa";
+import { PaginationControl } from 'react-bootstrap-pagination-control';
 import Skeleton from "react-loading-skeleton"; //Libreria que viene para utilizar skeleton
 import "react-loading-skeleton/dist/skeleton.css";// Importancion de Skeleton
-
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Auth/AuthContext";
+import { toast } from "sonner";
+import { facturasPagadas } from "../../services/facturasPagadas";
+import { facturasPagadas_F } from "../../services/facturasPagadas_F";
 
 /* Se define la interface facturas con su tipo de dato */
 
-interface Facturas {//Esta la funcion de interface que nos ayuda para poder definir un tipo de dato
-  id: number; // Idenficador unico para cada factura
-  descripcion: string;// Descripcion de la factura
-  subtotal: number;//subtotal de la factura
-  valortotal: number;//valor total de la factura
-  fechapago: string;//fecha de pago de la factura
-  periodo: number;//Periodo de la factura
-  estado: string;//estado de la factura
+interface FacturasPagadas {//Esta la funcion de interface que nos ayuda para poder definir un tipo de dato
+  NoFactura: number;
+  ClaveCatastral: string;
+  Descripcion: string;
+  ValorFacturado: number;
+  ValorPagado: number;
+  FechaPago: string;
+  FechaVence: string;
+  NoRecibo: number;
+  TipoFactura: string;
 }
+
+type Option = { label: string; value: string };
 
 
 const HistorialPagos: React.FC = () => {
 
+  const navigate = useNavigate();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const { selectedMunicipality, token } = useAuth();
+  const [selectedTax, setSelectedTax] = useState("ALL"); // Track selected dropdown option
+  const facturasOptions: Option[] = [
+    { label: 'Todas (cualquier fecha)', value: 'ALL' },
+    { label: 'Bienes Inmuebles', value: 'BI' },
+    { label: 'Impuesto Vecinal', value: 'IP' },
+    { label: 'Servicios Publicos', value: "SP" },
+    { label: 'Impuesto Industria, C y S', value: 'IC' },
+    { label: 'Plan de Pago', value: "PP" },
+    { label: 'Servicios Varios', value: 'OT' },
+  ];
+
   /*Se use el hook de useState para el arreglo de Facturas*/
-  const [historialFacturas, setHistorialFacturas] = useState<Facturas[]>([]);
+  const [historialFacturas, setHistorialFacturas] = useState<FacturasPagadas[]>([]);
   const [loading, setLoading] = useState(true);// se declara un const para loading
   const [paginaActual, setPaginaActual] = useState(1);//Estado para la paginacion actual, con el estado de hook useState
   const registrosPorPagina = 5;//Esta contante utiliza el numero de registro por paginacion
@@ -31,62 +54,79 @@ const HistorialPagos: React.FC = () => {
   const indUltimoReg = paginaActual * registrosPorPagina;//
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const registrosActuales = historialFacturas.slice(indPrimerReg, indUltimoReg);
-  const pagsTotales = Math.ceil(historialFacturas.length / registrosPorPagina);
-  const handleCambioPag = (numPag: number) => {
-    setPaginaActual(numPag);
-  }
+  const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
+
 
   /* REALIZADO POR MARLEY */
-  const [selectedOption, setSelectedOption] = useState(""); // Track selected dropdown option
 
-  const handleRefreshClick = () => {
-    setHistorialFacturas(
-      [
-        {
-          id: 22,
-          descripcion: "Impuesto Bien Inmueble Periodo 2016",
-          subtotal: 390.73,
-          valortotal: 410.73,
-          fechapago: "08/09/16",
-          periodo: 2016,
-          estado: "PAGADA",
-        },
-        {
-          id: 23,
-          descripcion: "Impuesto Bien Inmueble Periodo 2017",
-          subtotal: 415.39,
-          valortotal: 450.60,
-          fechapago: "12/12/17",
-          periodo: 2017,
-          estado: "PAGADA",
-        }
-      ]
-    )
+
+  const handleTaxChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log("parametro seleccionado: ", e.target.value)
+    setSelectedTax(e.target.value); // Update selected option
+  };
+
+  const fetchHistorialPagos = useCallback(async () => {
+
+    setLoading(true);
+
+    if (!selectedMunicipality) {
+      toast.error("No se ha seleccionado una Municipalidad, no cargara registros de facturas.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const respuesta = await facturasPagadas(selectedMunicipality, token);
+      console.log("Esta es la respuesta de las facturas pagadas: ", respuesta);
+
+      if (respuesta && Array.isArray(respuesta)) {
+        setHistorialFacturas(respuesta)
+      }
+
+    } catch (error) {
+      console.log("Error obteniendo registros:", error);
+      if (error === "Error: No hay facturas disponibles") setHistorialFacturas([]);
+    } finally {
+      setLoading(false);
+    }
+
+  }, [selectedMunicipality, token]);
+
+  const fetchFacturas_F = async () => {
+    const startDateFormatted = startDate.toISOString().split("T")[0];
+    const endDateFormatted = endDate.toISOString().split("T")[0];
+
+    console.log("El tipo de factura: ", selectedTax,
+      " la fecha inicial: ", (startDateFormatted),
+      " la fecha final: ", (endDateFormatted));
+
+    if (startDateFormatted > endDateFormatted) return toast.error("La fecha inicial no puede ser mayor a la fecha final");
+
+    if (!selectedMunicipality) {
+      toast.error("No se ha seleccionado una Municipalidad, no se cargara el historico de pagos.");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const respuesta = await facturasPagadas_F(selectedMunicipality, selectedTax, startDateFormatted, endDateFormatted, token);
+      console.log("Esta es la respuesta de las facturas pagadas: ", respuesta);
+
+      if (respuesta && Array.isArray(respuesta)) {
+        setHistorialFacturas(respuesta)
+      }
+    } catch (error) {
+      console.log("Error obteniendo registros:", error);
+    } finally {
+      setLoading(false);
+    }
     //En esta parte tendra que implementar la logica para refrescar las facturas
   };
 
-
-  const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(e.target.value); // Update selected option
-  };
-
-  //Agregacion de useEffect para poder agregar
   useEffect(() => {
-    const fetchHistorialPagos = async () => {
-
-      setLoading(true);
-      try {
-
-      } catch (error) {
-
-      } finally {
-        setLoading(false);
-      }
-
-    };
-
     fetchHistorialPagos();
-  }, [historialFacturas]);
+  }, []);//se cargan las facturas al inicio 
 
   return (
     <div className="historialFacturas">{/**tenemos la primera parte en donde se muestra la clase principal*/}
@@ -95,43 +135,58 @@ const HistorialPagos: React.FC = () => {
       {/* Date Range Filter */}
       <div className="historial-facturacion-container">{/**En este apartado tenemos el contenedor de los  bloques de los filtros de busqueda y por fechas*/}
 
-        <div className="date-range-container">{/**En una clase personalizada, en donde viene de Historial de pago Components*/}
-          <div className="date-range-filter">{/**Tenemos la parte de los filtros de fechas */}
-            <select className="selectInvoice" onChange={handleOptionChange}>{/**Select, es un etiqueta en donde podemos seleccionar las opciones que nos ofrecen*/}
-              <option style={{ background: "#FFFFFF", color: "black" }}>{/**Option es parte de la etiqueta de Select para poder elegir una eleccion.*/}
-                Tipo de factura
-              </option>
-              <option style={{ background: "#FFFFFF", color: "black" }}>
-                BI-Bienes Inmuebles
-              </option>
+        <div className="date-range-container">
+          <div className="date-range-label">
+            <label htmlFor="tipoFactura">Tipo de factura</label>
+            <label htmlFor="date-inicio">Fecha Inicial</label>
+            <label htmlFor="date-final">Fecha Final</label>
+          </div>
 
+          <div className="date-range-filter">
+            <select id="tipoFactura" className="selectInvoice" onChange={handleTaxChange}>{/**Select, es un etiqueta en donde podemos seleccionar las opciones que nos ofrecen*/}
+              {facturasOptions.map(opt => (
+                <option key={opt.value} value={opt.value} style={{ background: "#FFFFFF", color: "black" }}>
+                  {opt.label}
+                </option>
+              ))}
             </select>
 
-            <input type="date" defaultValue="dd-mm-yyyy" className="date-inicio" />{/**En esta parte tenemos un input en donde pasamos la parte de fecha */}
+            <input id="date-inicio"
+              type="date"
+              className="date-inicio"
+              value={startDate.toISOString().split('T')[0]}
+              onChange={(e) => {
+                setStartDate(new Date(e.target.value)); // se convierte el input string a Date
+              }} />{/**En esta parte tenemos un input en donde pasamos la parte de fecha */}
 
-            <input type="date" defaultValue="yyy-mm-dd" className="date-final" />{/**En esta parte tambien tenemos un input con el type de fecha*/}
+            <input id="date-final"
+              type="date"
+              className="date-final"
+              value={endDate.toISOString().split('T')[0]}
+              onChange={(e) => {
+                setEndDate(new Date(e.target.value));
+              }} />{/**En esta parte tambien tenemos un input con el type de fecha*/}
 
             <button className="buttonSearch" title="Buscar Facturas"
-              onClick={handleRefreshClick}><FaSearch /></button>{/**Este boton nos ayuda poder refrescar la factuaras actuales*/}
+              onClick={selectedTax === 'ALL' ? fetchHistorialPagos : fetchFacturas_F}>
+              <FaSearch /></button>{/**Este boton nos ayuda poder refrescar la factuaras actuales*/}
 
-            {/* <button className="buttonInvoices" title="Descargar PDF"><LiaFileInvoiceSolid /></button>*Tenemos el segundo boton en donde podemos descargar sin ningun problema los documentos */}
           </div>
         </div>
       </div>
-      {/* Tabla de Facturas - Realizado por Milton Paz*/}
 
-      <div className="table-responsive">
-        <table className="details-table">{/**En este caso tenemos las tablas que se le mostrarar en la parte del diseño al usuario*/}
+      <div >
+        <table className="details-table table table-hover table-sm align-middle w-100">{/**En este caso tenemos las tablas que se le mostrarar en la parte del diseño al usuario*/}
           <thead>
             <tr>
-              <th>N°FACTURA</th>{/**Tenemos la primera parte de Factura*/}
-              <th>DESCRIPCION</th>{/**Tenemos la primera parte de Descripcion*/}
-              <th>SUBTOTAL</th>{/**Tenemos la primera parte de Subtotal*/}
-              <th>VALORTOTAL</th>{/**Tenemos la primera parte de ValorTotal*/}
-              <th>FECHAPAGO</th>{/**Tenemos la primera parte de FechaPago*/}
-              <th>PERIODO</th>{/**Tenemos la primera parte de Periodo*/}
-              <th>ESTADO</th>{/**Tenemos la primera parte de Estado*/}
-
+              <th>N° FACTURA</th>
+              <th>FECHA DE VENCIMIENTO</th>
+              <th>CLAVE CATASTRAL </th>
+              <th>DESCRIPCION</th>
+              <th>VALOR FACTURADO</th>
+              <th>VALOR PAGADO</th>
+              <th>FECHA DE PAGO</th>
+              <th>VER RECIBO</th>
             </tr>
           </thead>
 
@@ -140,7 +195,7 @@ const HistorialPagos: React.FC = () => {
               // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
               ? Array.from({ length: registrosPorPagina }).map((_, i) => (
                 <tr key={i}>
-                  {Array.from({ length: 7 }).map((__, j) => (
+                  {Array.from({ length: 8 }).map((__, j) => (
                     <td key={j} style={{ textAlign: "center" }}>
                       <Skeleton height={20} />
                     </td>
@@ -149,15 +204,19 @@ const HistorialPagos: React.FC = () => {
               ))
 
               : registrosActuales.map((registro, i) => (
-                <tr key={i}>
-
-                  <td>{registro.id}</td>
-                  <td>{registro.descripcion}</td>
-                  <td>{registro.subtotal}</td>
-                  <td>{registro.valortotal}</td>
-                  <td>{new Date(registro.fechapago).toLocaleDateString()}</td>
-                  <td>{registro.periodo}</td>
-                  <td>{registro.estado}</td>
+                <tr key={i} className="table-hovers">
+                  <td>{registro.NoFactura}</td>
+                  <td>{registro.FechaVence}</td>
+                  <td>{registro.ClaveCatastral || "NO APLICA"}</td>
+                  <td>{registro.Descripcion}</td>
+                  <td>L. {registro.ValorFacturado}</td>
+                  <td>L. {registro.ValorPagado}</td>
+                  <td>{registro.FechaPago}</td>
+                  <td >
+                    <button className="btnRecibos" title="Visualizar recibo" onClick={() => { navigate("/recibo-BI") }}>
+                      <FaEye /> &nbsp; {registro.NoRecibo}
+                    </button>
+                  </td>
 
                 </tr>
               ))}
@@ -165,42 +224,26 @@ const HistorialPagos: React.FC = () => {
             {!loading && historialFacturas.length === 0 && (
               <tr>
                 <td colSpan={7} style={{ textAlign: "center" }}>
-                  NO HAY DATOS QUE MOSTRAR
+                  NO SE ENCONTRARON FACTURAS
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-        {/* ANALIZAR: la funcionalidad cuando ya tenga resgistros en la parte de paginacion */}
-        {pagsTotales > 1 && !loading && (
-          <div className="pagination">
-            {Array.from({ length: pagsTotales }, (_, i) => (
-              <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
-                {i + 1}
-              </button>
-            ))}
-          </div>
+
+        {historialFacturas.length > registrosPorPagina && !loading && (
+          <PaginationControl
+            page={paginaActual}
+            total={historialFacturas.length}
+            between={2}
+            changePage={(page: number) => handleCambioPag(page)}
+            limit={registrosPorPagina}
+          />
+
         )}
 
       </div>
-      {/* <nav>
-        <ul className="pagination">
-          {[...Array(pagsTotales).keys()].map((page) => (
-            <li
-              key={page}
-              className={`page-item ${paginaActual === page + 1 ? 'active' : ''}`}
-              onClick={() => handleCambioPag(page + 1)}
-            >
-              <a className="page-link" href="#!">
-                {page + 1}
-              </a>
-            </li>
-          ))
-
-          }
-        </ul>
-      </nav> */}
-    </div>
+    </div >
   );
 };
 

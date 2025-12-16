@@ -10,8 +10,8 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "sonner";
 import Spinner from 'react-bootstrap/Spinner';
-import { FaDownload } from "react-icons/fa";
-import ReportBI from "../PDF/reporteBI";
+import ReportBI from "../PDF_Components/PDF_Impuestos/reporteBI";
+import { FaEye } from "react-icons/fa";
 
 interface Facturas {
   numFactura: number;
@@ -39,18 +39,18 @@ const ProceosFacturacion: React.FC = () => {
   const [modalDetPago, setModalDetPago] = useState(false);
   const [modalProPay, setModalProPay] = useState(false);
   const [pagoExitoso, setPagoExitoso] = useState(false);
+  // const [viewPDF, setViewPDF] = useState<boolean>(false);
 
   const closeModalDetPago = () => {
     setModalDetPago(false);
   };
 
   const { state } = useLocation() as { state: LocationState };
-  const { claveCat, direccion, dni } = state;
-  const location = useLocation();
+  const { claveCat, direccion } = state;
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const registrosPorPagina = 5;
-
 
 
   const [selectedAmount, setSelectedAmount] = useState(0);
@@ -105,11 +105,14 @@ const ProceosFacturacion: React.FC = () => {
   const indUltimoReg = paginaActual * registrosPorPagina;
   const indPrimerReg = indUltimoReg - registrosPorPagina;
   const facturasActuales = facturas.slice(indPrimerReg, indUltimoReg);
-  const pagsTotales = Math.ceil(facturas.length / registrosPorPagina);
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
 
 
-  const { user, selectedMunicipality, token } = useAuth();
+  const { user, selectedMunicipality, token, identifier } = useAuth();
+
+  const dniDigits = identifier?.replace(/\D/g, '');//para mantener solo los digitos del DNI
+  const dniParts = [dniDigits?.slice(0, 4), dniDigits?.slice(4, 8), dniDigits?.slice(8, 13)].filter(Boolean); // Cuts the digits into three groups, filter(Boolean) removes empty parts so you don’t get trailing dashes.
+  const formattedDni = dniParts.join('-');// Joins only the existing parts with hyphens.
 
   // 2) Declaramos la clave catastral en el estado o la recibimos de alguna parte
   //const [claveCat, setClaveCat] = useState("CU238"); // ejemplo
@@ -201,7 +204,7 @@ const ProceosFacturacion: React.FC = () => {
     setTimeout(() => {
       setPagoExitoso(true);
       setModalProPay(false);
-    }, 3000)
+    }, 2000)
   }
 
   //Implementacion para la seleccion de checkbox en la facturas
@@ -261,6 +264,7 @@ const ProceosFacturacion: React.FC = () => {
 
       <h2 className="subTitles">Datos del Inmueble</h2>
 
+      {/* Datos de las Tablas Superior*/}
       <table className="details-table">
         <thead>
           <tr>
@@ -282,10 +286,9 @@ const ProceosFacturacion: React.FC = () => {
           ))
             : (
               <tr>
-                <td style={{ textAlign: "center" }}>{claveCat}</td>
-                {/* <td style={{ textAlign: "center" }}>{dni || "EN DESARROLLO"}</td> */}
-                <td style={{ textAlign: "center" }}>{dni || "0801-2000-23308"}</td>
-                <td style={{ textAlign: "center" }}>{direccion}</td>
+                <td style={{ textAlign: "center" }}>{claveCat || "No encontrado"}</td>
+                <td style={{ textAlign: "center" }}>{formattedDni || "No encontrado"}</td>
+                <td style={{ textAlign: "center" }}>{direccion || "No encontrado"}</td>
               </tr>
             )
           }
@@ -296,7 +299,7 @@ const ProceosFacturacion: React.FC = () => {
       <br />
       <br />
 
-      {/* Datos de las Tablas*/}
+      {/* Datos de las Tablas Inferior*/}
       <table className="details-table table table-hover table-sm align-middle w-100">
         <thead className="table-light">
           <tr>
@@ -628,17 +631,21 @@ const ProceosFacturacion: React.FC = () => {
             </h2>
             <span>Su codigo de referencia es <strong>90223</strong></span>
             <div className="pagoBotones">
-              {/* <button className="modal-button"
-                onClick={() => {
-                  setPagoExitoso(false);
-                  navigate("/bienes-inmuebles");
-                }}
-              >
-                <FaDownload /> &nbsp; Descargar Comprobante</button> */}
+
               <button
                 className="modal-button"
                 onClick={() => {
+                  setPagoExitoso(false);
+                  // setViewPDF(true);
+                  navigate("/recibo-BI", { state: { impuesto: "BIENES INMUEBLES" } });
+                }}
+              >
+                <FaEye /> &nbsp; Visualizar Comprobante
+              </button>
 
+              <button
+                className="modal-button"
+                onClick={() => {
                   setPagoExitoso(false);
                   navigate("/bienes-inmuebles");
                 }}>Volver </button>

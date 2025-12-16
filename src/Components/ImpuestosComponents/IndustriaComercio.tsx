@@ -12,6 +12,7 @@ const ProceosFacturacion: React.FC = () => {
       <br />
       <p> <strong>EN PROCESO DE MANTENIMIENTO</strong></p>
       <Municipalidad />
+      <br />
     </div>
   )
 };

@@ -14,7 +14,8 @@ import "../../style/LayoutStyles/dropDown.css";
 import "../../style/LayoutStyles/header.css";
 import { useAuth } from "../../Auth/AuthContext";
 import { logoutUsuario } from "../../services/EliminacionCookie";
-// import { useSessionTimeout } from "../../hook/UseSessionTimeout";
+import Tippy from "@tippyjs/react";//dependencia que se usa para el tooltip que se muestra cuando no se ha selecciona una municipalidad 
+import "tippy.js/dist/tippy.css";
 
 // Props para controlar el collapse del sidebar
 interface HeaderProps {
@@ -26,7 +27,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const { user, token, setUser, setToken, setSelectedMunicipality, selectedMunicipality } = useAuth();
+  const { user, token, setUser, setToken, setSelectedMunicipality, setIdentifier, selectedMunicipality } = useAuth();
   const userEmail = user?.email ?? "Inicia Sesion";
   const toggleDropdown = () => setIsOpen((o) => !o);
 
@@ -50,6 +51,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
       setUser(null);
       setToken(null);
       setSelectedMunicipality(null);
+      setIdentifier(null);
       navigate("/"); //navigate si esta funcionando aqui no es necesario el .reload(), probablemente por el finally
 
     }
@@ -87,16 +89,28 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
                   </Link>
                 </li>
 
-                <li title={`${restrictedLinkProps.className === "menu-link disabled" ? "Por favor, selecciona una municipalidad para comenzar." : ""}`}>
-                  <Link to="/historial-pagos"
-                    {...restrictedLinkProps}
-                    // className="menu-link" previously before changed 
-                    className={` ${restrictedLinkProps.className === "menu-link disabled" ? restrictedLinkProps.className : "menu-link"}`}
-                    style={{ display: 'flex', alignItems: 'center' }}>
-                    <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
-                    <span className="ms-2">Historial de Pagos</span>
-                  </Link>
-                </li>
+                <Tippy
+                  content="Por favor, selecciona una municipalidad para comenzar."
+                  placement="left"
+                  delay={[200, 300]}
+                  arrow={true}
+                  theme="my-theme"
+                  disabled={!(restrictedLinkProps.className === "menu-link disabled")}
+                >
+                  <li>
+
+                    <Link to="/historial-pagos"
+                      {...restrictedLinkProps}
+                      // className="menu-link" previously before changed 
+                      className={` ${restrictedLinkProps.className === "menu-link disabled" ? restrictedLinkProps.className : "menu-link"}`}
+                      style={{ display: 'flex', alignItems: 'center' }}>
+                      <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
+                      <span className="ms-2">Historico de Pagos</span>
+                    </Link>
+
+                  </li>
+                </Tippy>
+
                 <li style={{ padding: 0 }}>
                   <span onClick={handleLogout}
                     className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
@@ -111,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
           )}
         </div>
       </div>
-    </header>
+    </header >
   );
 };
 

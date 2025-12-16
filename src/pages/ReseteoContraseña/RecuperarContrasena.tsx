@@ -160,10 +160,11 @@ const RecuperarContrasena: React.FC = () => {
                       }, required: 'El email es obligatorio', pattern: { value: /\S+@\S+\.\S+/, message: 'Formato inválido' },
                     })} />
                 <label htmlFor="email">Correo electrónico</label>
-                {errors.email && (<div className="text-danger mt-1">{errors.email.message}</div>)}
-              </div>
 
-              <div className="mb-4 mb-4 d-flex justify-content-end">
+              </div>
+              {errors.email && (<div className="text-danger mb-2">{errors.email.message}</div>)}
+
+              <div className="mb-4 mb-4 d-flex justify-content-center">
                 <ReCAPTCHA sitekey={RECAPTCHA_KEY} onChange={onRecaptcha} />
               </div>
 
@@ -179,7 +180,7 @@ const RecuperarContrasena: React.FC = () => {
               {/* Descripción OTP */}
               <p className="lead-text mb-3 text-center" style={{ textAlign: "left" }}>
                 Ingresa el código temporal enviado a tu correo electrónico.
-                Revisa tu bandeja de entrada y spam..
+                Revisa tu bandeja de entrada y spam.
               </p>
 
               <form onSubmit={handleSubmit(onValidateOtp)}>

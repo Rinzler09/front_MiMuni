@@ -22,9 +22,14 @@ import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 
 // Imágenes del carrusel
-import slide1 from "../../public/img/muni.png";
-import slide2 from "../../public/img/muni.png";
-import slide3 from "../../public/img/muni.png";
+
+// import slide1 from "../../public/img/muni.png";
+// import slide2 from "../../public/img/muni.png";
+// import slide3 from "../../public/img/muni.png";
+
+import slide1 from "../../public/img/MML_Logo.jpg";
+import slide2 from "../../public/img/MML_Logo.jpg";
+import slide3 from "../../public/img/MML_Logo.jpg";
 
 const slides = [
   { image: slide1, description: "Bienvenido, estamos en compromiso y servicio a la comunidad." },
@@ -52,7 +57,7 @@ const LoginForm: React.FC = () => {
 
   //Verificacion de token
   const navigate = useNavigate();
-  const { setUser, setToken, setTokenOT } = useAuth();
+  const { setUser, setToken, setTokenOT, setIdentifier } = useAuth();
 
   // React Hook Form
   const {
@@ -96,6 +101,7 @@ const LoginForm: React.FC = () => {
 
     try {
       const data = await login(emailLowCase, password);
+      const identificador = data?.dni as string;
       console.log("Resultado del login:", data);
       console.log("el correo, ", emailLowCase);
 
@@ -119,17 +125,19 @@ const LoginForm: React.FC = () => {
         setTokenOT(tokenValue);
         sessionStorage.setItem("email", emailLowCase); //se guarda en SessionStorage para el cambio de contraseña inicial
         sessionStorage.setItem("password", password);//se guarda en SessionStorage para el cambio de contraseña inicial
-        setTimeout(() => navigate("/cambio-contrasena"), 2000);
+        setTimeout(() => navigate("/cambio-contrasena"), 500);
         return;
       }
 
       // Si se recibe success: true desde el service entonces se ejecuta este bloque de codigo
       if (data.success) {
+        console.log("La data que se recibe en success: ", data);
         const tokenValue = data.access_token || "";
         setUser({ email: data.correo, /*token: tokenValue,*/ municipalidades: municipalidadesArray, });
         setToken(tokenValue);
+        setIdentifier(identificador);
         // setSessionCounter(sessionCounter + 1);
-        setTimeout(() => navigate("/dashboard"), 3000);
+        setTimeout(() => navigate("/dashboard"), 500);
       }
     } catch (err: any) {
       toast.error(err.message || "Error al iniciar sesión");
@@ -183,13 +191,13 @@ const LoginForm: React.FC = () => {
                 ))}
               </div>
 
-              <img alt="LogoBancoAtlantida"
+              {/* <img alt="LogoBancoAtlantida"
                 src="../../../public/img/LogocompletoBALinea.png"
                 style={{
                   width: "220px",
                   margin: "auto",
                   marginTop: "40px"
-                }} />
+                }} /> */}
             </div>
 
             {/* Panel derecho: formulario */}

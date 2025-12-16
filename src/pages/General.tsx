@@ -42,6 +42,9 @@ const Components: Components = {
     'historial-pagos': React.lazy(() => import('../Components/UserComponents/HistorialPagosComponents')),
     //'cambio-contraseña': React.lazy(() => import('../pages/CambioContraseña')),
 
+    //Componente para visualizar recibo PDF
+    'recibo-BI': React.lazy(() => import('../Components/PDF_Components/PDF_Impuestos/reporteBI')),
+
 };
 
 const General: FC = () => {

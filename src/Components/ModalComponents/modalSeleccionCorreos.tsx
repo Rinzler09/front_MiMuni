@@ -21,8 +21,8 @@ const SeleccionCorreos: React.FC<Props> = ({ showSeleccionCorreos, handleClose, 
     // Mensaje que se mostrará dependiendo de la cantidad de correos
     const cantidadCorreos = correos.length; // Usamos la longitud directamente
     const esUnicoCorreo = cantidadCorreos === 1; // Nueva variable para la condición de un solo correo
-    const mensajeUnico = "Estimado contribuyente, se encontró un correo electrónico registrado en la municipalidad, aqui se enviarán sus credenciales temporales.";
-    const MensajeMultiples = "Estimado contribuyente, se encontraron multiples correos electronicos, por favor seleccione uno para el envio de sus credenciales temporales.";
+    const mensajeUnico = "Estimado contribuyente, se encontró un correo electrónico registrado. Aqui se enviarán sus credenciales temporales.";
+    const MensajeMultiples = "Estimado contribuyente, se encontraron multiples correos electronicos registrados. Por favor seleccione uno para el envio de sus credenciales temporales.";
     const mostrarMensajes = esUnicoCorreo ? mensajeUnico : MensajeMultiples;
 
     const [showModalDatos, setShowModalDatos] = useState(false);

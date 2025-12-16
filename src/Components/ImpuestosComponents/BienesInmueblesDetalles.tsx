@@ -1,12 +1,11 @@
 // src/components/DetallesImpuesto.tsx
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
 import { clavesCatastrales } from "../../services/claveCatastral";
-import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
 import { mensajes } from "../../util/message";
 import { PaginationControl } from 'react-bootstrap-pagination-control';
@@ -27,12 +26,15 @@ interface Claves {
   dni: string
 }
 
+
 const DetallesImpuesto: React.FC = () => {
   const navigate = useNavigate();
   const { user, selectedMunicipality, token } = useAuth();
   // const token = user?.token;
+  // const { state } = useLocation();
+  // console.log("eL ESTADO", state);
 
-  const [claves, setClaves] = useState<Claves[]>([]);
+  const [claves, setClaves] = useState<Claves[]>([]); //<Claves[]> es el tipo y ([]) es lo que se inicializa en el mismo;
   const [loading, setLoading] = useState(true);
 
   const biTableHeaders = ['Propietario', 'Clave Catastral', 'Valor Impuesto', 'Uso', 'Sub Uso', 'Aldea', 'Barrio/Caserio', 'Dirección'] as const; //Tupla en vez de arreglo
@@ -97,20 +99,22 @@ const DetallesImpuesto: React.FC = () => {
   const registrosActuales = claves.slice(indPrimerReg, indUltimoReg); //son los registros que se muestran en la pagina Actual es decir del 5 - 9 si estamos en la pag 2 , tambien se usa para lo que se mostrara en la tabla
   // console.log("La lontitug de claves: ", claves.length);
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
-  const handleVerFacturas = async (claveCat: string, direccion: string, dni: string) => {
+  const handleVerFacturas = async (claveCat: string, direccion: string) => {
+
     if (!selectedMunicipality || !token) {
       toast.error("Debe iniciar sesión y seleccionar municipalidad.");
       return;
     }
     try {
-      const facturaResponse = await facturaBienesInmueble(
-        selectedMunicipality,
-        claveCat,
-        token
-      );
+      // const facturaResponse = await facturaBienesInmueble(
+      //   selectedMunicipality,
+      //   claveCat,
+      //   token
+      // );
       toast.success("Factura generada para proceso de pago.");
       navigate("/facturas-BI", {
-        state: { municipalidad: selectedMunicipality, claveCat, direccion, facturaData: facturaResponse }
+        // state: { municipalidad: selectedMunicipality, claveCat, direccion, facturaData: facturaResponse }
+        state: { municipalidad: selectedMunicipality, claveCat, direccion }
       });
     } catch {
       toast.error(mensajes["Error al obtener facturas para este bien inmueble"].mensaje);
@@ -177,7 +181,7 @@ const DetallesImpuesto: React.FC = () => {
                   <td style={{ textAlign: "center" }}>
                     <button
                       className="btnFacturas"
-                      onClick={() => handleVerFacturas(item.claveCat, item.direccion, item.dni)}
+                      onClick={() => handleVerFacturas(item.claveCat, item.direccion)}
                     >
                       Facturas
                     </button>

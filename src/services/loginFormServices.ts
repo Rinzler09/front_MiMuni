@@ -1,5 +1,4 @@
 //Codigo Revisado por MP
-
 import { toast } from "sonner";
 import auth from "../Auth/auth";
 import { mensajes } from "../util/message";
@@ -12,6 +11,7 @@ interface LoginResponse {
   message: string;
   user: any;
   municipalidades?: string[];
+  identificador?: string;
 }
 
 interface LoginResult {
@@ -21,6 +21,7 @@ interface LoginResult {
   correo?: any;
   access_token?: string;
   municipalidades?: string[];
+  dni?: string;
 }
 
 const interpretarMensaje = ( //esta funcion se usa para mandar mostrar mensajes al frontend segun los mensajes que vienen del backend ya que no se puede mostrar el mismo mensaje
@@ -63,7 +64,7 @@ export const login = async ( //funcion login la cual sirve para validar credenci
     }
 
     // Desestructura body de la respuesta del backend
-    const { message, user, municipalidades } = response.data;
+    const { message, user, municipalidades, identificador } = response.data;
     const { mensaje, tipo } = interpretarMensaje(message); //se obtiene el mensaje y se desestructura del diccionario el mensaje y el tipo
 
     if (tipo === "error") {//en caso que el tipo en el diccionario sea un error
@@ -90,6 +91,7 @@ export const login = async ( //funcion login la cual sirve para validar credenci
       correo: user,
       message,
       municipalidades,
+      dni: identificador,
       access_token: acc_TKN,
     };
   } catch (error: any) {

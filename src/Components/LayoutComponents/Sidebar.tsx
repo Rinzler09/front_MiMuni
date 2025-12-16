@@ -11,6 +11,8 @@ import { useAuth } from "../../Auth/AuthContext";// Importacion de useAuth de Au
 import { Toaster, toast } from "sonner";// Importacion de Toast de la libreria sonner // Codigo descartado
 import { mensajes } from "../../util/message"//Importacion de mensajes de errores de util/message
 import { MdErrorOutline } from "react-icons/md";// Importacion de MDErrorOutline, esto nos ayuda mostrar graficamente un simbolo de error en la interface donde lo estamos utilizando
+import Tippy from "@tippyjs/react";//dependencia que se usa para el tooltip que se muestra cuando no se ha selecciona una municipalidad 
+import "tippy.js/dist/tippy.css";
 
 // // PROPS para controlar el collapse del sidebar
 export interface SidebarPROPS { //marley lo programo y no supo explicar
@@ -53,7 +55,11 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
   const toggleSidebar = () => {//tenemos una funcion donde estara la funcionalidad de abrir y cerrar el menu de boton de hamburguesa.
     setIsSidebarOpen(prev => !prev);
   };
-  const gotoMenu = () => navigate("/dashboard");//Tenemos la funcion que es redirigir al usuario a la ruta de dashboard usando el hook navigate.  
+  const gotoMenu = () => {
+    navigate("/dashboard");
+    setSelectedMunicipality(null);
+    setSelectedSubMenuIdx(null);
+  }//Tenemos la funcion que es redirigir al usuario a la ruta de dashboard usando el hook navigate.  
 
   const municipalidades = user?.municipalidades || [];//Declaramos una constante con el nombre de municiaplidades.
   // En este caso obtiene la lista de la municipalidades la cual el usuario tiene acceso, mediante de user.?municipalidades  
@@ -64,12 +70,12 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
     //El React.MouseEvent<HTMLButtonElement> Es el evento de clic sobre boton que se esta seleccionando
     e.preventDefault();//En este apartado tenemos que si el boton que no se vuelva a seleccionar si el usuario selecciona otra vez
     e.stopPropagation();//hace que no se duplique el evento al momento de seleccionarlo en este caso como los tast
-    setSelectedMunicipality(municipality);//En este el setSelectedMunicipality(municipality) acualiza el estado de la municipalidad.
     toast.success(`${municipality} seleccionada.`);// Muestra el mensaje de exito al momento de seleccionar una municpalidad.
     if (window.location.pathname !== "/dashboard") {
       gotoMenu();
-      setSelectedSubMenuIdx(null);
+      //setSelectedSubMenuIdx(null);
     }
+    setSelectedMunicipality(municipality);//En este el setSelectedMunicipality(municipality) acualiza el estado de la municipalidad.
   };
 
   const handleRestrictedClick = (e: React.MouseEvent) => {//Esta funcion sirve para el bloqueo de todas las secciones, si al momento no se le selecciono una municipalidad
@@ -112,7 +118,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
         {/* ——— Brand / Logo arriba ——— */}
         <div className="sidebar-brand">
           <img
-            src="../../public/img/Muni.png" alt="Mi Muni En Línea" className="sidebar-logo" />
+            src="../../public/img/MML_Logo.jpg" alt="Mi Muni En Línea" className="sidebar-logo" />
           {(
             <span className="sidebar-brand-text" onClick={gotoMenu}>Mi Muni En Línea</span>
           )}
@@ -143,27 +149,39 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
             <span className="section-icon"><FontAwesomeIcon icon={faFileInvoice} /></span>
             <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
           </h3>
-          <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}
-            title={`${restrictedLinkProps.className === "menu-item disabled" ? "Por favor, selecciona una municipalidad para comenzar." : ""}`}
-          > {/*show sirve para mostrar el despliegue del dropdown*/}
-            {sbMenEstCuenta.map((item, index) => (
-              <li key={index}>
-                <Link to={sbMenEstCuenta_R[index]}
-                  {...restrictedLinkProps} //restrictedProps ya usa clase menu-item 
-                  className={` ${restrictedLinkProps.className === "menu-item disabled" ? restrictedLinkProps.className : "menu-item"}
+          <Tippy
+            content="Por favor, selecciona una municipalidad para comenzar."
+            placement="right-start"
+            delay={[200, 400]}
+            theme="my-theme"
+            arrow={true}
+            disabled={!(restrictedLinkProps.className === "menu-item disabled")}
+          >
+
+            <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}
+            // title={`${restrictedLinkProps.className === "menu-item disabled" ? "Por favor, selecciona una municipalidad para comenzar." : ""}`}
+            > {/*show sirve para mostrar el despliegue del dropdown*/}
+
+              {sbMenEstCuenta.map((item, index) => (
+                <li key={index}>
+                  <Link to={sbMenEstCuenta_R[index]}
+                    {...restrictedLinkProps} //restrictedProps ya usa clase menu-item 
+                    className={` ${restrictedLinkProps.className === "menu-item disabled" ? restrictedLinkProps.className : "menu-item"}
                    ${selectedSubMenuIdx === index ? "selected" : ""} `}
-                  onClick={() => {
-                    console.log("El valor de selectedSubMenuIdx: ", selectedSubMenuIdx);
-                    console.log("el className de restrictedprops: ", restrictedLinkProps.className);
-                    setSelectedSubMenuIdx(index); //se guarda el numero de indice para cada subMenu de la lista el cual debe hacer match con el indice actual que se clickea
-                  }}
-                >
-                  {/* <FontAwesomeIcon icon={sbMenEstCuenta_I[index]} className="menu-icon" /> */}
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
+                    onClick={() => {
+                      console.log("El valor de selectedSubMenuIdx: ", selectedSubMenuIdx);
+                      console.log("el className de restrictedprops: ", restrictedLinkProps.className);
+                      setSelectedSubMenuIdx(index); //se guarda el numero de indice para cada subMenu de la lista el cual debe hacer match con el indice actual que se clickea
+                    }}
+                  >
+                    {/* <FontAwesomeIcon icon={sbMenEstCuenta_I[index]} className="menu-icon" /> */}
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+          </Tippy>
         </div>
 
         {/* <div className="sidebar-section">

@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ag-media/react-pdf-table": "^2.0.3",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@react-pdf/renderer": "^4.3.1",
     "@sentry/react": "^9.42.0",
+    "@tippyjs/react": "^4.2.6",
     "@types/bootstrap": "^5.2.10",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.8",
@@ -36,6 +38,7 @@
     "react-router-dom": "^6.27.0",
     "rxjs": "^7.8.2",
     "sonner": "^2.0.1",
+    "tippy.js": "^6.3.7",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

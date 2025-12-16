@@ -100,18 +100,6 @@ auth.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // Retry único en caso de 401
-    // if (error.response?.status === 401 && !originalRequest._retry) {
-    //   originalRequest._retry = true;
-    //   originalRequest.withCredentials = true;
-
-    //   try {
-    //     return await auth.request(originalRequest);
-    //   } catch (err) {
-    //     return Promise.reject(err);
-    //   }
-    // }
-
     return Promise.reject(error);
   }
 );

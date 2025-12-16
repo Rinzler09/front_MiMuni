@@ -77,17 +77,29 @@
 
 .date-range-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-top: 20px;
     margin-bottom: 20px;
 
 }
 
 .date-range-filter {
+    margin-top: 20px;
     display: flex;
-    align-items: center;
+    flex-direction: row;
     justify-content: center;
-    margin-right: 170px;
+}
+
+.date-range-label {
+    display: flex;
+    flex-direction: row;
+    margin-left: -110px;
+    margin-bottom: -15px;
+}
+
+.date-range-label>label {
+    margin: auto 4rem;
 }
 
 .date-inicio {
@@ -128,25 +140,21 @@
 
 .details-table th {
     padding: 12px 10px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
     font-size: 12px;
-
+    background-color: #9b3900;
+    color: white;
 }
 
 .details-table td {
     padding: 10px 10px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
     font-size: 11px;
+
 }
 
-
-.details-table th {
-    background-color: #9b3900;
-    color: white;
-    text-align: center;
-}
 
 .details-table tr:hover {
     background-color: #f0f0f0;
@@ -155,6 +163,56 @@
 
 .details-table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
+}
+
+.btnRecibos {
+    border-radius: 5px;
+    background-color: #ff8a04;
+    height: 30px;
+    width: 60px;
+    border: none;
+    font-weight: bold;
+    transition: black 0.6s ease-in-out;
+}
+
+.btnRecibos:hover {
+    color: #fff;
+    background-color: #9b3900;
+}
+
+
+.table-hovers:hover {
+    transform: scale(1.01);
+    /* Agrandar un 2% */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Sombra para el efecto de elevación */
+    position: relative;
+    /* Asegura que la sombra y la transformación no se recorten por elementos vecinos */
+    z-index: 1;
+    /* Asegura que la fila hovered esté por encima de las otras */
+    border-radius: 20px;
+    /* Bordes redondeados como en la imagen */
+}
+
+.table-hovers:hover td:first-child {
+    border-top-left-radius: 8px;
+    /* Bordes redondeados en la primera celda */
+    border-bottom-left-radius: 8px;
+    /* Bordes redondeados en la primera celda */
+}
+
+
+.table-hovers:hover td:last-child {
+    border-top-right-radius: 8px;
+    /* Bordes redondeados en la última celda */
+    border-bottom-right-radius: 8px;
+    /* Bordes redondeados en la última celda */
+}
+
+
+.table-hovers td {
+    text-align: center;
+    /* margin: 100 auto; */
 }
 
 

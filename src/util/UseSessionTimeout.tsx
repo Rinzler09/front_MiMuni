@@ -94,6 +94,7 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
                 sessionStorage.removeItem("access_TKN_OT");//este existe en cambio de contraseña inicial y reseteo de contraseña
                 sessionStorage.removeItem("userPayload");//este existe en cambio de contraseña inicial
                 sessionStorage.removeItem("selectedMunicipality");//este existe en general y se le agrega valor cuando selecciona una Muni
+                sessionStorage.removeItem("identifier");//este existe en general y se le agrega valor cuando selecciona una Muni
                 setShowWarning(false);// Oculta warning
                 setIsOTSession(false);//hook para mostrar que es sesion de uso Unico para el boton de la modal
                 setCanRenewTKN(false); // una vez cerrada la sesion no se puede renovar el token    

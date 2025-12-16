@@ -53,6 +53,8 @@ interface AuthContextProps { //en esta interfaaz se definen todos los valores y 
     setUser: Dispatch<SetStateAction<User | null>>; //el respectivo setter para el valor del user
     token: string | null; //el valor de token
     setToken: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor del token
+    identifier: string | null;
+    setIdentifier: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor del token
     tokenOT: string | null; //el valor de token
     setTokenOT: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor del token
     selectedMunicipality: string | null;//el valor de selectedMunicipality
@@ -80,7 +82,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         useSessionStorageState<string | null>('access_TKN_OT', null);//hook para guardar estado en session storage
     const [selectedMunicipality, setSelectedMunicipality] =
         useSessionStorageState<string | null>("selectedMunicipality", null);
-
+    const [identifier, setIdentifier] =
+        useSessionStorageState<string | null>("identifier", null);
     // const [sessionCounter, setSessionCounter] =
     //     useSessionStorageState<number>("sessionCounter", 0);
     // const { clearAll } = useSessionTimeout();
@@ -146,6 +149,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 //aqui se comparten estados(valores en memoria), sus setters y funciones utiles como refreshToken y logOut
                 user,
                 setUser,
+                identifier,
+                setIdentifier,
                 token,
                 setToken,
                 tokenOT,

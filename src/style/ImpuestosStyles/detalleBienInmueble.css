@@ -6,6 +6,7 @@
   justify-content: flex-start;
   /* Alinea el contenido hacia la parte superior */
   padding: 20px;
+  padding-bottom: 60px;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.1);
@@ -21,7 +22,7 @@
   /* Ajusta margen para centrar */
   border: 1px solid #d3d3d3;
   /* Borde gris claro */
-  margin-top: 63px;
+  /* margin-top: 63px; */
 
 }
 

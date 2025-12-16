@@ -57,13 +57,15 @@
   padding: 0.5rem 1rem;
   /* más pegado arriba */
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
 }
 
 .sidebar-logo {
-  width: 42px;
-  height: 42px;
+  /* width: 42px; */
+  height: 40px;
   object-fit: contain;
   margin-right: 0.45rem;
+  border-radius: 100%;
 }
 
 @keyframes blink-logo {
@@ -180,6 +182,26 @@
   background-color: #555555;
 }
 
+/* ------ Fondo para el tooltip ---------*/
+.tippy-box[data-theme~="my-theme"] {
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
+}
+
+/* padding del contenido de tooltip*/
+.tippy-box[data-theme~="my-theme"] .tippy-content {
+  padding: 0.5rem 0.70rem;
+  font-size: 0.9rem;
+}
+
+/* flecha del tooltip */
+.tippy-box[data-theme~="my-theme"] .tippy-arrow {
+  color: rgba(0, 0, 0, 0.70);
+}
+
+
 /* ─── Ítems del menú ───────────────────────────────────────────────────── */
 .menu-item {
   display: flex;
@@ -222,6 +244,7 @@
 .menu-item.disabled {
   opacity: 0.6;
   pointer-events: none;
+  /* cursor: not-allowed; */
   /* este parametro de ponter es el que hace que no se pueda seleccionar el submenu */
 }
 

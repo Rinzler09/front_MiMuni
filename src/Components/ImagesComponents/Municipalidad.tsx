@@ -6,7 +6,8 @@ const Municipalidad: React.FC = () => {
 
     return (
         <div className="img-Municipalidad">
-            <img src="public/img/Muni.png" alt="logoMunicipalidad" />
+            {/* <img src="public/img/Muni.png" alt="logoMunicipalidad" /> */}
+            <img src="public/img/MML_Logo.jpg" alt="logoMunicipalidad" />
         </div>
     );
 };
