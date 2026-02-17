@@ -1,6 +1,5 @@
-/* src/style/LayoutStyles/sidebar.css */
 
-/* ─── Contenedor fijo del sidebar ───────────────────────────────────────── */
+/* ───Contenedor fijo del sidebar ───*/
 .sidebar-container {
   position: fixed;
   top: 0;
@@ -14,18 +13,13 @@
   z-index: 1000;
   transition: width 0.5s ease;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
-
-  /* Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: #888888 #dddddd;
-  /* thumb gris, track claro */
 }
 
 .sidebar-container.collapsed {
   width: 80px;
 }
 
-/* ─── Scrollbar WebKit en sidebar-container ───────────────────────────── */
+/* ─── Scrollbar WebKit en sidebar-container ────*/
 .sidebar-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -99,16 +93,6 @@
   padding: 0.5rem 0;
 }
 
-/* ─── Sidebar interior ─── */
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding-top: 0.25rem;
-  /* menos espacio arriba */
-  gap: 0.20rem;
-  /* espacio uniforme entre secciones/ítems */
-}
 
 /* ─── Secciones y títulos ───── */
 .sidebar-section {
@@ -151,7 +135,7 @@
 .menu-list.show {
   max-height: 60vh;
   /* limita la altura y deja espacio para scroll */
-  overflow-y: auto;
+  overflow-y: hidden;
   opacity: 1;
 
   /* Firefox */
@@ -261,7 +245,7 @@
   display: none;
 }
 
-/* ─── rotación SOLO al chevron ─── */
+/* ------- rotación SOLO al chevron --------*/
 .section-chev {
   transition: transform 0.3s ease;
 }
@@ -291,30 +275,12 @@
 }
 
 
-
-/* Efectos para los iconos de los submenus
-
-/* rotación solo al chevron  */
-/* .section-chev {
-  transition: transform 0.3s ease;
-} */
-
-/* .section-title.active .section-chev {
-  transform: rotate(180deg);
-} */
-
-/*  Anula cualquier transform en los demás iconos ─── */
-/* .menu-item svg,
-.menu-icon {
-  transform: none !important;
-} */
-
 /* clases para iconos de subMenus */
 .subMenuIcon {
   margin-right: 1rem;
 }
 
-/* ─── Ajustes cuando está colapsado ────── */
+/* ─── Ajustes cuando está colapsado ── */
 .sidebar-container.collapsed .menu-icon {
   margin: 20px auto;
 }
@@ -362,22 +328,42 @@
   transition: transform 0.3s ease;
 }
 
+.sidebar-container .open{
+  transform: translateX(0);
+}
 
 
-@media (max-width: 992px) {
+/* ─── Ajustes para el contenedor de detalles al colapsar ─── */
+.app-container.sidebar-collapsed .detalles-impuesto-container {
+  padding-left: 20px;
+  padding-right: 30px;
+  margin: 4rem 0 1rem;
+  max-width: none;
+}
+
+@media (max-width: 1265px) {
+
+.sidebar-container{
+  display: none !important;
+ }
+
   .hamburger-icon {
     position: relative;
     z-index: 1100;
   }
-
-  .sidebar-container {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-  }
-
   .sidebar-container.active {
     transform: translateX(0);
   }
+
 }
+
+@media (max-width: 768px) {
+  .app-container.sidebar-open .sidebar-backdrop {
+    display: block;
+  }
+}
+
+
+
 
 /* Probando el MEDIA QUERY */

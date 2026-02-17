@@ -1,7 +1,7 @@
 import React, { useState } from 'react';//estamos utilizando el hook useState para manejar los estados de los iconos de los de visualizacion
 import '../../../style/UserInfoStyles/ResetPwdSession.css';//Estilo para el componente de RestablecerContraseñaSesion.tsx
 import { useForm } from 'react-hook-form';//Libreria para validar los campos del formulario
-import ErrorMessage from '../../ErrorMessage.tsx/MostrarMensajesError'; //Importacion del componenete que viene el mensaje del error
+import ErrorMessage from '../../ErrorMessage/MostrarMensajesError'; //Importacion del componenete que viene el mensaje del error
 import { resetPwdSessionService } from '../../../services/RstPwdSessionService'; //Servicio para enviar la solicitud de cambio de contraseña
 import type { resetPwdSession } from '../../../types/generalForm'//Importancion del type para el manejo de los datos del formulario
 import { toast } from "sonner";

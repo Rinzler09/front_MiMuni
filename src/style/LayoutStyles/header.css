@@ -99,10 +99,17 @@
   color: #FFFFFF;
 }
 
+/* Proceso de rotacion en la parte de dropdawn */
 .chevron-icon {
   font-size: 0.75em;
   color: #FFFFFF;
+  transition: transform 0.3s ease;
 }
+
+.chevron-icon.rotate {
+  transform: rotate(180deg);
+}
+
 
 /* ========================= MEDIA QUERY ==================== */
 
@@ -166,4 +173,35 @@
   .header-hamburger {
     margin-left: 0.3rem;
   }
+}
+
+@media (max-width: 1265px) {
+ .header {
+    left: 0;
+    width: 100%;
+    transition: left 0.1s ease, width 0.2s ease;
+  }
+
+  .header.collapsed {
+    left: 0;
+    width: 100%;
+    transition: left 0.1s ease, width 0.4s ease;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .user-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* separa avatar y chevron */
+    margin-right: 0.5rem;
+
+  }
+
+  .header-hamburger {
+    margin-left: 0.3rem;
+  } 
 }

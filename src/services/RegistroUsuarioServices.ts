@@ -3,10 +3,10 @@ import auth from "../Auth/auth";
 const API_URL = "/activacion/activarUser";
 
 // Función para registrar un usuario
-export const registrarSolicitud = async (nombre: string, identidad: string, registrotributario: string, email: string, telefono: string) => {
+export const registrarSolicitud = async ( dni: string,  rtn: string, email: string, telefono: string) => {
   try {
     const response = await auth.post(API_URL, {
-      nombre, identidad, registrotributario, email, telefono
+       dni, rtn, email, telefono
     });
     return response.data; // Devuelve los datos del usuario registrado
   } catch (error: any) {

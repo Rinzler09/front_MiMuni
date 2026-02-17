@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";//Importacioon de libreria de
 import "../../style/UserInfoStyles/historialFacturas.css";//Importacion del estilo historialFacturas.css
 import { GrPowerReset } from "react-icons/gr";//Importancion de icono de refrescar desde la libreria react-icons
 import { LiaFileInvoiceSolid } from "react-icons/lia";//Importacion de icono de factura desde la libreria react-icons
+import { CiSearch } from "react-icons/ci";
 import Skeleton from "react-loading-skeleton"; //Libreria que viene para utilizar skeleton
 import "react-loading-skeleton/dist/skeleton.css";// Importancion de Skeleton
+import { TbReportAnalytics } from "react-icons/tb";
+import { ToastContainer, toast } from "react-toastify"; //Es para agregar el toastify
+import 'react-toastify/dist/ReactToastify.css';//Es para el diseño de css que viene con la libreria
+import { set } from "react-hook-form";
 
 
 /* Se define la interface facturas con su tipo de dato */
@@ -40,8 +45,48 @@ const HistorialPagos: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState(""); // Track selected dropdown option
 
   const handleRefreshClick = () => {
-    //En esta parte tendra que implementar la logica para refrescar las facturas
+    //La implementacion para poner retriccion en los filtros
+    const seleccionFacturacion = selectedOption;
+
+    //Condicion de restriccion para usuario
+    if (!seleccionFacturacion) {
+      //Si la seleecion es vacio mostrara una alerta diciendo que seleccione una opcion
+      toast.info("Por favor seleccione una opcion de tipo de facturas" )
+      return;
+    }
+    
+    //Limpiar registros actuales en la tabla si aun caso el contribuyente selecciona la opcion de tipo de factura
+   //setHistorialFacturas([]);
+    
+   //En esta parte tendra que implementar la logica para refrescar las facturas
+  setHistorialFacturas(
+      [
+        {
+          id: 22,
+          descripcion: "Impuesto Bien Inmueble Periodo 2016",
+          subtotal: 390.73,
+          valortotal: 410.73,
+          fechapago: "08/09/16",
+          periodo: 2016,
+          estado: "P",
+        },
+        {
+          id: 23,
+          descripcion: "Impuesto Bien Inmueble Periodo 2017",
+          subtotal: 415.39,
+          valortotal: 450.60,
+          fechapago: "12/12/17",
+          periodo: 2017,
+          estado: "P",
+        }
+      ]
+    )
   };
+
+  //Funcion para manera la descargas de PDF
+  const handleDownloadPdf = () => {
+    toast.success("Descargando PDF...");
+  }
 
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -67,12 +112,16 @@ const HistorialPagos: React.FC = () => {
   }, [historialFacturas]);
 
   return (
+     
+       
+      
     <div className="historialFacturas">{/**tenemos la primera parte en donde se muestra la clase principal*/}
-      <h2 className="title">HISTORIAL DE FACTURACION</h2>{/**El titulo que se muestra en la parte de facturacion*/}
+      
+      <h2 className="title" >HISTORIAL DE FACTURACION</h2>{/**El titulo que se muestra en la parte de facturacion*/}
 
       {/* Date Range Filter */}
       <div className="historial-facturacion-container">{/**En este apartado tenemos el contenedor de los  bloques de los filtros de busqueda y por fechas*/}
-
+        <ToastContainer/>
         <div className="date-range-container">
         <div className="filters-grid">
         <select className="selectInvoice" onChange={handleOptionChange} aria-label="Tipo de factura">
@@ -84,21 +133,18 @@ const HistorialPagos: React.FC = () => {
 
         <div className="actions">
         <button className="buttonReset" title="Buscar Facturas" onClick={handleRefreshClick}>
-        <GrPowerReset />
+        <CiSearch />
         <span>Buscar</span>
         </button>
         
-        <button className="buttonInvoices" title="Descargar PDF">
-        <LiaFileInvoiceSolid />
-        <span>PDF</span>
-        </button>
+        
         </div>
         </div>
         </div>
       </div>
       {/* Tabla de Facturas - Realizado por Milton Paz*/}
 
-      <div className="table-responsive">
+      <div className="table-responsive-historial">
         <table className="details-table table table-hover table-sm align-middle w-100">{/**En este caso tenemos las tablas que se le mostrarar en la parte del diseño al usuario*/}
           <thead className="table-light">
             <tr>
@@ -109,6 +155,7 @@ const HistorialPagos: React.FC = () => {
               <th>FECHAPAGO</th>{/**Tenemos la primera parte de FechaPago*/}
               <th>PERIODO</th>{/**Tenemos la primera parte de Periodo*/}
               <th>ESTADO</th>{/**Tenemos la primera parte de Estado*/}
+              <th>PDF</th>
 
             </tr>
           </thead>
@@ -127,23 +174,23 @@ const HistorialPagos: React.FC = () => {
               ))
 
               : registrosActuales.map((registro, i) => (
-                <tr key={i}>
+                <tr key={i} >
 
-                  <td>{registro.id}</td>
-                  <td>{registro.descripcion}</td>
-                  <td>{registro.subtotal}</td>
-                  <td>{registro.valortotal}</td>
-                  <td>{new Date(registro.fechapago).toLocaleDateString()}</td>
-                  <td>{registro.periodo}</td>
-                  <td>{registro.estado}</td>
-
+                  <td style={{ textAlign: "center" }}>{registro.id}</td>
+                  <td style={{ textAlign: "center" }}>{registro.descripcion}</td>
+                  <td style={{ textAlign: "center" }}>{registro.subtotal}</td>
+                  <td style={{ textAlign: "center" }}>{registro.valortotal}</td>
+                  <td style={{ textAlign: "center" }}>{new Date(registro.fechapago).toLocaleDateString()}</td>
+                  <td style={{ textAlign: "center" }}>{registro.periodo}</td>
+                  <td style={{ textAlign: "center" }}>{registro.estado}</td>
+                  <td><button className="buttonPdf" onClick={handleDownloadPdf}><TbReportAnalytics /></button></td>
                 </tr>
               ))}
 
             {!loading && historialFacturas.length === 0 && (
               <tr>
                 <td colSpan={7} style={{ textAlign: "center" }}>
-                  NO HAY DATOS QUE MOSTRAR
+                  SELECCIONA UNA DE LAS OPCIONES Y DA CLICK EN BUSCAR PARA CARGAR EL HISTORIAL DE PAGOS
                 </td>
               </tr>
             )}

@@ -1,13 +1,10 @@
-import React, { FC, Suspense, useState, useEffect } from 'react'
-import { replace, useLocation, useNavigate, useParams } from 'react-router-dom';
+import React, { FC, Suspense, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Sidebar from '../Components/LayoutComponents/Sidebar';
-import Header from '../Components/LayoutComponents/Header'
-import '../style/PagesStyles/generalStyles.css'
-import { useAuth } from '../Auth/AuthContext';
+import Header from '../Components/LayoutComponents/Header';
+import '../style/PagesStyles/generalStyles.css';
 import { useSessionTimeout } from '../TimeOut/UseSessionTimeout';
-//me quede por aqui ya que sera aqui en donde se implementara la logica 
-// de los eventos mas la logica de las modales
-
+import NotFound from '../Components/ErrorMessage/NotFound';
 
 // Definimos una interfaz para mapear los tipos de servicios a sus componentes correspondientes.
 interface Components {
@@ -17,7 +14,7 @@ interface Components {
 const Components: Components = {
 
     //Componentes de Pantallas Landing Dashboard
-    'dashboard': React.lazy(() => import('../Components/ImagesComponents/Dashboard')),
+    'dashboard': React.lazy(() => import('../Components/ImagesComponents/CarruselComponents')),
     //Componentes de Pantallas Landing de Impuestos
     'bienes-inmuebles': React.lazy(() => import('../Components/ImpuestosComponents/BienesInmueblesDetalles')),
     'impuesto-personal': React.lazy(() => import('../Components/ImpuestosComponents/ImpuestoPersonal')),
@@ -41,12 +38,9 @@ const Components: Components = {
     'historial-pagos': React.lazy(() => import('../Components/UserComponents/HistorialPagosComponents')),
     //'cambio-contraseña': React.lazy(() => import('../pages/CambioContraseña')),
 
-
-
 };
 
 const General: FC = () => {
-
     // Extraemos el parámetro "tipo" de la URL, por ejemplo: /impuesto-bienes-inmuebles
     const { tipo } = useParams<{ tipo: string }>();
     //console.log("Este es el tipo en general.tsx, ", tipo);
@@ -54,11 +48,18 @@ const General: FC = () => {
     // Buscamos el componente correspondiente al servicio solicitado.
     const Componente = tipo ? Components[tipo] : null;
 
-
     //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
-
     const [collapsed, setCollapsed] = useState(false)
-    const handleToggleSidebar = () => setCollapsed(c => !c);
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const handleToggleSidebar = () => {
+    if (window.innerWidth <= 768) {
+        setMobileOpen(prev => !prev);   // móvil
+    } else {
+        setCollapsed(prev => !prev);    // desktop
+    }
+    };
+
 
 
     //Se configura el hook de sesion con callbacks
@@ -94,22 +95,29 @@ const General: FC = () => {
 
     return (
 
-        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
-            <Sidebar collapsed={collapsed} />
+        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''} ${mobileOpen ? 'open' : ''}`}>
+            {mobileOpen && (
+                console.log("Abriendo sidebar en versio Movil", mobileOpen),
+            <div className="sidebar-backdrop"
+                onClick={() => setMobileOpen(false)}/>
+            )}
+              <Sidebar collapsed={collapsed} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
+            
+            
             <Header collapsed={collapsed} onToggleSidebar={handleToggleSidebar} />
             <div className="generalDiv">
                 <Suspense fallback={<div>Cargando Impuesto ...</div>}>
                     {Componente ? (
                         <Componente />
                     ) : (
-                        <div>Componente no encontrado</div>
+                        <NotFound />
                     )
                     }
                 </Suspense>
-            </div>
+            </div >
             {Modals} {/* Este hook se coloca al final del render para que las advertencias aparezcan sobre el layout*/}
-            {SsExpiredModal}  {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
-        </div>
+            {SsExpiredModal} {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
+        </div >
     )
 }
 

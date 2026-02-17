@@ -1,26 +1,28 @@
-.detalles-impuesto-container {
+.detalles-impuesto-containers {
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    /* Alinea el contenido hacia la parte superior */
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.1);
-    margin-top: -535px;
-    /* Ajusta este valor para mover el contenedor hacia arriba o abajo según sea necesario */
-    width: 78%;
-    /* Toma casi todo el ancho disponible, ajusta según sea necesario */
-    max-width: 1200px;
-    /* Limita el ancho máximo */
-    height: 100%;
-    /* Ajusta la altura según el contenido */
-    margin-left: 20%;
-    /* Ajusta margen para centrar */
-    border: 1px solid #d3d3d3;
-    /* Borde gris claro */
+   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* Alinea el contenido hacia la parte superior */
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.1);
+  margin-top: -535px;
+  /* Ajusta este valor para mover el contenedor hacia arriba o abajo según sea necesario */
+  width: 98%;
+  /* Toma casi todo el ancho disponible, ajusta según sea necesario */
+  max-width: 1000px;
+  /* Limita el ancho máximo */
+  height: 98%;
+  /* Ajusta la altura según el contenido */
+  margin-left: 20%;
+  /* Ajusta margen para centrar */
+  border: 1px solid #d3d3d3;
+  /* Borde gris claro */
+  margin-top: 63px;
+  transition: max-width 0.2s ease, margin-left 0.1s ease;
     margin-top: 63px;
 
 }
@@ -44,4 +46,59 @@
     overflow: hidden;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
+}
+
+/* Media Query para la parte de responsive en impuesto personal */
+
+@media (max-width: 768px){
+  .detalles-impuesto-containers{
+    flex: 1;
+    width: calc(100% - 2rem);
+    padding: 1rem;
+    margin: 4rem auto 1.5rem;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .title{
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    max-width: none;
+    text-align: center;
+  }
+}
+
+@media (max-width: 1265px) {
+  .detalles-impuesto-containers {
+    flex: 1;
+    width: calc(100% - 2rem);
+    margin: 4rem auto 1.5rem;
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  .title {
+    padding: 20px 50px;
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 2098px){
+  .detalles-impuesto-containers{
+    flex: 1;
+    width: calc(100% -2rem);
+    padding: 1rem;
+    margin: auto;
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  .title{
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+  }
 }

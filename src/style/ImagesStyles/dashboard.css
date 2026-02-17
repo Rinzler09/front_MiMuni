@@ -3,149 +3,185 @@
 
 /* Regla conflictiva para el LoginForm ya que deshabilita los inputs y botones, integrado por Marley   */
 
-/* html,
-body,
-#root {
-  margin: 0;
-  padding: 0;
+/* CONTENEDOR PRINCIPAL */
+.hero-carousel-container {
+  width: calc(100vw - var(--sidebar-width));
+  margin-left: var(--sidebar-width);
+  height: 100vh;
+  overflow: hidden;
+  /* transition: width 0.1s ease, margin-left 0.3s ease, height 0.2s ease; */
+  /* transition: max-width 0.2s ease, margin-left 0.1s ease; */
+}
+
+/* CAROUSEL */
+.hero-carousel {
   height: 100%;
-  overflow: hidden;
-} */
-
-.layout {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
 }
 
-.layout-content {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-
-.main-content.full-carousel-container {
-  position: absolute;
-  top: 50px;
-  left: 240px;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  transition: max-width 0.2s ease, margin-left 0.1s ease;
-}
-
-
-.full-carousel {
+/* IMAGEN HERO */
+.imgcarousel {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  object-fit: cover;
+}
+
+/* OVERLAY OSCURO */
+.carousel-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+/* TEXTO */
+.hero-caption {
+  transform: translateY(-5%);
+  z-index: 1;
+}
+
+.hero-caption h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.hero-caption p {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+/* BOTÓN */
+.hero-btn {
+  padding: 0.7rem 1.6rem;
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+/* INDICADORES ESTILO  */
+.hero-indicators button {
+  width: 32px;
+  height: 3px;
+  background-color: #ffffff;
+  opacity: 0.5;
+}
+
+.hero-indicators .active {
+  opacity: 1;
+}
+
+/* CONTROLES */
+.hero-control {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hero-carousel:hover .hero-control {
+  opacity: 1;
+}
+
+/* ANIMACIÓN SUAVE */
+.carousel-fade .carousel-item {
+  transition: opacity 1.2s ease-in-out;
+}
+
+.carousel-item {
   position: relative;
 }
 
 
-.full-carousel .carousel-item {
-  height: 100%;
+/* Donde iria la parte que se expande */
+.app-container.sidebar-collapsed .hero-carousel-container {
+  width: calc(100vw - var(--sidebar-collapsed-width));
+  margin-left: var(--sidebar-collapsed-width);
+  transition: max-width 0.1s ease, margin-left 0.1s ease;
 }
 
-.full-carousel .carousel-item .carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+@media (max-width: 1265px) {
 
-.carousel-fade .carousel-item {
-  transition: opacity 1s ease-in-out;
-}
-
-.carousel-indicators {
-  bottom: 10%;
-}
-
-.carousel-indicators button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.6);
-}
-
-.carousel-indicators .active {
-  background-color: #fff;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  filter: invert(100%);
-}
-
-
-.carousel-caption {
-  bottom: 20%;
-}
-
-.carousel-caption h5 {
-  background: rgba(0, 0, 0, 0.5);
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
-  font-size: 1.5rem;
-  animation: fadeInUp 0.8s ease both;
-  margin: 0;
-}
-
-/* Cambio de color de las flechas en color blanco */
-.carousel-control-prev-icon {
-  background-color: #180404;
-}
-
-.carousel-control-next-icon {
-  background-color: #180404;
-}
-
-/* REGLAS CSS DE CAROUSEL EN EL MODO DE COLAPSO */
-.full-carousel-container {
- position: fixed;                      /* ocupa viewport bajo el header */
-  top: var(--header-height);            /* 50px */
-  left: var(--sidebar-width);           /* 250px */
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  transition: left .5s ease;            /* suave al colapsar/expandir */
-  z-index: 1;                           /* por debajo del header */
-}
-
-/* Carrusel en estado “collapsed” */
-.app-container.sidebar-collapsed .full-carousel-container {
-  left: var(--sidebar-collapsed-width);
-
-  /* ancho colapsado del sidebar */
-}
-
-.full-carousel,
-.full-carousel .carousel-item {
-  width: 100%;
-  height: 100%;
-}
-.full-carousel .carousel-item .carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+ /* 2) Fija el carousel como “pantalla completa” bajo el header */
+  .main-content.full-carousel-container {
+    position: fixed;
+    /* saca del flujo, cubre viewport */
+    top: 60px;
+    /* altura real de tu header */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    /* que no asome nada fuera */
+    z-index: 10;
+    /* por encima de contenido */
+    transition: max-width 0.2s ease, margin-left 0.2s ease;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  /* Esto donde ira la parte del texto */
+
+  .hero-carousel-container {
+    width: 100vw;
+    margin-left: 0;
+    height: calc(107vh - 65px);
   }
+
+  .imgcarousel{
+    height: 100vh;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .hero-caption {
+  transform: translateY(-20%);
+  z-index: 1;
 }
 
-@media (max-width: 768px) and (max-width: 990px) {
+.hero-caption h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.hero-caption p {
+  font-size: 1rem;
+  color: #ffffff;
+}
+  
+
+
+  /* 3) El carousel rellena ese espacio */
+  .full-carousel {
+    width: 100%;
+    height: 100%;
+  }
+
+  .full-carousel .carousel-item {
+    height: 100%;
+  }
+
+  .full-carousel .carousel-item .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+
+  /* 4) Flechas y dots visibles */
+  .carousel-control-prev,
+  .carousel-control-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    top: 200%;
+    transform: translateY(-50%);
+  }
+
+
+}
+
+
+
+/* RESPONSIVE */
+@media (max-width: 768px)  {
 
   /* 1) Oculta el sidebar */
   .sidebar-container {
@@ -168,56 +204,37 @@ body,
     transition: max-width 0.2s ease, margin-left 0.2s ease;
   }
 
-  /* 3) El carousel rellena ese espacio */
-  .full-carousel {
-    width: 100%;
-    height: 100%;
+  /* Esto donde ira la parte del texto */
+
+  .hero-carousel-container {
+    width: 100vw;
+    margin-left: 0;
+    height: calc(107vh - 65px);
   }
 
-  .full-carousel .carousel-item {
-    height: 100%;
-  }
-
-  .full-carousel .carousel-item .carousel-image {
+  .imgcarousel{
+    height: 100vh;
     width: 100%;
-    height: 100%;
     object-fit: cover;
   }
 
-  /* 4) Flechas y dots visibles */
-  .carousel-control-prev,
-  .carousel-control-next {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 10%;
-    top: 50%;
-    transform: translateY(-50%);
-  }
+  .hero-caption {
+  transform: translateY(-20%);
+  z-index: 1;
 }
 
-@media (max-width: 990px) {
+.hero-caption h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
 
- /* 1) Oculta el sidebar */
-  .sidebar-container {
-    display: none !important;
-  }
+.hero-caption p {
+  font-size: 1rem;
+  color: #ffffff;
+}
+  
 
-  /* 2) Fija el carousel como “pantalla completa” bajo el header */
-  .main-content.full-carousel-container {
-    position: fixed;
-    /* saca del flujo, cubre viewport */
-    top: 50px;
-    /* altura real de tu header */
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-    /* que no asome nada fuera */
-    z-index: 10;
-    /* por encima de contenido */
-    transition: max-width 0.1s ease, margin-left 0.2s ease;
-  }
 
   /* 3) El carousel rellena ese espacio */
   .full-carousel {
@@ -235,14 +252,15 @@ body,
     object-fit: cover;
   }
 
+
   /* 4) Flechas y dots visibles */
   .carousel-control-prev,
   .carousel-control-next {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 10%;
-    top: 50%;
+    width: 20%;
+    top: 200%;
     transform: translateY(-50%);
   }
 }

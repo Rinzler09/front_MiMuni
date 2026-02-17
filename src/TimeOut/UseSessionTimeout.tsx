@@ -90,6 +90,7 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
             if (!notGeneralLocations.includes(window.location.pathname)) {
                 console.log("Location: ", window.location.pathname);
                 sessionStorage.removeItem("access_TKN");//este existe en cambio de contraseña inicial y reseteo de contraseña
+                sessionStorage.removeItem("access_TKN_OT");//este existe en cambio de contraseña inicial y reseteo de contraseña
                 sessionStorage.removeItem("userPayload");//este existe en cambio de contraseña inicial
                 sessionStorage.removeItem("selectedMunicipality");//este existe en general y se le agrega valor cuando selecciona una Muni
                 setShowWarning(false);// Oculta warning

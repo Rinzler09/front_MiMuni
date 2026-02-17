@@ -19,10 +19,11 @@ import { logoutUsuario } from "../../services/EliminacionCookie";
 interface HeaderProps {
   collapsed: boolean;
   onToggleSidebar: () => void;
+  mobileOpen?: boolean;
 
 }
 
-const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed, mobileOpen}) => {
   const navigate = useNavigate();
   const [isOpen, setOpen] = useState(false);// Estado para el dropdown
   const { user, token, setUser, setToken, setSelectedMunicipality } = useAuth();
@@ -55,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
   };
 
   return (
-    <header className={`header ${collapsed ? "collapsed" : ""}`}>{/* En este caso tenemos un div
+    <header className={`header ${collapsed ? "collapsed" : ""}  ${mobileOpen ? "open" : ""}`}>{/* En este caso tenemos un div
     que contiene una claseName en este caso tenemos una interpolacion valores dinamicos de la cadena.
     dentro de la interpolarizacion expresa una condicion, si el collapsed es true se le agregar la clase sidebar-container y aplica la parte
     *de collapsed si es false no se le agregara nada o viene vacia.*/}
@@ -63,15 +64,11 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
       <div className="header-left">
         <FontAwesomeIcon icon={faBars}
           className="header-hamburger"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             onToggleSidebar();
+             
           }} />
-
-        {/* Si más adelante quieres el search, descomenta */}
-        {/* <div className="header-search">
-          <input type="text" placeholder="Search..." />
-          <FontAwesomeIcon icon={faSearch} className="fa-search" />
-        </div> */}
       </div>
 
      
@@ -81,7 +78,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
           className="user-profile" onClick={toggleDropdown}>
           <img src="/img/usuarios.png" alt="User" className="user-icon" />
           <span className="user-name">{userEmail}</span>
-          <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
+          <FontAwesomeIcon icon={faChevronDown} className={`chevron-icon ${isOpen ? "rotate" : ""}`} />
 
           {isOpen  && (
 
@@ -110,8 +107,6 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
                 </li>
               </ul>
             </div>
-
-
           )}
         </div>
       </div>

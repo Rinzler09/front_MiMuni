@@ -6,11 +6,12 @@ import "../../style/PagesStyles/ReseteoContraseñaStyle/recuperarContrasenaStyle
 import type { verificacion, codigoVerificacion } from "../../types/generalForm";
 import { useForm } from "react-hook-form";
 import ReCAPTCHA from "react-google-recaptcha";
-
+import ErrorMessage from "../../Components/ErrorMessage/MostrarMensajesError";
 import { correoRecuperacionContrasenia, verificacioCodigoServices, } from "../../services/EnvioEmailServices";
 import Modal from "../../Components/ModalComponents/modalComponent";
 import { Toaster, toast } from "sonner";
 import { useAuth } from "../../Auth/AuthContext";
+import { RiRadarFill } from "react-icons/ri";
 
 const RecuperarContrasena: React.FC = () => {
   const navigate = useNavigate();

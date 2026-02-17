@@ -72,19 +72,6 @@
   animation: fadeIn 0.6s ease both;
 }
 
-
-/* .login-wrapper>.row {
-  background: #fff;
-  border-radius: 32px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  display: flex;
-  width: 85%;
-  max-width: 1000px;
-  min-height: 500px;
-  animation: fadeIn 0.6s ease both;
-} */
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -373,10 +360,10 @@ a.forgot-password:hover {
 .login-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-<<<<<<< HEAD
+
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px)  {
   .login-wrapper {
     flex-direction: column;
     width: 100%;
@@ -403,6 +390,36 @@ a.forgot-password:hover {
   .titu{
     align-items: center;
   }
-=======
->>>>>>> e04d54e122ad258d89e6c059190cb2aba175a9f8
+
+}
+
+
+@media (max-width: 1188px)  {
+  .login-wrapper {
+    flex-direction: column;
+    width: 100%;
+    max-width: none;
+    min-height: auto;
+  }
+
+  .col-md-5, .col-md-7 {
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .carousel-wrapper {
+    margin-bottom: 1.5rem;
+  }
+
+  .carousel-content {
+    align-items: center;
+  }
+
+  .illustration {
+    max-width: 150px;
+  }
+  .titu{
+    align-items: center;
+  }
+
 }

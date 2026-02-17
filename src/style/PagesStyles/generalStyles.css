@@ -2,42 +2,83 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;  /* evitar espacio en blanco */
+    width: 100%;
+    height: auto;
 }
 
+/* Esto toma en cuenta en la parte de  */
 .app-container.sidebar-collapsed .detalles-impuesto-container {
     /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
     margin-left: calc(var(--sidebar-collapsed-width) + 15px);
     /* haz que pueda crecer más si es necesario, quitando el max-width fijo */
     max-width: none;
     margin-right: 15px;
-
 }
+
+/* Esto toma en cuenta en la parte de  */
+.app-container.sidebar-collapsed .detalles-impuesto-containers {
+    /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
+    margin-left: calc(var(--sidebar-collapsed-width) + 15px);
+    /* haz que pueda crecer más si es necesario, quitando el max-width fijo */
+    max-width: none;
+    margin-right: 15px;
+}
+
 .app-container.sidebar-collapsed .historialFacturas {
     /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
     margin-left: calc(var(--sidebar-collapsed-width) + 15px);
     /* haz que pueda crecer más si es necesario, quitando el max-width fijo */
     max-width: none;
     margin-right: 15px;
-
 }
-.app-container.sidebar-collapsed .password-change-container {
+
+.app-container.sidebar-collapsed .password-change-container  {
     /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
     margin-left: calc(var(--sidebar-collapsed-width) + 15px);
     /* haz que pueda crecer más si es necesario, quitando el max-width fijo */
-    max-width: none;
+    /* max-width: none; */
     margin-right: 15px;
+}
+
+.app-container.sidebar-collapsed .editar-perfil-container {
+  margin-left: calc(var(--sidebar-collapsed-width) + 15px);
+  max-width: none;
+  margin-right: 15px;
+}
+
+.app-container.sidebar-collapsed .detalles-impuesto-container-facturacion {
+  margin-left: calc(var(--sidebar-collapsed-width) + 15px);
+  max-width: none;
+  margin-right: 15px;
 }
 
 
 
 @media (max-width: 768px) {
+
+    /* Contenedor principal */
     .app-container {
         flex-direction: column;
+        position: relative;
     }
 
-    .sidebar {
-        width: 100%;
-        position: relative;
+    /* Sidebar oculto */
+
+    /* Sidebar visible */
+    .app-container.sidebar-open .sidebar-container {
+        left: 0;
+    }
+
+     .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 1500;
+        display: none;
+    }
+
+    .app-container.sidebar-open .sidebar-backdrop {
+        display: block;
     }
 }

@@ -8,17 +8,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";// Importaciones de iconos de la libreria free.solid.svg.icons
 import "../../style/LayoutStyles/sidebar.css";// Importacion de estilo de sidebar.css
 import { useAuth } from "../../Auth/AuthContext";// Importacion de useAuth de AuthContext.tsx
-import { Toaster, toast } from "sonner";// Importacion de Toast de la libreria sonner // Codigo descartado
 import { mensajes } from "../../util/message"//Importacion de mensajes de errores de util/message
-import { MdErrorOutline } from "react-icons/md";// Importacion de MDErrorOutline, esto nos ayuda mostrar graficamente un simbolo de error en la interface donde lo estamos utilizando
+import { MdErrorOutline } from "react-icons/md";// Importacion de MDErrorOutline, esto nos ayuda mostrar graficamente un simbolo de error en la interface donde lo estamos utilizandoimport { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify"; //Es para agregar el toastify
+import 'react-toastify/dist/ReactToastify.css';//Es para el diseño de css que viene con la libreria
 
-// // PROPS para controlar el collapse del sidebar
-export interface SidebarPROPS { //marley lo programo y no supo explicar
+
+export interface SidebarPROPS { 
   collapsed: boolean;
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 
-const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
+const Sidebar: React.FC<SidebarPROPS> = ({ collapsed, mobileOpen, onCloseMobile }) => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({// Declaramos una contanste en donde contiene openSections, SetOpenSections,
     //donde tambien estamos pasando un generico key:string: booleano, donde nos indica que el estado sera un objeto cuyas claves son string y los valores son booleans
     EstadoCuenta: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
@@ -30,15 +33,17 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
     Varios: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
   });
   const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();/**Tenemos el user  que es un objeto con el dato del usuario que se esta logueando tiene toda su informacion
+  
   SelectedMunicipality: es donde la municipalidad donde el usuario haya seleccionado
   SetSelectedMunicipality: es donde se releja la actualizacion del objeto al momento de cambiar la municipalidad */
   //const token = sessionStorage.getItem("access_TKN");
   const navigate = useNavigate();// En esta parte tenemos una constante en donde tenemos el navigate declarado y dentro de eso tenemos el hook de useNavigate() en donde lo utilizamos para poder navegar
 
-  const sbMenEstCuenta: string[] = ['Bienes Inmuebles', 'Impuesto Vecinal', 'Servicios Publicos', 'Impuesto Negocios', 'Multas Municipales', 'Servicios Varios'];//Cadenas de Titulos para subMenu correspondiente 
+  const sbMenEstCuenta: string[] = ['Bienes Inmuebles', 'Impuesto Vecinal / Personal', 'Servicios Publicos', 'Impuesto Industria, C y S', 'Multas Municipales', 'Servicios Varios'];//Cadenas de Titulos para subMenu correspondiente 
   // const sbMenEstCuenta_I: any[] = [faHome, faUser, faBuilding, faIndustry, faBuilding, faBuilding]; //Iconos para subMenu correspondiente
   const sbMenEstCuenta_R: string[] = ['/bienes-inmuebles', '/impuesto-personal', '/servicios-publicos', '/industria-comercio', '/otras-tasas', '/otras-tasas'];//Cadenas de Rutas para subMenu correspondiente 
   const [selectedSubMenuIdx, setSelectedSubMenuIdx] = useState<number | null>(null);
+  
 
 
   const toggleSection = (section: string) => {/**En este apartado tenemos una funcion donde funciona para poder abrir y cerrar dinamicamente una seccion con el estado de
@@ -49,19 +54,25 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
 
 
   const gotoMenu = () => navigate("/dashboard");//Tenemos la funcion que es redirigir al usuario a la ruta de dashboard usando el hook navigate.  
-
+  //En esta parte tenemos una funcion que muestra un mensaje de que la funcionalidad esta en desarroll
   const municipalidades = user?.municipalidades || [];//Declaramos una constante con el nombre de municiaplidades.
   // En este caso obtiene la lista de la municipalidades la cual el usuario tiene acceso, mediante de user.?municipalidades  
 
   // Selección de municipalidad con toast
   const handleMunicipalitySelect = ( //Tenemos una funcion en donde se maneja un evento que se ejecuta cuando el usuario hace click en un boton para selecionar un municipio
     municipality: string, e: React.MouseEvent<HTMLButtonElement>) => {// En esta parte de municipality, nombre del municipio que se esta seleccioando
-    //El React.MouseEvent<HTMLButtonElement> Es el evento de clic sobre boton que se esta seleccionando
+      //El React.MouseEvent<HTMLButtonElement> Es el evento de clic sobre boton que se esta seleccionando
     e.preventDefault();//En este apartado tenemos que si el boton que no se vuelva a seleccionar si el usuario selecciona otra vez
     e.stopPropagation();//hace que no se duplique el evento al momento de seleccionarlo en este caso como los tast
     setSelectedMunicipality(municipality);//En este el setSelectedMunicipality(municipality) acualiza el estado de la municipalidad.
+    console.log("Seleccion de municipalidad en el sidebar con select:", selectedMunicipality);
     toast.success(`${municipality} seleccionada.`);// Muestra el mensaje de exito al momento de seleccionar una municpalidad.
+   if (window.location.pathname !== '/dashboard') {//Si la ruta actual no es dashboard
+    gotoMenu();
+    setSelectedSubMenuIdx(null); // Reinicia la selección del submenú al cambiar de municipalidad
+   }
   };
+
 
   const handleRestrictedClick = (e: React.MouseEvent) => {//Esta funcion sirve para el bloqueo de todas las secciones, si al momento no se le selecciono una municipalidad
     if (!selectedMunicipality) {//Esto comprueba si la variable selectedMunicipality no esta seleccionada, quiere decir que no esta seleccionada una muniipalidad
@@ -79,8 +90,8 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
     contadorNota += 1;
     if (contadorNota <= 1) {
       setTimeout(() => {
-        toast.info(<span style={{ color: "blue", fontSize: "1.1em" }}>{mensajes["!Tomar Nota!"]?.mensaje || "!Tomar Nota!"} </span>, { // Mensaje que se le muestra en la parte de entrada
-          description: (<span>Por favor, selecciona una municipalidad para comenzar.</span>),//Descripcion del mensaje que se le muestra al usuario (Contrituyete)
+        toast.info(<span style={{ color: "blue", fontSize: "1.1em" }}>{mensajes["!Tomar Nota!"]?.mensaje || "Por favor, selecciona una municipalidad para comenzar."} </span>, { // Mensaje que se le muestra en la parte de entrada
+          //description: (<span>Por favor, selecciona una municipalidad para comenzar.</span>),//Descripcion del mensaje que se le muestra al usuario (Contrituyete)
           icon: <MdErrorOutline style={{ color: "blue", fontSize: "1.2em" }} />//Icono de informacion para que el usuario (Contribuyente) pueda saber que el mensaje es importante
         }
         );
@@ -92,13 +103,15 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
 
   return (
 
-
     <div>
       {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast que viene de la libreria toast*/}
-      <Toaster closeButton position="top-right" richColors />
-
+       <>
+      {/* Exportamos la parte de toaste*/}
+      <ToastContainer/>
+    </>
+    
       {/* Contenedor del sidebar */}
-      <div className={`sidebar-container ${collapsed ? 'collapsed' : ''}`}>
+      <div className={`sidebar sidebar-container ${collapsed ? "collapsed" : ""} ${mobileOpen ? "open" : ""}`}>
         {/* <div className={`sidebar-container ${isOpen ? "open" : ""}`}> */}
         {/* ——— Brand / Logo arriba ——— */}
         <div className="sidebar-brand">
@@ -137,7 +150,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
           <h3 className={`section-title ${openSections.EstadoCuenta ? "active" : ""}`} onClick={() => toggleSection("EstadoCuenta")}>
             <span className="section-text"><FontAwesomeIcon className="subMenuIcon" icon={faFileInvoice} />Estado de Cuenta </span>
             <span className="section-icon"><FontAwesomeIcon icon={faFileInvoice} /></span>
-            <FontAwesomeIcon className="section-chev" icon={faChevronDown} />
+            <FontAwesomeIcon className="section-chev" icon ={faChevronDown} />
           </h3>
           <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}> {/*show sirve para mostrar el despliegue del dropdown*/}
             {sbMenEstCuenta.map((item, index) => (
@@ -150,6 +163,9 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
                     console.log("El valor de selectedSubMenuIdx: ", selectedSubMenuIdx);
                     console.log("el className de restrictedprops: ", restrictedLinkProps.className);
                     setSelectedSubMenuIdx(index); //se guarda el numero de indice para cada subMenu de la lista el cual debe hacer match con el indice actual que se clickea
+                   if (window.innerWidth <= 768) {
+                    onCloseMobile?.();
+                   }
                   }}
                 >
                   {/* <FontAwesomeIcon icon={sbMenEstCuenta_I[index]} className="menu-icon" /> */}
@@ -371,6 +387,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
     </div >
 
   );
+  
 };
 
 export default Sidebar;

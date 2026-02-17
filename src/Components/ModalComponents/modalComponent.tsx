@@ -2,6 +2,7 @@
 import React from 'react';
 import "../../style/ModalesStyles/PageModal/modalConfir.css";
 
+//Interface para los props de la modal
 interface ModalProps {
   isVisible: boolean;
   title?: string;
@@ -12,9 +13,15 @@ interface ModalProps {
   closeButtonLabel?: string;
   iconSrc?: string;
   iconAlt?: string;
+  showCardModal?: boolean;
+  closeCardModal?: () => void;
+  onSaveCard?: (card: {number: string; expiry: string; cvc: string; name: string;}) => void;
+  //Interdace de componentes de la modal de pagos
 }
 
-const Modal: React.FC<ModalProps> = ({
+
+
+const Modals: React.FC<ModalProps> = ({
   isVisible,
   title,
   message,
@@ -42,16 +49,15 @@ const Modal: React.FC<ModalProps> = ({
       onMouseMove={stop}
       onKeyDown={stop}
       onTouchStart={stop}
-      onScroll={stop}
-    >
+      onScroll={stop}>
+
       <div
         className="modal-box"
         onMouseDown={stop}
         onMouseMove={stop}
         onKeyDown={stop}
         onTouchStart={stop}
-        onScroll={stop}
-      >
+        onScroll={stop}>
         <img src={iconSrc} alt={altText} className='modal-icon' />
         {title && <h3 className="modal-title" style={{ textAlign: "center" }}>{title}</h3>}
         {message && <p className="modal-message">{message}</p>}
@@ -66,6 +72,6 @@ const Modal: React.FC<ModalProps> = ({
   );
 };
 
-export default Modal;
+export default Modals;
 
 

@@ -21,6 +21,5 @@ export const mensajes: { [key: string]: { mensaje: string; tipo: string } } = {
   "Contraseña actualizada correctamente": { mensaje: "La contraseña se actualizo correctamente", tipo: "success" },
 
   "Seleccion municipalidad": { mensaje: "Por favor, seleccione la municipalidad correspondiente para proceder con el proceso de pago.", tipo: "info" }
-
-
 };
+

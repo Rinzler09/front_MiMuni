@@ -1,0 +1,410 @@
+
+/* Tarjeta  */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+
+/* card-modal-content contiene la card-preview y la card-form */
+.card-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 900px;
+    max-width: 90%;
+ 
+}
+
+.card-modal-content h3 {
+    color: #004e7e;
+    display: flex;
+    justify-content: center;
+}
+
+.card-modal-body {
+    display: flex;
+    gap: 20px;
+}
+
+
+.card-preview {
+    /* Se define que 50% sera para visualizar la tarjeta*/
+    width:50%;
+    display: flex;
+    margin: 20px 18px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* la coma significa que aplica para cualquiera de las dos clases */
+.card-image,
+.card-back {
+position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.25),
+    0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Banda magnética real */
+.black-bar {
+  background: #1a1a1a;
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 4px;
+}
+
+/* Área de firma */
+.signature-strip {
+  background: #ffffff;
+  width: 78%;
+  height: 35px;
+  margin: 18px auto 0 auto;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.15);
+}
+
+/* Líneas finas estilo firma */
+.signature-strip::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(200,200,200,0.55),
+    rgba(200,200,200,0.55) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  opacity: 0.6;
+}
+
+.card-number {
+    margin-top: 40px;
+    font-size: 21px;
+    letter-spacing: 3px;
+    margin-top: 35px;
+}
+
+/* Nombre del titular */
+.card-name {
+ position: absolute;
+  bottom: 10px;        /* bien abajo */
+  left: 5px;
+  right: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.1;
+  word-break: break-word; /* si el nombre es muy largo se ajusta */
+}
+
+/* Fecha a la derecha */
+.card-expiry {
+   position: absolute;
+  top: 65%;            /* Centro vertical */
+  right: 80px;
+  transform: translateY(-50%);
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+}
+
+
+.card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-form .textoPrincial {
+    margin: 0 20px;
+}
+
+.card-form input {
+    margin: 5px 20px;
+    border: 1px solid #eeebeb;
+    border-radius: 5px;
+}
+
+.flip-card {
+  width: 380px;
+  height: 220px;
+  position: relative;
+}
+.card-image,
+.card-back {
+ padding: 0; /* quitar padding */
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden; /* importante para bordes redondeados */
+}
+
+
+.black-bar {
+    background-color: #000;
+    width: 100%;
+    height: 45px;
+    margin-right: 200px;
+}
+
+.cvv-box {
+  position: absolute;
+  top: 72px;        /* Ajusta según altura */
+  right: 38px;      /* CVV a la derecha, como tarjeta real */
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
+}
+
+.cvv-text {
+  letter-spacing: 3px;
+}
+
+.button-continue {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f04e23;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 190px;
+    margin-left: 270px;
+}
+
+.button-back {
+    margin-top: -53px;
+    padding: 10px;
+    background-color: #666;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 190px;
+}
+
+
+/* VISA */
+.visa-bg {
+    background: linear-gradient(135deg, #0022aa, #3c5dff) !important;
+}
+
+.mastercard-bg {
+    background: linear-gradient(135deg, #f1791d, #e24f00) !important;
+}
+
+.amex-bg {
+    background: linear-gradient(135deg, #deb410, #b88804) !important;
+}
+
+.americanexpress-bg {
+    background: linear-gradient(135deg, #deb410, #b88804) !important;
+}
+
+
+.default-bg {
+    background: linear-gradient(135deg, #6e6e6e, #797878) !important;
+}
+
+/* Asegurar el padding para evitar colisión */
+.card-image {
+  position: relative;
+  padding-top: 40px !important;
+}
+
+.default-bg {
+  background: linear-gradient(135deg, #6e6e6e, #797878); /* gris elegante */
+  color: #767676;
+}
+
+
+/* Contenedor fijo, no mueve la tarjeta */
+.card-logo-container {
+  position: absolute;
+  top: 25px;
+  left: 20px; /* CHIP A LA IZQUIERDA */
+  right: 20px;
+  display: flex;
+  justify-content: space-between; /* chip izquierda - marca derecha */
+  align-items: center;
+  width: calc(100% - 40px); /* margen seguro */
+}
+
+/* CHIP SIEMPRE A LA IZQUIERDA */
+.chip-logo {
+  width: 60px;
+  margin-top: -25px;
+}
+
+/* LOGO DE VISA/MASTERCARD/AMEX A LA DERECHA */
+.brand-logo {
+  width: 65px;
+  margin-top: -20px
+}
+
+/* Logo de la tarjeta atras */
+.brand-logo-back {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 90px;
+  opacity: 0.85;
+}
+
+/* TEXTO BLANCO PARA TARJETAS DE COLOR */
+.visa-bg .card-number,
+.visa-bg .card-name,
+.visa-bg .card-expiry,
+.mastercard-bg .card-number,
+.mastercard-bg .card-name,
+.mastercard-bg .card-expiry,
+.amex-bg .card-number,
+.amex-bg .card-name,
+.amex-bg .card-expiry {
+  color: #ffffff !important;
+}
+
+/* TEXTO NEGRO PARA DEFAULT */
+.default-bg .card-number,
+.default-bg .card-name,
+.default-bg .card-expiry {
+  color: #eaeaea !important;
+}
+
+/* ===================================
+MEDIA QUERY EN LA PARTE DE TABLET 
+=====================================*/
+@media (max-width: 768px) {
+
+   /* MODAL */
+  .card-modal-content {
+    width: 92%;
+    max-height: 95vh;
+    overflow-y: auto;
+    padding: 12px;
+  }
+
+  .card-modal-body {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* CONTENEDOR TARJETA */
+  .card-preview {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  /* TARJETA */
+  .flip-card {
+    width: 100%;
+    max-width: 320px;
+    height: 190px;
+    position: relative;
+  }
+
+  
+  .card-image,
+  .card-back {
+    position: relative;     
+    width: 100%;
+    height: 100%;
+  }
+
+  /* TEXTO TARJETA */
+  .card-number {
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
+
+  .card-name,
+  .card-expiry {
+    font-size: 15px;
+  }
+
+  /* FORMULARIO */
+  .card-form {
+    width: 100%;
+  }
+
+  .card-form input {
+    width: 100%;
+    margin: 6px 0;
+    text-align: center;
+  }
+
+  /* BOTONES */
+  .button-continue,
+  .button-back {
+    width: 100%;
+    margin: 8px 0;
+  }
+}
+
+
+/* ============================
+En la parte de la de tablet
+   ============================ */
+@media (min-width: 768px) and (max-width: 1265px) {
+
+  /* SECCIÓN CONTENEDORA */
+  .credit-card-section {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* CONTENEDOR INTERNO */
+  .card-display-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  /* TÍTULO */
+  .credit-card-section h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  /* BOTÓN AGREGAR */
+  .add-card-link {
+    width: 100%;
+    max-width: 320px;
+    padding: 10px;
+    text-align: center;
+  }
+
+  /* TEXTO DE TARJETAS ACEPTADAS */
+  .card-info {
+    font-size: 12px;
+    color: #666;
+  }
+
+}

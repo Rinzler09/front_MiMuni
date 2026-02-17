@@ -1,12 +1,11 @@
 export type registroSolicitud = {
-    nombrecompleto: string
-    identidad: string
+    dni: string
     rtn: string
-    correo: string
+    email: string
     telefono: string
 }
 
-export type RegisterForm = Pick<registroSolicitud, 'nombrecompleto' | 'identidad' | 'correo' | 'telefono'> & {}
+export type RegisterForm = Pick<registroSolicitud, 'dni' | 'email' | 'telefono'> & {}
 
 // cambio de contraseñas
 export type cambioContrasena = {
@@ -41,3 +40,36 @@ export type codigoVerificacion = {
     otp: string
 }
 export type codigoVerif = Pick<codigoVerificacion, 'otp'> & {}
+
+//Formulario de tarjeta de pago
+export type tarjetaPago = {
+    number: string;
+    nombreTarjeta: string;
+    expiry: string ; 
+    cvv: string;
+    direccion?: string;
+}
+export type cardForm = Pick<tarjetaPago, 'number' | 'nombreTarjeta' | 'expiry' | 'cvv'> & {}
+
+//Exportacion de los tipos para el carrusel
+export type carruselProps ={
+    id: number;
+    title: string;
+    description: string;
+    imageUrls: string[];
+}
+
+//mejoracion del contenido que viene desde el sidebar
+export const getMunicipialkey = (municipio?: string): string =>{
+    if (!municipio) return "";
+
+    const value = municipio.toLowerCase();
+
+    //Aqui es donde iran todasa las las municipalidades que se vayan agregando 
+    if (value.includes("santa")) return "SantaLucia";
+    if (value.includes("valleAngeles")) return "ValleAngeles";
+    if (value.includes("choluteca")) return "Choluteca";
+    
+    return "";
+
+};

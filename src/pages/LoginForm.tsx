@@ -6,10 +6,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../style/PagesStyles/loginFormStyles.css";
 import { login } from "../services/loginFormServices";
-import { Toaster, toast } from "sonner";
+//import { Toaster, toast } from "sonner";
+import { ToastContainer, toast } from 'react-toastify';
 
 // Manejo de errores con react-hook-form
-import ErrorMessage from "../Components/ErrorMessage.tsx/MostrarMensajesError";
+import ErrorMessage from "../Components/ErrorMessage/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import type { confirmacionLogin } from "../types/generalForm";
 
@@ -52,7 +53,7 @@ const LoginForm: React.FC = () => {
 
   //Verificacion de token
   const navigate = useNavigate();
-  const { setUser, setToken, setTokenOT /*setSessionCounter, sessionCounter*/ } = useAuth();
+  const { setUser, setToken, setTokenOT } = useAuth();
 
   // React Hook Form
   const {
@@ -100,6 +101,7 @@ const LoginForm: React.FC = () => {
       console.log("el correo, ", emailLowCase);
 
       if (data.message.toLowerCase().includes("credenciales incorrectas")) {
+        toast.error("Credenciales Incorrectas");
         setIsSubmitting(false);// innecesario por los momentos
         return;
       }
@@ -119,17 +121,19 @@ const LoginForm: React.FC = () => {
         setTokenOT(tokenValue);
         sessionStorage.setItem("email", emailLowCase); //se guarda en SessionStorage para el cambio de contraseña inicial
         sessionStorage.setItem("password", password);//se guarda en SessionStorage para el cambio de contraseña inicial
-        setTimeout(() => navigate("/cambio-contrasena"), 2000);
+        setTimeout(() => navigate("/cambio-contrasena"), 3000);
+        toast.success("Tu contraseña temporal es correcta. Se recomienda cambiarla para mayor seguridad.");
         return;
       }
 
       // Si se recibe success: true desde el service entonces se ejecuta este bloque de codigo
       if (data.success) {
+        toast.success("Tus credenciales son correctas.");
         const tokenValue = data.access_token || "";
         setUser({ email: data.correo, /*token: tokenValue,*/ municipalidades: municipalidadesArray, });
         setToken(tokenValue);
         // setSessionCounter(sessionCounter + 1);
-        setTimeout(() => navigate("/dashboard"), 3000);
+        setTimeout(() => navigate("/dashboard"), 1000);
       }
     } catch (err: any) {
       toast.error(err.message || "Error al iniciar sesión");
@@ -150,12 +154,16 @@ const LoginForm: React.FC = () => {
 
   return (
 
+    
     <Suspense fallback={<div>Cargando Login ...</div>}>
-
-
+        <>
+      <ToastContainer/>
+    </>
+  
       <div className="background">
         {/**En esta parte se agrego el cambio de la posicion superior y el tipo del color de los toast*/}
-        <Toaster closeButton position="top-right" richColors />
+        {/* <Toaster closeButton position="top-right" richColors /> */}
+
         <div className="circle circle1"></div>{/*Estos circulos son para el efecto de foco detras del Login Form*/}
         <div className="circle circle2"></div>
         <div className="circle circle3"></div>
@@ -186,7 +194,7 @@ const LoginForm: React.FC = () => {
             {/* Panel derecho: formulario */}
             <div className="col-12 col-md-7 d-flex flex-column justify-content-center align-items-start">
               <h2 className="titu">LOGIN</h2>
-              <span>
+              <span >
                 Actíva y accede a todos los servicios en línea que tu municipalidad pone a tu disposición.{" "}
                 <a href="#" className="forgot-password" onClick={handleRegister}>
                   Activar Ahora

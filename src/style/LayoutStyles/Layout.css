@@ -1,6 +1,7 @@
+
 .app-container {
-  display: flex;
-  height: 100vh;
+  display: block;
+  height: auto;
 }
 
 .sidebar-container {
@@ -23,23 +24,25 @@
 
 
 .outlet-container {
-  flex: 1;
-  overflow-y: auto;
-  position: relative;
-  z-index: 0;
+ position: relative;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
+  display: block;    
+  overflow-y: visible;
+  height: auto;
+  min-height: auto;
+  flex: initial;     
+  padding: 0;
 }
 
 .main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  min-width: 0; /* crítico: permite que hijos se reduzcan/expandan correctamente */
+ display: block;   
+  width: 100%;
+  height: auto;
   padding: 0;
-  margin-left: 0;
+  margin: 0;
+  overflow: visible;
+  flex: initial;   
+  min-width: 0;
 }
 
 

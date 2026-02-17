@@ -22,7 +22,7 @@ body,
     overflow-y: auto;
     /* Añade una barra lateral si el contenido en Y se sale de la modal*/
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.821);
 }
 
 .pagoBotones {
@@ -34,7 +34,8 @@ body,
     margin: 0px 15px;
 }
 
-.detalles-impuesto-container {
+.detalles-impuesto-container-facturacion {
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,63 +45,48 @@ body,
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    gap: 1rem;
     margin-top: -535px;
     /* Ajusta este valor para mover el contenedor hacia arriba o abajo según sea necesario */
-    width: 75%;
+    width: 90%;
     /* Toma casi todo el ancho disponible, ajusta según sea necesario */
-    max-width: 965px;
+    max-width: 985px;
     /* Limita el ancho máximo */
-    height: 100%;
+    height: 90%;
     /* Ajusta la altura según el contenido */
     margin-left: 20%;
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
     margin-top: 55px;
-    /* Modificar la posicion del Container de la pagina*/
-
+    transition: max-width 0.5s ease, margin-left 0.5s ease
 }
 
-
 .credit-card-section {
-    margin-top: 15px;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    margin-right: 315px;
+  background: #ffffff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  border: 1px solid #dcdcdc;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  margin-top: 20px;
+  width: 75%;
+  margin-left: 40px;
+  margin-right: auto;
 }
 
 .credit-card-section h3 {
-    font-size: 13px;
+    font-size: 15px;
     color: #333;
+    font-weight: 600;
+    margin-top: 15px;
 }
 
-.add-card {
-    display: flex;
-    align-items: center;
-    margin-top: 1px;
+/* En la parte del diseño */
+.card-display-container{
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-.card-icon {
-    font-size: 1em;
-    margin-right: 10px;
-}
-
-.add-card-link {
-    font-size: 14px;
-    color: #0073bb;
-    text-decoration: none;
-}
-
-.add-card-link:hover {
-    text-decoration: underline;
-}
-
-.card-info {
-    font-size: 11px;
-    color: #666;
-    margin-left: 80px;
-}
 
 .payment-summary {
     display: flex;
@@ -254,181 +240,308 @@ body,
     background-color: #f36405;
 }
 
-.button-continue {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f04e23;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 190px;
-    margin-left: 270px;
-}
-
-.button-back {
-    margin-top: -53px;
-    padding: 10px;
-    background-color: #666;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 190px;
-}
 
 /* MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */
 
-.modal {
+
+/* ===========================Nueva agregacion en la parte de mini Tarjeta================================= */
+ .mini-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+} 
+
+/* CONTENEDOR VISUAL */
+.mini-card-bg {
+  width:290px;
+  height: 180px;
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Nombre y número */
+.mini-card-number {
+  font-size: 18px;
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin-top: 35px;
+}
+
+.mini-card-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.mini-card-logo{
+    width: 55px;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+    top: 5px;
+    right: 15px;
+}
+
+.saved-card-expiry {
+  font-size: 13px;
+  opacity: 0.9;
+  color: #ffffff;
+}
+
+.add-card-link {
+    font-size: 14px;
+    color:#0073bb;
+    cursor: pointer;
+    padding: 7px 45px;
+    border-radius: 8px;
+    transition: 0.2s ease;
+    border: 1px dashed #0073bb;
+}
+
+.add-card-link:hover {
+   background: #eef8ff;
+}
+
+.card-info {
+    font-size: 12px;
+    color: #666;
+    margin-left: auto;
 }
 
 
-/* card-modal-content contiene la card-preview y la card-form */
-.card-modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 900px;
-    max-width: 90%;
-    box-shadow: 0 4px 8px rgba(41, 41, 41, 0.2);
+
+/* Button de editar tarjeta*/
+.button-card button {
+  background: #949494;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #ceb094;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
 }
 
-.card-modal-content h3 {
-    color: #004e7e;
-    display: flex;
-    justify-content: center;
+.button-card button:hover {
+  background: #ffe8d1;
 }
 
-.card-modal-body {
-    display: flex;
-    gap: 20px;
-}
-
-
-.card-preview {
-    /* Se define que 50% sera para visualizar la tarjeta*/
-    width: 50%;
-    display: flex;
-    margin: 20px 15px;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-/* la coma significa que aplica para cualquiera de las dos clases */
-.card-image,
-.card-back {
-    position: absolute;
-    background-color: #adadad;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    width: 330px;
-    height: 200px;
-}
-
-.card-number {
-    position: relative;
-    top: 20%;
-}
-
-.card-name {
-    position: relative;
-    top: 25%;
-    right: 20%;
-}
-
-.card-expiry {
-    font-size: small;
-    position: relative;
-    top: 30%;
+.buttonReuti{
+    background-color: #0073bb;
+    right: 300px;
 }
 
 
-.card-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.card-form .textoPrincial {
-    margin: 0 20px;
-}
-
-.card-form input {
-    margin: 5px 20px;
-    border: 1px solid #eeebeb;
-    border-radius: 10px;
-}
-
-.black-bar {
-    background-color: #000;
-    width: 98%;
-    height: 35px;
-}
-
-.cvv-box {
-    position: relative;
-    background-color: #ffffff;
-    top: 30%;
-    left: 40%;
-    width: 20%;
-    height: 35px;
-}
-
-/* TERMINA MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */
-
+/* Para el color de fondo de la mini-Tarjeta */
+/* Fondo Visa */
 
 /* PAGINACION */
 
 .pagination {
-    margin-top: 20px;
+    margin-top: 40px;
 }
-@media(max-width: 768px){
-    .detalles-impuesto-container{
-        flex: 1;
-        width: calc(100% -2rem);
-        padding: 1rem;
-        margin: 4rem auto 1.5rem;
-        max-width: none;
-        box-sizing: border-box;
-    }
+ 
+.table-responsive {
+    margin: -35px auto;
+    overflow-x: auto;
+}
+ 
 
-    .credit-card-section{
-        font-size: 1.2rem;
-        padding: 0.5rem 1rem;
-        width: 110%;
-        max-width: 100%;
-        text-align: center;
-        margin-left: 83%;
-    }
+@media (max-width: 768px)   {
+  .detalles-impuesto-container-facturacion {
+    flex: 1;
+    width: calc(100% -2rem);
+    padding: 1rem;
+    margin: 4rem auto 1.5rem;
+    max-width: none;
+    box-sizing: border-box;
+    transition: max-width 0.3s ease, margin-left 0.4s ease;
+  }
+ 
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+ 
+  .payment-summary {
+    font-size: 0.2rem;
+    padding: 0.5rem 1rem;
+    margin-left: 8%;
+  }
+ 
+  .button-cancel,
+  .button-pay {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    width: 180px;
+  }
+}
+ 
 
-    .payment-summary{
-        font-size: 0.2rem;
-        padding: 0.5rem 1rem;
-        margin-left: 38%;
-    }
-
-    .button-cancel,
-    .button-pay {
-        padding: 0.5rem;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        margin: 5px;
-        width: 180px;
-      
+@media (max-width: 1265px){
+  .detalles-impuesto-container-facturacion {
+    flex: 1;
+    width: calc(100% -2rem);
+    padding: 1rem;
+    margin: 4rem auto 1.5rem;
+    max-width: none;
+    box-sizing: border-box;
+    transition: max-width 0.3s ease, margin-left 0.4s ease;
+  }
+ 
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+ 
+  .credit-card-section {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    width: 70%;
+    max-width: 100%;
+    text-align: center;
+    margin-left: 30%;
+  }
+ 
+  .payment-summary {
+    font-size: 0.2rem;
+    padding: 0.5rem 1rem;
+    margin-left: 8%;
+  }
+ 
+  .button-cancel,
+  .button-pay {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    width: 180px;
+  }
 }
 
-  
+/* =========================
+   MINI CARD - MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .credit-card-section {
+    width: 100%;
+    margin: 0;
+    margin-top: 16px;
+    padding: 18px 16px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+
+  .credit-card-section h3 {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  .card-display-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  /* Botón agregar tarjeta */
+  .add-card-link {
+    width: 100%;
+    padding: 14px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 12px;
+    border: 2px dashed #0073bb;
+    background: #f6fbff;
+  }
+
+  .card-info {
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+    margin-top: 6px;
+  }
+
+  .mini-card {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .mini-card-bg {
+    width: 100%;
+    max-width: 340px;        /* aspecto real de tarjeta */
+    height: 190px;
+    border-radius: 18px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* LOGO */
+  .mini-card-logo {
+    width: 48px;
+    top: 14px;
+    right: 14px;
+  }
+
+  /* NÚMERO */
+  .mini-card-number {
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 45px;
+    white-space: nowrap;     /* evita salto de línea */
+  }
+
+  /* NOMBRE */
+  .mini-card-name {
+    font-size: 15px;
+    line-height: 1.2;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* si es muy largo */
+  }
+
+  /* EXPIRACIÓN */
+  .saved-card-expiry {
+    font-size: 15px;
+    opacity: 0.85;
+  }
+
+  /* BOTÓN */
+  .button-card {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .button-card button {
+    width: 90%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  /* TEXTO LATERAL */
+  .card-info {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+  }
 }
+

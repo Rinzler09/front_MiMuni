@@ -1,14 +1,19 @@
 // src/components/DetallesImpuesto.tsx
-import React, { useState, useEffect } from "react";//Estamos declarando el hook de useState para poder integrar la parte de boolean
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {  toast } from "sonner";
+import { toast } from "sonner";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../../style/ImpuestosStyles/detalleBienInmueble.css";
 import { clavesCatastrales } from "../../services/claveCatastral";
-import { facturaBienesInmueble } from "../../services/facturasBI";
 import { useAuth } from "../../Auth/AuthContext";
 import { mensajes } from "../../util/message";
+import { PaginationControl } from 'react-bootstrap-pagination-control';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import { biHeaders } from "../../util/headerDescrip";
+import{TableBase} from "../shared/tableComponent/tableGenerica";
+
 
 interface Claves {
   prop: string;
@@ -19,33 +24,31 @@ interface Claves {
   aldea: string;
   barrio: string;
   direccion: string;
+  dni: string
 }
+
 
 const DetallesImpuesto: React.FC = () => {
   const navigate = useNavigate();
-  const {  selectedMunicipality, token } = useAuth();
-  // const token = user?.token;
+  const { user, selectedMunicipality, token } = useAuth();
 
-
-  const [claves, setClaves] = useState<Claves[]>([]);
-  const [loading, setLoading] = useState(true);//En tenemos una contasnte que contiene loading y setloading con el hook useState(true)
-  //Esto no ayudara cuando el argumento que pasas a useState que en este caso es true se establece al valor inicial que ne este coso viene siendo loading
-  //Por ejemplo loading === true eso indica que esta teniendo un estado que esta cargando 
-  const [paginaActual, setPaginaActual] = useState(1);//Proceso de la paginacion 
-  const registrosPorPagina = 5;//Declaracion del registro de paginas.
+  const [claves, setClaves] = useState<Claves[]>([]); //<Claves[]> es el tipo y ([]) es lo que se inicializa en el mismo;
+  const [loading, setLoading] = useState(true);
+  const biTableHeaders = ['Propietario', 'Clave Catastral', 'Valor Impuesto', 'Uso', 'Sub Uso', 'Aldea', 'Barrio/Caserio', 'Dirección'] as const; //Tupla en vez de arreglo
+  const renderTooltip = (displayedText: string, props?: any) => (
+    <Tooltip className="tooltip-BI" {...props}>
+      {displayedText}
+    </Tooltip>
+  );
 
   useEffect(() => {
     if (!selectedMunicipality || !token) return;
 
     const fetchClaves = async () => {
-      
-      setLoading(true);/**En este caso el setLoading hace referencia que antes de llamar los registros este en estado loading en true, esto es para que cuando este esperando datos
-       * muestre el skeleton mientras se este cargando los datos completos, en este caso se mostrara 5 filas 5 
-      */
+      setLoading(true);
       try {
         const respuesta = await clavesCatastrales(selectedMunicipality, token);
-        //  console.log(" respuesta API clavesCatastrales:", respuesta);
-        //  console.log("VIENE DE LA API:", clavesCatastrales);
+        // console.log(" respuesta API clavesCatastrales:", respuesta);
 
         // 1) Extraemos array: puede venir directamente o en respuesta.data
         const rawArray = Array.isArray(respuesta)
@@ -77,46 +80,40 @@ const DetallesImpuesto: React.FC = () => {
       } catch (error: any) {
         console.error("Error fetchClaves:", error);
         toast.error(mensajes["Error al obtener facturas para este bien inmueble"].mensaje);
-      } finally {//En este caso se utiliza la parte de finally asegurando que siempre se desactive, ante que eso sueceda tiene que pasar primero todo el trycatch, 
-        //Pero siempre se va ejecutar el finally a pesar de encontrar un error, esto nos ayuda que se detenga la parte de skeleton al momento de encontrar un resultado o mensaje,
-        setLoading(false);//Esto nos ayuda poder tener el skeleton cuando ya se encuentre un resultado por eso estamos usando la parte de finally
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchClaves();// Esto siempre va de la mano para el skeleton funcione correctamente el skeleton
+    fetchClaves();
   }, [selectedMunicipality]);
 
-  // Paginación, es donde calcula el indice del ultimo registro en la paginacion actual
-  const indUltimoReg = paginaActual * registrosPorPagina;// En esta parte estan diciendo que si (PaginaActual) Vale 1 y (registrosPorPagina) vale 10 entonces, 
-  // indUltimoReg = 1 * 10 = 10, para la paginaActual = 2, indUltimoReg = 2 * 10 = 10, entonces este valor representa la posicion "Uno. pasado"
-
-  const indPrimerReg = indUltimoReg - registrosPorPagina;// Tenemos el indUltimoReg que eso equivale = 10 y registroPorPagina = 10, indPrimerReg = 10 - 10 = 0
-  //En la pagina 2 (indUltimoReg = 20), indPrimerReg = 20 - 10 = 10, significa que este valor es el indice desde el actual empezamos a extraer elementos.
-  
-  const registrosActuales = claves.slice(indPrimerReg, indUltimoReg);//El método slice(start, end) devuelve los elementos del array desde start (inclusive) hasta end (exclusive).
-  //La pagina 1, Clave:slice(0,10) esto es que los primeros 10 elementos (0, 9)
-  //para la pagina 2, clave.slice(10,20), los elementos de la posicion 10, al 19.
-  
-  const pagsTotales = Math.ceil(claves.length / registrosPorPagina);//En la parte de Math.ceil es el total del elementos en el array, 
-  //Dividiendo por registrosPorPagina obtenemos cuantas paginas completas caben, esto quiere decir que si hay 45 registros y 10 por paginas es 
-  //45 / 10 = 4.5 pero como usamos el Math.ceil(4.5) = 5
-
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const registrosPorPagina = 5;
+  const indUltimoReg = paginaActual * registrosPorPagina; //si estoy en la pagina 2 el indUltimoReg seria 10 ya que se utiliza 2*5=10, tambien se usa para lo que se mostrara en la tabla
+  const indPrimerReg = indUltimoReg - registrosPorPagina; //si estoy en la pagina 2 el indPrimerReg seria 5 ya que se utiliza 10-5 = 5, tambien se usa para lo que se mostrara en la tabla
+  const registrosActuales = claves.slice(indPrimerReg, indUltimoReg); //son los registros que se muestran en la pagina Actual es decir del 5 - 9 si estamos en la pag 2 , tambien se usa para lo que se mostrara en la tabla
+  // console.log("La lontitug de claves: ", claves.length);
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
-
+  console.log("Datos para tabla de BI: ", claves);
+console.log("Registros actuales para tabla de BI: ", registrosActuales);
   const handleVerFacturas = async (claveCat: string, direccion: string) => {
+
     if (!selectedMunicipality || !token) {
       toast.error("Debe iniciar sesión y seleccionar municipalidad.");
       return;
     }
     try {
-      const facturaResponse = await facturaBienesInmueble(
-        selectedMunicipality,
-        claveCat,
-        token
-      );
+      // const facturaResponse = await facturaBienesInmueble(
+      //   selectedMunicipality,
+      //   claveCat,
+      //   token
+      // );
       toast.success("Factura generada para proceso de pago.");
       navigate("/facturas-BI", {
-        state: { municipalidad: selectedMunicipality, claveCat, direccion, facturaData: facturaResponse }
+        // state: { municipalidad: selectedMunicipality, claveCat, direccion, facturaData: facturaResponse }
+        state: { municipalidad: selectedMunicipality, claveCat, direccion }
       });
     } catch {
       toast.error(mensajes["Error al obtener facturas para este bien inmueble"].mensaje);
@@ -125,101 +122,117 @@ const DetallesImpuesto: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
+      
+      <h2 className="title" style={{ textAlign: "center" }}>
+        LISTADO DE BIENES INMUEBLES
+      </h2>
 
-      <h2 className="title">LISTADO DE BIENES INMUEBLES</h2>      
+      {/* <TableBase <Claves> loading={loading} data={registrosActuales} 
+       
+      columns={[
+        {header: "Propietario", accessor: "prop"},
+        {header: "Clave Catastral", accessor: "claveCat"},
+        {header: "Valor Impuesto", accessor: "valorImp"},
+        {header: "Uso", accessor: "uso"},
+        {header: "Sub Uso", accessor: "subUso"},
+        {header: "Aldea", accessor: "aldea"},
+        {header: "Barrio/Caserio", accessor: "barrio"},
+        {header: "Direccion", accessor: "direccion"},
+        {
+      header: "Ver Facturas",accessor: "acciones",
+      render: (row: Claves) => (
+        <button
+          className="btnFacturas"
+          onClick={() =>
+            handleVerFacturas(row.claveCat, row.direccion)
+          }
+        >
+          Facturas
+        </button>
+      ),
+    },
+      ]}
+      
+      /> */}
 
-    <div className="table-responsive">
+       <div className="table-responsives details-table table table-hover table-sm align-middle w-100">
         <table className="details-table table table-hover table-sm align-middle w-100">
-        <thead className="table-light">
-          <tr>
-            <th>Propietario</th>
-            <th>Clave Catastral</th>
-            <th>Valor Impuesto</th>
-            <th>Uso</th>
-            <th>Sub Uso</th>
-            <th>Aldea</th>
-            <th>Barrio/Caserio</th>
-            <th>Dirección</th>
-            <th>Ver Facturas</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading //En este caso vamos utilizar el loading en este caso ya es booleano, quiere decir que si es true, va rederizar el bloque de Skeleton 
-                   //Ya si es false esto redenrizaria la parte de los datos que se esta extrayendo la informacion que viene en la arreglo de la API. 
+          <thead className="table-light" >
+            <tr >
+              {biTableHeaders.map((item, idx) => (
+                <th key={idx}>
+                  {item}  &nbsp;
+                  <OverlayTrigger
+                    placement="top"
+                    delay={{ show: 200, hide: 500 }} //show es lo que tarda en mostrarse y delay en ocultarse
+                    overlay={renderTooltip(biHeaders[item]?.def)}>
+                    <i className="bi bi-question-circle"></i>
+                  </OverlayTrigger>
+                </th>
+              ))}
+              <th>Ver Facturas </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading
+              // Mientras carga, mostramos skeletons
+              ? Array.from({ length: registrosPorPagina }).map((_, i) => (
+                <tr key={i}>
+                  {Array.from({ length: 9 }).map((__, j) => (
+                    <td key={j} style={{ textAlign: "center" }}>
+                      <Skeleton height={20} />
+                    </td>
+                  ))}
+                </tr>
+              ))
+              // Una vez cargado, los datos reales
+              : registrosActuales.map((item, i) => (
+                <tr key={i} className="table-hovers">
+                  <td style={{ textAlign: "center" }}>{item.prop}</td>
+                  <td style={{ textAlign: "center" }}>{item.claveCat}</td>
+                  <td style={{ textAlign: "center" }}>L{item.valorImp}</td>
+                  <td style={{ textAlign: "center" }}>{item.uso}</td>
+                  <td style={{ textAlign: "center" }}>{item.subUso}</td>
+                  <td style={{ textAlign: "center" }}>{item.aldea}</td>
+                  <td style={{ textAlign: "center" }}>{item.barrio}</td>
+                  <td style={{ textAlign: "center" }}>{item.direccion}</td>
+                  <td style={{ textAlign: "center" }}>
+                    <button
+                      className="btnFacturas"
+                      onClick={() => handleVerFacturas(item.claveCat, item.direccion)}
+                    >
+                      Facturas
+                    </button>
+                  </td>
+                </tr>
+              ))}
 
-            // Mientras carga, mostramos skeletons
-            ? Array.from({ length: registrosPorPagina }).map((_, i) => (//En este caso tenemos un arrelgo en donde tenemos la logintud de registrosPorPagina
-              //En este caso tenemos 10 paginas
-              <tr key={i}>
-                {Array.from({ length: 9 }).map((__, j) => (//Tenemos un arreglo de 9 posisiones en donde no tiene ningun dato,
-                //de esta menera vamos a mostrar 9 columnas de skeletons, tenemos la parte de .map en donde se convierte en un nuevo arreglo
-                //y para cada uno de los elementos del arreglo, se crea una celda <td> con un Skeleton dentro. 
-                  <td key={j} style={{ textAlign: "center" }}>{/**En este caso tenemos el porcentaje del indice j donde tendra el key={j}
-                  ayuda que manejar la eficiencia de la lista de los elementos*/}
-                    <Skeleton height={20} />{/**En este caso es la libreria que dibuja un rectangulo gris de 20px de alto con animacion de brillo*/}
-                  </td>//En este caso tenemos la parte 
-                ))}
-              </tr>
-            ))
-            // Una vez cargado, los datos reales
-            : registrosActuales.map((item, i) => (
-              <tr key={i}>
-                <td style={{ textAlign: "center" }}>{item.prop}</td>
-                <td style={{ textAlign: "center" }}>{item.claveCat}</td>
-                <td style={{ textAlign: "center" }}>L{item.valorImp}</td>
-                <td style={{ textAlign: "center" }}>{item.uso}</td>
-                <td style={{ textAlign: "center" }}>{item.subUso}</td>
-                <td style={{ textAlign: "center" }}>{item.aldea}</td>
-                <td style={{ textAlign: "center" }}>{item.barrio}</td>
-                <td style={{ textAlign: "center" }}>{item.direccion}</td>
-                <td>
-                  <button
-                    className="btnFacturas"
-                    onClick={() => handleVerFacturas(item.claveCat, item.direccion)}>Facturas</button>
+            {!loading && claves.length === 0 && (
+              <tr>
+                <td colSpan={9} style={{ textAlign: "center" }}>
+                  No hay datos que mostrar
                 </td>
               </tr>
-            ))}
+            )}
+          </tbody>
+        </table>
 
-            {/*
-              Si NO estamos cargando datos (!loading)
-              Y el arreglo (claves) está vacío (claves.length === 0),
-              mostramos una unica fila en la tabla indicando que no hay datos
-            */}
-          {!loading && claves.length === 0 && (
-            <tr>
-              <td colSpan={9} style={{ textAlign: "center" }}>{/**Estamos usando el colpsan que indican que esta celda debe abarcar 9 columnas
-               * de la tabla en lugar de sola 1, y estamos usando el style con textAlign: "center" centra horizontalmente el texto dentro de la celda.
-              */}
-                No hay datos que mostrar
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+      </div> 
 
-      {/*
-        Si el numero total de paginas (pagsTotales) es mayor que 1
-        Y NO estamos cargando !loading,
-        mostramos los controles de paginacion.
-      */}
+      {claves.length > registrosPorPagina && !loading && (
 
-      {pagsTotales > 1 && !loading && (
-        <div className="pagination">
-            {/*
-              Generamos un array de longitud pagsTotales, y para cada índice i creamos un botón:
-              key={i+1} clave única  para cambiar a la página correspondiente.
-              El texto del botón es el número de página (i+1).
-            */}
-          {Array.from({ length: pagsTotales }, (_, i) => (
-            <button key={i + 1} onClick={() => handleCambioPag(i + 1)}>
-              {i + 1}
-            </button>
-          ))}
-        </div>
+        <PaginationControl
+
+          page={paginaActual}
+          total={claves.length}
+          between={2}
+          changePage={(page: number) => handleCambioPag(page)}
+          limit={registrosPorPagina}
+        />
+
       )}
-      </div>
-    
+
+    </div>
   );
 };
 

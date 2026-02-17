@@ -6,7 +6,7 @@ import "../../style/ImpuestosStyles/otrasTasasMunicipales.css";
 const TasasMunicipales: React.FC = () => {
 
   return (
-    <div className="detalles-impuesto-container">
+    <div className="detalles-impuesto-containers">
       <div className="title">ESTADO DE CUENTA DE TASA POR SERVICIOS A LA PROPIEDAD</div>
 
       <br />

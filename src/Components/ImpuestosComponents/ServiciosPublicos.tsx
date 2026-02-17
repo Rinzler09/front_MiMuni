@@ -5,7 +5,7 @@ import "../../style/ImpuestosStyles/serviciosPublicos.css";
 
 const ServiciosPublicos: React.FC = () => {
   return (
-    <div className="detalles-impuesto-container">
+    <div className="detalles-impuesto-containers">
       <div className="title">ESTADO DE CUENTA DE SERVICIOS PUBLICOS</div>
 
       <br />
