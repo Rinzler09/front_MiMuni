@@ -9,7 +9,7 @@ const ImpuestoPersonal: React.FC = () => {
       <div className="title">ESTADO DE CUENTA DE IMPUESTO PERSONAL / VECINAL</div>
 
       <br />
-      <p> <strong>EN PROCESO DE MANTENIMIENTO</strong></p>
+      <p><strong>EN PROCESO DE CONSTRUCCIÓN</strong></p>
       <Municipalidad />
       <br />
     </div>

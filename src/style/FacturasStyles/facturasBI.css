@@ -311,7 +311,7 @@ body,
 
 
 /* card-modal-content contiene la card-preview y la card-form */
-.card-modal-content {
+/* .card-modal-content {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -333,16 +333,16 @@ body,
 
 
 .card-preview {
-    /* Se define que 50% sera para visualizar la tarjeta*/
+
     width: 50%;
     display: flex;
     margin: 20px 15px;
     border-radius: 10px;
     overflow: hidden;
-}
+} */
 
 /* la coma significa que aplica para cualquiera de las dos clases */
-.card-image,
+/* .card-image,
 .card-back {
     position: absolute;
     background-color: #adadad;
@@ -400,6 +400,84 @@ body,
     left: 40%;
     width: 20%;
     height: 35px;
+} */
+
+.card-display-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.mini-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.mini-card-bg {
+    width: 290px;
+    height: 180px;
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.mini-card-logo {
+    width: 55px;
+    position: absolute;
+    top: 5px;
+    right: 15px;
+}
+
+.mini-card-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.mini-card-number {
+    font-size: 18px;
+    color: #ffffff;
+    letter-spacing: 2px;
+    margin-top: 35px;
+}
+
+.saved-card-expiry {
+    font-size: 13px;
+    opacity: 0.9;
+    color: #ffffff;
+}
+
+.butto-card {
+    background: #f04e23;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    padding: 7px;
+}
+
+.butto-card:hover {
+    background-color: #e53e10;
+    transform: scale(1.05);
+}
+
+.add-card-link {
+    font-size: 14px;
+    color: #0073bb;
+    cursor: pointer;
+    padding: 7px 45px;
+    border-radius: 8px;
+    transition: 0.2s ease;
+    border: 1px dashed #0073bb;
+}
+
+.add-card-link:hover {
+    background: #eef8ff;
 }
 
 /* TERMINA MODAL DONDE SE VISUALIZA EL FORMULARIO Y LA PREVIEW DE LA TARJETA */

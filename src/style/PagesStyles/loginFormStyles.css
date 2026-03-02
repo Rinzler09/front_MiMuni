@@ -1,6 +1,13 @@
 /* ======================================================
    Fondo y círculos para mostrar efecto difuminado en Login
    ====================================================== */
+
+body,
+.background {
+  min-width: 412px;
+  overflow-x: auto;
+}
+
 .background {
   position: fixed;
   top: 0;
@@ -341,11 +348,24 @@
   padding-top: 5px;
 }
 
-.forgot-password,
+/* .forgot-password,
 a.forgot-password {
   color: #f67003;
   text-decoration: none;
   font-weight: 600;
+} */
+
+
+.forgot-password {
+  background: none;
+  color: #f67003;
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  margin-right: auto;
 }
 
 a.forgot-password:hover {

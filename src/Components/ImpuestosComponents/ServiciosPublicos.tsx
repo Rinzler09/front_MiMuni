@@ -9,7 +9,7 @@ const ServiciosPublicos: React.FC = () => {
       <div className="title">ESTADO DE CUENTA DE SERVICIOS PUBLICOS</div>
 
       <br />
-      <p><strong>EN PROCESO DE MANTENIMIENTO</strong></p>
+      <p><strong>EN PROCESO DE CONSTRUCCIÓN</strong></p>
       <Municipalidad />
       <br />
     </div>

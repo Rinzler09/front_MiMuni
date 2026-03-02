@@ -1,11 +1,13 @@
-import React, { FC, Suspense, useState, useEffect } from 'react'
+import React, { FC, Suspense, useState, useEffect, useCallback } from 'react'
 import { replace, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../Components/LayoutComponents/Sidebar';
 import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
 import { useAuth } from '../Auth/AuthContext';
-import { useSessionTimeout } from '../util/UseSessionTimeout';
+import { useSessionTimeout } from '../hooks/UseSessionTimeout';
 import NotFound from '../Components/ErrorMessage/NotFound';
+import Modal from '../Components/shared/ModalComponents/modalComponent';
+import { useSessionPoll } from '../hooks/UseSessionPoll';
 //me quede por aqui ya que sera aqui en donde se implementara la logica 
 // de los eventos mas la logica de las modales
 
@@ -34,8 +36,8 @@ const Components: Components = {
     'facturas-BI': React.lazy(() => import('../Components/FacturasComponents/BI-Facturacion')),
 
     //Componentes de tarjetas
-    'tarjetas-guardadas': React.lazy(() => import('../Components/TarjetasComponents/TarjetasGuardadas')),
-    'administrador-tarjetas': React.lazy(() => import('../Components/TarjetasComponents/AdministradorTarjetasComponents')),
+    'tarjetas-guardadas': React.lazy(() => import('../Components/shared/TarjetasComponents/TarjetasGuardadas')),
+    'administrador-tarjetas': React.lazy(() => import('../Components/shared/TarjetasComponents/AdministradorTarjetasComponents')),
 
     //Compoenentes de Dropdown
     'editar-perfil': React.lazy(() => import('../Components/UserComponents/EditarPerfil')),
@@ -56,28 +58,46 @@ const General: FC = () => {
     const Componente = tipo ? Components[tipo] : null;
 
     //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
-    const [collapsed, setCollapsed] = useState(false)
-    const handleToggleSidebar = () => setCollapsed(c => !c);
+    const [collapsed, setCollapsed] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
+    const handleToggleSidebar = () => {
+        setMobileOpen(prev => !prev);
+        setCollapsed(c => !c);
+    };
 
     //Se configura el hook de sesion con callbacks
-    const { Modals, SsExpiredModal, initializeRFSession } = useSessionTimeout({//se importan las modales del sesionTimeOut y tambien la funcion resetSession la 
+    const { Modals, SsExpiredModal, initializeRFSession, newLogin, setNewLogin, showExpired, logout, token } = useSessionTimeout({//se importan las modales del sesionTimeOut y tambien la funcion resetSession la 
         // cual limpia y reprograma sus timers basados en el atributo "exp" del JWT lo cual reinicia el reloj de advertencia cuando el 
         // usuario tiene interaccion con la pantalla
-
-        // onRefresh: refreshToken, //onRefresh se ejecutara la funcion para refrescar el token llamada refreshToken
         onExpire: () => {
-            // if (!notGeneralLocations.includes(location.pathname)) {
-            //     console.log("Location: ", location.pathname);
-            //     console.log("Navego a '/' ya que esta en una ruta que se carga en General.tsx")
             window.location.reload(); //se usa en vez de navigate ya que con navigate podemos entrar a la ruta anterior que se carga en cache y puede consumir los endpoints aunque sea una ruta privada y no tenga nada en sessionStorage
-            //navigate('/'); //si expira la sesion y la ruta actual NO es una ruta contenida en el arreglo de rutas que no se cargan en General entonces se navega al index
-            // } else {
-            //     console.log("NO navego a '/' ya que esta en una ruta que NO se carga en General.tsx")
-            // }
         },
         isOTimeSession: false,
     });
+
+    const [counter, setCounter] = useState<number>(0);
+    useEffect(() => setCounter(counter + 1), []);
+    console.log("Esta es la " + counter + " vez que se renderizo el componente de General. ");
+
+    //console.log("El token en general previo a invocar useSessionPoll: ", token); //el preoblema no es en general si no que en checOnce
+    const getTokenCb = useCallback(() => token, [token]); //obtiene el token cada vez que el mismo cambie asi useSessionPoll no se ejecuta en cada render de general si no que solo cuando el token cambie
+    const onInvalidCb = useCallback(() => {
+        console.log("Se deberia mostrar la modal de inicio de sesion por multiples sesiones");
+        if (!showExpired) setNewLogin(true);  //si no esta mostrando la ventana modal de sesion expirada entonces que muestre el nuevo inicio de sesion detectado 
+        logout(); //se procede a cerrar sesion si el endpoint retorna en su respuesta que la sesion actual es invalida
+    }, [logout, showExpired]);//se usa el callback para que la funcion se cree solamente cuando cambien sus deps y no cuando se re-renderize
+
+    // console.log("El valor de getTokenCb en General: ", getTokenCb()); // el problema definitavemnete no es aqui si no que dentro de useSessionPoll
+    useSessionPoll({ // se instancia el hook para estar revisando el estado de la sesion actual 
+        intervalMs: 30_000,
+        getToken: getTokenCb, //si ya se hizo "const function = useCallback(..) " como previamente, entonces en la opcion del hook solo se pasa " getToken: function, "
+        onInvalid: onInvalidCb,
+    });
+
+
+
+    // }, []) //al renderizar el componente por primera vez cargara useSessionPoll ya que general siempre sera el componente que se carga post - login 
 
     useEffect(() => {
         const events = ["mousemove", "touchstart", "scroll"] as const; //se añade as const para que TS 
@@ -92,10 +112,14 @@ const General: FC = () => {
     }, [initializeRFSession]); //resetSessionTimers no cambiara a menos de que una de sus dependencias internas cambien ya que usa useCallback
     //los timers internos de la funcion son los que cambian la funcion de resetSessionTimers como tal no
 
+
     return (
 
-        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
-            <Sidebar collapsed={collapsed} />
+        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''} ${mobileOpen ? 'mobileOpen' : ''}`}>
+            {mobileOpen && (
+                <div className='sidebar-backdrop' onClick={() => setMobileOpen(false)} />)}
+            <Sidebar collapsed={collapsed} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
+
             <Header collapsed={collapsed} onToggleSidebar={handleToggleSidebar} />
             <div className="generalDiv">
                 <Suspense fallback={<div>Cargando Impuesto ...</div>}>
@@ -107,8 +131,11 @@ const General: FC = () => {
                     }
                 </Suspense>
             </div >
-            {Modals} {/* Este hook se coloca al final del render para que las advertencias aparezcan sobre el layout*/}
+            {!newLogin && Modals} {/* Este hook se coloca al final del render para que las advertencias aparezcan sobre el layout*/}
             {SsExpiredModal} {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}
+            {newLogin && <Modal isVisible={true} title="Alerta" message="Se detecto un nuevo inicio de sesion, por favor vuelva a iniciar sesion."
+                showCloseButton={true} onClose={() => { window.location.reload(); }} closeButtonLabel='Iniciar Sesion' />
+                /*Esta debe ser la forma correcta de instancear el componente de las modales y no como la SsExpireModal */}
         </div >
     )
 }

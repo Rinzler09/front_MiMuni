@@ -10,7 +10,7 @@ const ProceosFacturacion: React.FC = () => {
       <div className="title">ESTADO DE CUENTA DE INDUSTRIA, COMERCIO y SERVICIO</div>
 
       <br />
-      <p> <strong>EN PROCESO DE MANTENIMIENTO</strong></p>
+      <p><strong>EN PROCESO DE CONSTRUCCIÓN</strong></p>
       <Municipalidad />
       <br />
     </div>

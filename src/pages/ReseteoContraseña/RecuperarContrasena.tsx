@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import { correoRecuperacionContrasenia, verificacioCodigoServices, } from "../../services/EnvioEmailServices";
-import Modal from "../../Components/ModalComponents/modalComponent";
+import Modal from "../../Components/shared/ModalComponents/modalComponent";
 import { mensajes } from "../../util/message";
 import { Toaster, toast } from "sonner";
 import { useAuth } from "../../Auth/AuthContext";

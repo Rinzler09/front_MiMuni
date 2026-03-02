@@ -240,18 +240,11 @@ const LoginForm: React.FC = () => {
                   {errors.contra && <ErrorMessage>{errors.contra.message}</ErrorMessage>}
                 </div>
 
-                {/* Recordar credenciales 
-                <div className="form-check mb-3">
-                  <input type="checkbox" className="form-check-input" id="remember" />
-                  <label htmlFor="remember" className="form-check-label">
-                    Recordar credenciales
-                  </label>
-                </div>*/}
-
                 {/* Olvidó contraseña */}
                 <a href="#" className="forgot-password mb-3" onClick={handleForgotPassword}>
                   ¿Olvidó su contraseña?
                 </a>
+                {/* <button className="forgot-password mb-3" onClick={handleForgotPassword}>¿Olvidó su contraseña?</button> */}
 
                 {/* Botón Iniciar sesión */}
                 <button type="submit" className="login-btn" disabled={isSubmitting}>

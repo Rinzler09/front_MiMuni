@@ -17,10 +17,12 @@ import "tippy.js/dist/tippy.css";
 // // PROPS para controlar el collapse del sidebar
 export interface SidebarPROPS { //marley lo programo y no supo explicar
   collapsed: boolean;
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 
-const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
+const Sidebar: React.FC<SidebarPROPS> = ({ collapsed, mobileOpen, onCloseMobile }) => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({// Declaramos una contanste en donde contiene openSections, SetOpenSections,
     //donde tambien estamos pasando un generico key:string: booleano, donde nos indica que el estado sera un objeto cuyas claves son string y los valores son booleans
     EstadoCuenta: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
@@ -100,7 +102,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
         }
         );
         //toast.info( "Por favor, seleccione una municipalidad para continuar con el proceso de pago.");
-      }, 3000);// Retraso de 3000 ms para no interrumpir inmediatamente la experiencia de carga  
+      }, 2000);// Retraso de 3000 ms para no interrumpir inmediatamente la experiencia de carga  
     }
 
   }, []);//Este hook hace que cambie en selectedMunicipality
@@ -113,7 +115,7 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
       <Toaster closeButton position="top-right" richColors />
 
       {/* Contenedor del sidebar */}
-      <div className={`sidebar-container ${collapsed ? 'collapsed' : ''}`}>
+      <div className={`sidebar-container ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobileOpen' : ''}`}>
         {/* <div className={`sidebar-container ${isOpen ? "open" : ""}`}> */}
         {/* ——— Brand / Logo arriba ——— */}
         <div className="sidebar-brand">
@@ -159,7 +161,6 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
           >
 
             <ul className={`menu-list ${openSections.EstadoCuenta ? "show" : ""}`}
-            // title={`${restrictedLinkProps.className === "menu-item disabled" ? "Por favor, selecciona una municipalidad para comenzar." : ""}`}
             > {/*show sirve para mostrar el despliegue del dropdown*/}
 
               {sbMenEstCuenta.map((item, index) => (
@@ -172,6 +173,9 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
                       console.log("El valor de selectedSubMenuIdx: ", selectedSubMenuIdx);
                       console.log("el className de restrictedprops: ", restrictedLinkProps.className);
                       setSelectedSubMenuIdx(index); //se guarda el numero de indice para cada subMenu de la lista el cual debe hacer match con el indice actual que se clickea
+                      if (window.innerWidth <= 768) {
+                        onCloseMobile?.();
+                      }
                     }}
                   >
                     {/* <FontAwesomeIcon icon={sbMenEstCuenta_I[index]} className="menu-icon" /> */}
@@ -205,6 +209,11 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
               </Link>
             </li>
             <li>
+              <Link to="/volumen-ventas" {...restrictedLinkProps}>
+                Planilla IPM
+              </Link>
+            </li>
+            <li>
               <Link to="/renovaciones" {...restrictedLinkProps}>
                 Cambio de propietario
               </Link>
@@ -235,25 +244,25 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
           <ul className={`menu-list ${openSections.Servicios ? "show" : ""}`}>
             <li>
               <Link to="/solicitud-inspeccion" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faSearch} className="menu-icon" />
+                 <FontAwesomeIcon icon={faSearch} className="menu-icon" /> 
                 Solicitud de Permiso de Construccion
               </Link>
             </li>
             <li>
               <Link to="/ambientales" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
+                 <FontAwesomeIcon icon={faLeaf} className="menu-icon" /> 
                 Constancias Catastrales
               </Link>
             </li>
             <li>
               <Link to="/ambientales" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
+                 <FontAwesomeIcon icon={faLeaf} className="menu-icon" /> 
                 Solicitud de Inspecciones
               </Link>
             </li>
             <li>
               <Link to="/ambientales" {...restrictedLinkProps}>
-                <FontAwesomeIcon icon={faLeaf} className="menu-icon" />
+                <FontAwesomeIcon icon={faLeaf} className="menu-icon" /> 
                 Planos Catastrales
               </Link>
             </li>
@@ -376,6 +385,8 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed }) => {
             </li>
           </ul>
         </div> */}
+
+
       </div>
     </div >
 

@@ -7,7 +7,7 @@ const VolumenVentas: React.FC = () => {
       <h2 className="title">Declaraciones Volumen de Ventas</h2>
       <Municipalidad />
       <br />
-      <p><strong>EN PROCESO DE MANTENIMIENTO</strong></p>
+      <p><strong>EN PROCESO DE CONSTRUCCIÓN</strong></p>
     </div>
   );
 };

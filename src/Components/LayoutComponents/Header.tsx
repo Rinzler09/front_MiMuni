@@ -16,16 +16,17 @@ import { useAuth } from "../../Auth/AuthContext";
 import { logoutUsuario } from "../../services/EliminacionCookie";
 import Tippy from "@tippyjs/react";//dependencia que se usa para el tooltip que se muestra cuando no se ha selecciona una municipalidad 
 import "tippy.js/dist/tippy.css";
+import Spinner from 'react-bootstrap/Spinner';
 
 // Props para controlar el collapse del sidebar
 interface HeaderProps {
   collapsed: boolean;
   onToggleSidebar: () => void;
-
 }
 
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { user, token, setUser, setToken, setSelectedMunicipality, setIdentifier, selectedMunicipality } = useAuth();
   const userEmail = user?.email ?? "Inicia Sesion";
@@ -42,6 +43,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
     : { className: "menu-link" }; //Esto es para que menu-item, sin handler extra ni estilo de “deshabilitado” el enlace o botón funciona como normal.
 
   const handleLogout = async () => {
+    setLoading(true);
     try {
       await logoutUsuario(token as string);
     } catch (err) {
@@ -53,12 +55,13 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
       setSelectedMunicipality(null);
       setIdentifier(null);
       navigate("/"); //navigate si esta funcionando aqui no es necesario el .reload(), probablemente por el finally
-
+      setLoading(false);
     }
   };
 
   return (
     <header className={`header ${collapsed ? "collapsed" : ""}`}>
+
       {/* IZQUIERDA: hamburger + logo */}
       <div className="header-left">
         <FontAwesomeIcon icon={faBars}
@@ -69,21 +72,24 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
 
       </div>
 
+      {loading ? (
+        <div className="sessionLogOut">
+          <Spinner animation="border" variant="light" /> &nbsp;
+          Cerrando Sesion ...
+        </div>
+      ) : (
+        <div className="header-right">
+          <div
+            className="user-profile" onClick={toggleDropdown}>
+            <img src="/img/usuarios.png" alt="User" className="user-icon" />
+            <span className="user-name">{userEmail}</span>
+            <FontAwesomeIcon icon={faChevronDown} className={`chevron-icon ${isOpen ? "rotate" : ""}`} />
 
-      <div className="header-right">
-        <div
-          className="user-profile" onClick={toggleDropdown}>
-          <img src="/img/usuarios.png" alt="User" className="user-icon" />
-          <span className="user-name">{userEmail}</span>
-          <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
-
-          {isOpen && (
-
-            <div className="dropdown-menu">
-
-              <ul className="dropdown-menu-end show">
-                <li>
-                  <Link to="/editar-perfil" className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
+            {/* {isOpen && ( */}
+            <div >
+              <ul className={`dropdown-menu ${isOpen ? "show" : ""}`}>
+                <li style={{ padding: 0 }}>
+                  <Link to="/editar-perfil" className="menu-link">
                     <FontAwesomeIcon icon={faEdit} className="menu-icon" />
                     <span className="ms-2">Restablecer Contraseña</span>
                   </Link>
@@ -103,7 +109,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
                       {...restrictedLinkProps}
                       // className="menu-link" previously before changed 
                       className={` ${restrictedLinkProps.className === "menu-link disabled" ? restrictedLinkProps.className : "menu-link"}`}
-                      style={{ display: 'flex', alignItems: 'center' }}>
+                    // style={{ display: 'flex', alignItems: 'center' }}
+                    >
                       <FontAwesomeIcon icon={faMoneyCheckDollar} className="menu-icon" />
                       <span className="ms-2">Historico de Pagos</span>
                     </Link>
@@ -111,9 +118,9 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
                   </li>
                 </Tippy>
 
-                <li style={{ padding: 0 }}>
+                <li >
                   <span onClick={handleLogout}
-                    className="menu-link" style={{ display: 'flex', alignItems: 'center' }}>
+                    className="menu-link" >
                     <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
                     <span className="ms-2">Cerrar sesión</span>
                   </span>
@@ -121,10 +128,10 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
               </ul>
             </div>
 
-
-          )}
+          </div>
         </div>
-      </div>
+      )}
+
     </header >
   );
 };

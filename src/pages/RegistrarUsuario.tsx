@@ -9,9 +9,9 @@ import Municipalidad from '../Components/ImagesComponents/Municipalidad';
 import ErrorMessage from '../Components/ErrorMessage/MostrarMensajesError';
 import { registrarSolicitud } from '../services/RegistroUsuarioServices';
 import { Toaster, toast } from 'sonner';
-import Modal from '../Components/ModalComponents/modalComponent';
+import Modal from '../Components/shared/ModalComponents/modalComponent';
 import { mensajes } from '../util/message';
-import SeleccionCorreos from '../Components/ModalComponents/modalSeleccionCorreos';
+import SeleccionCorreos from '../Components/shared/ModalComponents/modalSeleccionCorreos';
 
 
 const RegistrarUsuario: React.FC = () => {

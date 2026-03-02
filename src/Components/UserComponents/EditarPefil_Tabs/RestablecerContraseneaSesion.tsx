@@ -6,7 +6,7 @@ import { resetPwdSessionService } from '../../../services/RstPwdSessionService';
 import type { resetPwdSession } from '../../../types/generalForm'//Importancion del type para el manejo de los datos del formulario
 import { Toaster, toast } from "sonner";
 import { useAuth } from '../../../Auth/AuthContext';
-import Modal from '../../ModalComponents/modalComponent';
+import Modal from '../../shared/ModalComponents/modalComponent';
 import { useNavigate } from 'react-router-dom';
 import { logoutUsuario } from '../../../services/EliminacionCookie';
 

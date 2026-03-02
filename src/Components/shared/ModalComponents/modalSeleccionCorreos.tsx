@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import '../../style/ModalesStyles/PageModal/modalSeleccionCorreos.css';
-import { registrarCorreoPrincipal } from '../../services/correoPrincipalServices';
+import '../../../style/ModalesStyles/PageModal/modalSeleccionCorreos.css';
+import { registrarCorreoPrincipal } from '../../../services/correoPrincipalServices';
 import Modals from './modalComponent';
 import { useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'sonner';

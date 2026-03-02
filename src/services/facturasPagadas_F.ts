@@ -7,25 +7,19 @@ export const facturasPagadas_F = async (
     tipoImpuesto: string,
     fechaInicio: string,
     fechaFin: string,
+    claveCat: string | null,
     token: string | null
 ) => {
     try {
         const response = await auth.get(
             API_URL,
             {//se envuelven los headers y los params en un solo objeto ya que para el metodo HTTP GET no es recomendado enviar un Body (query string)
-                params: { municipalidad, tipoImpuesto, fechaInicio, fechaFin },
+                params: { municipalidad, tipoImpuesto, fechaInicio, fechaFin, claveCat },
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
         );
-        // { municipalidad, tipoImpuesto, fechaInicio, fechaFin },
-        // {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`,
-        //     },
-        // }
-        //);
 
         return response?.data;
     } catch (error: any) {

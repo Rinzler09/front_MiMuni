@@ -9,7 +9,7 @@ const Renovaciones: React.FC = () => {
             <h2 className="title">Renovaciones</h2>
             <Municipalidad />
             <br />
-            <p><strong>EN PROCESO DE MANTENIMIENTO</strong></p>
+            <p><strong>EN PROCESO DE CONSTRUCCIÓN</strong></p>
         </div>
     );
 };

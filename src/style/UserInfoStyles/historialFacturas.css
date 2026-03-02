@@ -246,3 +246,17 @@
     border-bottom: 1px dashed #ddd;
     color: #333;
 }
+
+/* PAGINACION, clases por default de React*/
+
+.pagination {
+    margin-top: 20px;
+}
+
+.page-item.active .page-link {
+    background-color: #9b3900;
+}
+
+.pagination>li>a {
+    color: #000;
+}

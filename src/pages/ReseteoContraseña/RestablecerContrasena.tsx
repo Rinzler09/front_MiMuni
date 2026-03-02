@@ -10,10 +10,10 @@ import { receteoContraServices } from "../../services/EnvioEmailServices";
 //import { cambiarContra } from "../../services/CambioControseñaServices";
 import { useAuth } from "../../Auth/AuthContext";
 import { Toaster, toast } from "sonner";
-import Modal from "../../Components/ModalComponents/modalComponent"
+import Modal from "../../Components/shared/ModalComponents/modalComponent"
 import { logoutUsuario } from "../../services/EliminacionCookie";
 // import { useSessionModal } from "../../hook/UseSessionTimeout";
-import { useSessionTimeout } from "../../util/UseSessionTimeout";
+import { useSessionTimeout } from "../../hooks/UseSessionTimeout";
 
 const RestablecerContrasena: React.FC = () => {
   const navigate = useNavigate();

@@ -9,6 +9,9 @@ import React, {
     SetStateAction,
 } from "react";
 import { logoutUsuario } from "../services/EliminacionCookie";
+import { toast } from "sonner";
+import { useSessionPoll } from "../hooks/UseSessionPoll";
+import Modal from "../Components/shared/ModalComponents/modalComponent";
 // import { useSessionTimeout } from "../hook/UseSessionTimeout";
 
 
@@ -61,10 +64,8 @@ interface AuthContextProps { //en esta interfaaz se definen todos los valores y 
     setSelectedMunicipality: Dispatch<SetStateAction<string | null>>;//el respectivo setter para el valor de selectedMunicipality 
     logout: () => void; // función para cerrar sesión y limpiar todo el estado de autenticación.
     refreshToken: () => Promise<void>; //función para pedir un nuevo access token al servidor backend y actualizarlo.
-    // clearAllHeader: () => void;
-    // sessionCounter: number;
-    // setSessionCounter: Dispatch<SetStateAction<number>>
-
+    newLogin: boolean;
+    setNewLogin: Dispatch<SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);//aqui se crea un contexto de react el cual llevara los datos
@@ -84,28 +85,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         useSessionStorageState<string | null>("selectedMunicipality", null);
     const [identifier, setIdentifier] =
         useSessionStorageState<string | null>("identifier", null);
-    // const [sessionCounter, setSessionCounter] =
-    //     useSessionStorageState<number>("sessionCounter", 0);
-    // const { clearAll } = useSessionTimeout();
 
-    // const clearAllHeader = clearAll;
+    const [newLogin, setNewLogin] = useState<boolean>(false); //hook de estado usado para mostrar la modal de nuevo inicio de sesion
 
     const logout = useCallback(async () => {//cuando se usa useCallback hacemos que esta sea una funcion asincrona memorizada 
         // es decir que solo cambiara si cambian las dependencias al final 
 
         if (token)
             try {
-                await logoutUsuario(token);// envía petición al backend para invalidar la cookie HTTP-only.
+                await logoutUsuario(token as string);// envía petición al backend para invalidar la cookie HTTP-only.
             } catch (error) {
                 console.error("Error al destruir cookie en logout:", error);
+            } finally {
+                // Limpia estado persistido y se usa esta sintaxis ya que si se usa la sintaxis de los hooks entonces no se puede usar el reload
+                sessionStorage.removeItem("access_TKN");//este existe en cambio de contraseña inicial y reseteo de contraseña
+                sessionStorage.removeItem("userPayload");//este existe en cambio de contraseña inicial
+                sessionStorage.removeItem("selectedMunicipality");//este existe en general y se le agrega valor cuando selecciona una Muni
+                sessionStorage.removeItem("identifier");//este existe en general y se le agrega valor cuando selecciona una Muni
+                // setUser(null);//el valor de user para el sessionStorage queda en null
+                // setSelectedMunicipality(null); //el valor de selectedMunicipality para el sessionStorage queda en null
+                // setToken(null); //el valor de token para el sessionStorage queda en null
+                // setIdentifier(null);
+                //ver posibilidad de borrar hooks de arriba que esta actualmente comentados
             }
-        // Limpia estado persistido
-
-        setUser(null);//el valor de user para el sessionStorage queda en null
-        setSelectedMunicipality(null); //el valor de selectedMunicipality para el sessionStorage queda en null
-        setToken(null); //el valor de token para el sessionStorage queda en null
-        // Opcional: redirigir o llamar a servicio de logout
-    }, [token, setUser, setSelectedMunicipality, setToken]); //estas son las dependencias de useCallback es decir que si 
+    }, [token, setUser, setSelectedMunicipality, setToken, setIdentifier]); //estas son las dependencias de useCallback es decir que si 
     // alguna cambia entonces React craeara esta funcion de lo contrario reutilizara la misma instancia para evitar renders extras
 
     const refreshToken = useCallback(async () => {// Se declara una funcion asincrona la cual no se vuelve a crear a menos que cambie token o setToken
@@ -129,6 +132,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             if (!authHeader) {
                 console.error("No llegó ningún header con el token desde el backend"); //si no existe ningun header con el token
+                // setUser(null);
+                // setSelectedMunicipality(null);
+                // setToken(null);
+                // toast.info("Su sesion ha expirado.");
                 return;
             }
             const newToken = authHeader.startsWith("Bearer ")//si el header comienza con Bearer
@@ -142,6 +149,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, [token, setToken]);//se usa useCallback porque esto asegura que la funcion refreshToken solo cree nuevamente si 
     // token o setToken cambian, esto es util ya que este hook se pasa a otros componentes como useSessionTimeOut el 
     // cual depende de su estabilidad
+
+    // useSessionPoll({ // se instancia el hook para estar revisando el estado de la sesion actual 
+    //     intervalMs: 45_000,
+    //     getToken: () => token,
+    //     onInvalid: () => {
+    //         console.log("Se deberia mostrar la modal de inicio de sesion");
+    //         //setNewLogin(true);
+    //         //logout();
+    //         //se procede a cerrar sesion si el endpoint retorna en su respuesta que la sesion actual es invalida
+    //     },
+    // });
 
     return (
         <AuthContext.Provider
@@ -159,9 +177,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 setSelectedMunicipality,
                 logout,
                 refreshToken,
-                // clearAllHeader
-                // sessionCounter,
-                // setSessionCounter
+                newLogin,
+                setNewLogin,
             }}
         >
             {children} {/* Esta linea envuelve todos los componentes hijos con el contexto de autenticacion*/}

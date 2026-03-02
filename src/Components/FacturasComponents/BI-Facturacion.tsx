@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import "../../style/FacturasStyles/facturasBI.css"
-import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css"
+import "../../style/FacturasStyles/facturasBI.css";
+import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css";
 import "../../style/PagesStyles/titulo_TablasStyle.css"
 import { PaginationControl } from 'react-bootstrap-pagination-control';
 import { facturaBienesInmueble } from "../../services/facturasBI";
@@ -12,6 +12,14 @@ import { toast } from "sonner";
 import Spinner from 'react-bootstrap/Spinner';
 import ReportBI from "../PDF_Components/PDF_Impuestos/reporteBI";
 import { FaEye } from "react-icons/fa";
+import visaImagen from "../../assets/iconoVisa.png";
+import mastercardImagen from "../../assets/master.png";
+import americaExpressImagen from "../../assets/america.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import Modal from "../shared/ModalComponents/modalComponent";
+import ModalsConteiners from "../shared/ModalComponents/ModalsConteiners";
+import CardForm from "../shared/TarjetasComponents/formTarjetas";
 
 interface Facturas {
   numFactura: number;
@@ -46,51 +54,55 @@ const ProceosFacturacion: React.FC = () => {
   };
 
   const { state } = useLocation() as { state: LocationState };
-  const { claveCat, direccion } = state;
+  const { claveCat, direccion } = (state ?? {});
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const registrosPorPagina = 5;
 
 
-  const [selectedAmount, setSelectedAmount] = useState(0);
-  const [selectedYears, setSelectedYears] = useState<number[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showModals, setShowModals] = useState<boolean>(false);
+  // const [selectedAmount, setSelectedAmount] = useState(0);
+  // const [selectedYears, setSelectedYears] = useState<number[]>([]);
+  // const [showModal, setShowModal] = useState(false);
   const [showCheckboxModal, setShowCheckboxModal] = useState(false);
-  const [showCardModal, setShowCardModal] = useState(false);
+  // const [showCardModal, setShowCardModal] = useState(false);
   const [showCardRequiredModal, setShowCardRequiredModal] = useState(false);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [showConfirmationIcon, setShowConfirmationIcon] = useState(false);
-  const [showOkButton, setShowOkButton] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] =
-    useState("Procesando...");
+  // const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  // const [showConfirmationIcon, setShowConfirmationIcon] = useState(false);
+  // const [showOkButton, setShowOkButton] = useState(false);
+  // const [confirmationMessage, setConfirmationMessage] =
+  //   useState("Procesando...");
   // Estados para los datos de la tarjeta
-  const [cardNumber, setCardNumber] = useState("•••• •••• •••• ••••");
-  const [cardName, setCardName] = useState("SU NOMBRE AQUÍ");
-  const [cardExpiry, setCardExpiry] = useState("MM / YY");
-  const [cardCVV, setCardCVV] = useState("");
-  const [isBackView, setIsBackView] = useState(false);
+  // const [cardNumber, setCardNumber] = useState("•••• •••• •••• ••••");
+  // const [cardName, setCardName] = useState("SU NOMBRE AQUÍ");
+  // const [cardExpiry, setCardExpiry] = useState("MM / YY");
+  // const [cardCVV, setCardCVV] = useState("");
+  // const [isBackView, setIsBackView] = useState(false);
   const [savedCard, setSavedCard] = useState<{
     number: string;
     name: string;
     expiry: string;
+    direccion: string;
+    type: string;
   } | null>(null);
-  //Cambiar los colores
-  const [cardColor, setCardColor] = useState(""); // Estado para el color de la tarjeta
 
-  const handleCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    amount: number,
-    year: number
-  ) => {
-    if (event.target.checked) {
-      setSelectedAmount(selectedAmount + amount);
-      setSelectedYears([...selectedYears, year].sort());
-    } else {
-      setSelectedAmount(selectedAmount - amount);
-      setSelectedYears(selectedYears.filter((y) => y !== year));
-    }
+  const logos: Record<string, string> = {
+    visa: visaImagen,
+    mastercard: mastercardImagen,
+    amex: americaExpressImagen,
   };
+
+  const getCardLogo = (type: string): string | undefined => {
+    if (!type) return undefined;
+
+    const normalized = type.replace(/\s+/g, "").toLowerCase();
+    return logos[normalized];
+  }
+
+  const handleCardSaved = (card: any) => {
+    setSavedCard(card);
+  }
 
 
   /*HOOKS PARA PAGOS A DB GEOREDES*/
@@ -119,6 +131,11 @@ const ProceosFacturacion: React.FC = () => {
 
   useEffect(() => {
     const fetchFacturas = async () => {
+
+      if (!claveCat) {
+        toast.error("Debe seleccionar un Bien Inmueble para ver sus facturas.",);
+        navigate("/error-404"); //si no existe una clave catastral seleccionada entonces navega a facturas-bi
+      }
 
       setLoading(true);
 
@@ -154,64 +171,24 @@ const ProceosFacturacion: React.FC = () => {
   //Cuando se clickea el boton pagar se ejecuta el metodo handlePayButtonClick
   //el cual mediante fetch usa un post para enviar el json conteniendo la estrucutar del pago de factura  
   const handlePayButtonClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
 
     if (!savedCard) {
-      e.preventDefault();
       setShowCardRequiredModal(true);
       return;
     }
 
-    e.preventDefault();
+    if (selectItems.length === 0) {
+      setShowCheckboxModal(true);
+      return;
+    }
+
     setModalDetPago(true);
 
   };
 
-  const closeModal = () => setShowModal(false);
-  const closeCheckboxModal = () => setShowCheckboxModal(false);
-  const closeCardRequiredModal = () => setShowCardRequiredModal(false);
-  const openCardModal = () => setShowCardModal(true);
-  const closeCardModal = () => setShowCardModal(false);
-
-  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value.replace(/\s+/g, "");
-    const formattedValue = rawValue.replace(/(\d{4})(?=\d)/g, "$1 ");
-    setCardNumber(formattedValue || "•••• •••• •••• ••••");
-  };
-
-  const handleCardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardName(e.target.value || "SU NOMBRE AQUÍ");
-  };
-
-  const handleCardExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardExpiry(e.target.value || "MM / YY");
-  };
-
-  const handleCardCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCardCVV(e.target.value);
-  };
-
-  const handleSaveCard = () => {
-    setSavedCard({
-      number: cardNumber,
-      name: cardName,
-      expiry: cardExpiry,
-    });
-    closeCardModal();
-  };
-
-  const processPayment = () => {
-    setModalProPay(true);
-    setTimeout(() => {
-      setPagoExitoso(true);
-      setModalProPay(false);
-    }, 2000)
-  }
-
   //Implementacion para la seleccion de checkbox en la facturas
   const [selectItems, setSelectedItems] = useState<number[]>([]);
-
-  //vereficacion si se han seleccionado todas la facturas
-  //const allSelected = facturasActuales.length > 0 && selectItems.length === facturasActuales.length;
 
   //Se realiza el calculo total de las facturas selecionadas
   const seleccionCantidad = React.useMemo(() => {
@@ -224,7 +201,13 @@ const ProceosFacturacion: React.FC = () => {
     }, 0);
   }, [selectItems, facturas]);
 
-  //Codigo de implementaco
+  //Funcion para formatear el numero de tarjeta en la mini tarjeta
+  const formatCardNumber = (num: string) => {
+    // return num.replace(/(.{4})/g, '$1 ').trim();
+    const clean = num.replace(/\s/g, "");// Elimina los espacios del número de tarjeta para trabajar con una cadena limpia
+    return clean.replace(/(.{4})/g, '$1 ').trim();
+  }
+
   const seleccionFilas = (item: Facturas) => {
     const id = item.numFactura;
     setSelectedItems((prev) =>
@@ -243,18 +226,60 @@ const ProceosFacturacion: React.FC = () => {
     [facturas]
   );
 
-  //Logica para poder seleecionar las 5 facturas actuales y no seleccionar el checkbox de todas las facturas
   const pageAllSelected = useMemo(
     () =>
       facturas.length > 0 &&
       facturas.every((f) => selectItems.includes(f.numFactura)),
     [facturas, selectItems]
   );
+
   const [headerClicked, setHeaderClicked] = useState(false);
 
   useEffect(() => {
     if (!pageAllSelected && headerClicked) setHeaderClicked(false);
   }, [pageAllSelected, headerClicked]);
+
+
+  const processPayment = () => {
+    setModalProPay(true);
+    setTimeout(() => {
+      setPagoExitoso(true);
+      setModalProPay(false);
+    }, 2000)
+  }
+
+  // const closeModal = () => setShowModal(false);
+  // const closeCheckboxModal = () => setShowCheckboxModal(false);
+  // const closeCardRequiredModal = () => setShowCardRequiredModal(false);
+  // const openCardModal = () => setShowCardModal(true);
+  // const closeCardModal = () => setShowCardModal(false);
+
+  // const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const rawValue = e.target.value.replace(/\s+/g, "");
+  //   const formattedValue = rawValue.replace(/(\d{4})(?=\d)/g, "$1 ");
+  //   setCardNumber(formattedValue || "•••• •••• •••• ••••");
+  // };
+
+  // const handleCardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setCardName(e.target.value || "SU NOMBRE AQUÍ");
+  // };
+
+  // const handleCardExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setCardExpiry(e.target.value || "MM / YY");
+  // };
+
+  // const handleCardCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setCardCVV(e.target.value);
+  // };
+
+  // const handleSaveCard = () => {
+  //   setSavedCard({
+  //     number: cardNumber,
+  //     name: cardName,
+  //     expiry: cardExpiry,
+  //   });
+  //   closeCardModal();
+  // };
 
 
   return (
@@ -373,7 +398,7 @@ const ProceosFacturacion: React.FC = () => {
           {!loading && facturas.length === 0 && (
             <tr>
               <td colSpan={11} style={{ textAlign: "center" }}>
-                NO HAY DATOS QUE MOSTRAR
+                NO HAY FACTURAS PENDIENTES DE PAGO
               </td>
             </tr>
           )}
@@ -396,31 +421,34 @@ const ProceosFacturacion: React.FC = () => {
       {/* Sección de "Mis tarjetas de crédito y débito" */}
       <div className="credit-card-section"> {/*Cambiar la logica a un componente reutilizable*/}
         <h3>Mis tarjetas de credito y debito</h3>
-        <div className="add-card">
-          <span className="card-icon">💳</span>
-          {savedCard ? (
-            <div className="saved-card-info">
-              <p className="saved-card-number">{savedCard.number}</p>
-              <p className="saved-card-name">{savedCard.name}</p>
-              <p className="saved-card-expiry">
-                Válida hasta {savedCard.expiry}
-              </p>
+        <div className="card-display-container">
+          {savedCard ?
+            (<div className="mini-card">
+              <div className={`mini-card-bg ${savedCard?.type?.toLowerCase() || ""}-bg`}>
+                {getCardLogo(savedCard.type) && (
+                  <img src={getCardLogo(savedCard.type)} className="mini-card-logo" alt="" />)}
+                <p className="mini-card-number">{formatCardNumber(savedCard.number)}</p>
+                <p className="mini-card-name">{savedCard.name}</p>
+                <p className="saved-card-expiry">Válida hasta {savedCard.expiry}</p>
+              </div>
+              <div >
+                <button className="butto-card" onClick={() => { setShowModals(true) }}
+                  title="Editar Tarjeta" >
+                  <FontAwesomeIcon icon={faPencil} /> Editar</button>
+              </div>
             </div>
-          ) : (
-            <a
-              href="#"
-              className="add-card-link"
-              onClick={(e) => {
-                e.preventDefault();
-                openCardModal();
-              }}
-            >
-              Agregar una tarjeta de credito o debito
-            </a>
-          )}
+            ) : (
+              <button className="add-card-link" onClick={() => setShowModals(true)}>Agregar una tarjeta</button>
+            )}
           <p className="card-info">
             Aceptamos las principales tarjetas de credito
           </p>
+
+          <ModalsConteiners open={showModals} onClose={() => setShowModals(false)}>
+            <div style={{ padding: '20px', color: 'black' }}>
+              <CardForm onSave={handleCardSaved} onCancel={() => setShowModals(false)} initialData={savedCard ?? undefined} />
+            </div>
+          </ModalsConteiners>
         </div>
       </div>
 
@@ -435,13 +463,28 @@ const ProceosFacturacion: React.FC = () => {
         >
           Pagar
         </Link>
-
-
       </div>
 
       {/* Modal de advertencia */}
-      {/*Cambiar la logica a un componente reutilizable*/}
-      {showModal && (
+
+      <Modal isVisible={showCheckboxModal} title="MENSAJE DE ADVERTENCIA" showCloseButton={false} >
+        <div style={{ padding: '20px', color: 'black', textAlign: 'center' }}>
+          <p>Debe seleccionar al menos un periodo de deuda para continuar con el pago.</p>
+          <button className="modal-button"
+            onClick={() => setShowCheckboxModal(false)}>Listo</button>
+        </div>
+      </Modal>
+
+      {/* Modal de advertencia para agregar tarjeta de crédito */}
+      <Modal isVisible={showCardRequiredModal} title="MENSAJE DE ADVERTENCIA" showCloseButton={false} >
+        <div style={{ padding: '20px', color: 'black', textAlign: 'center' }}>
+          <p>Debes agregar una tarjeta de crédito o débito antes de proceder con el pago.</p>
+          <button className="modal-button"
+            onClick={() => setShowCardRequiredModal(false)}>Listo</button>
+        </div>
+      </Modal>
+
+      {/* {showModal && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="img/error.svg" alt="Advertencia" className="modal-icon" />
@@ -456,11 +499,12 @@ const ProceosFacturacion: React.FC = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
+
 
       {/* Modal de advertencia de selección de checkbox */}
       {/*Cambiar la logica a un componente reutilizable*/}
-      {showCheckboxModal && (
+      {/* {showCheckboxModal && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="img/error.svg" alt="Advertencia" className="modal-icon" />
@@ -477,10 +521,10 @@ const ProceosFacturacion: React.FC = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
       {/* Modal de advertencia para agregar tarjeta de crédito */}
       {/*Cambiar la logica a un componente reutilizable*/}
-      {showCardRequiredModal && (
+      {/* {showCardRequiredModal && (
         <div className="modal-overlay">
           <div className="modal-box">
             <img src="img/error.svg" alt="Advertencia" className="modal-icon" />
@@ -502,11 +546,11 @@ const ProceosFacturacion: React.FC = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Modal de confirmación */}
       {/*Cambiar la logica a un componente reutilizable*/}
-      {showConfirmationModal && (
+      {/* {showConfirmationModal && (
         <div className="modal-overlay">
           <div className="modal-box">
             {showConfirmationIcon ? (
@@ -522,8 +566,6 @@ const ProceosFacturacion: React.FC = () => {
               Mensaje de Confirmación
             </h3>
             <p className="modal-message">{confirmationMessage}</p>
-            {/* Si el boton Ok tiene un estado activo entonces se procede
-            a la vista de  Proceso-Tarjeta*/}
             {showOkButton && (
               <Link to="/historial-pagos" className="modal-button">
                 OK
@@ -531,7 +573,7 @@ const ProceosFacturacion: React.FC = () => {
             )}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Modal desglose de cobro durante transaccion (donde se cobran los 30 lps)*/}
       {/*Cambiar la logica a un componente reutilizable*/}
@@ -657,7 +699,7 @@ const ProceosFacturacion: React.FC = () => {
 
       {/* Modal para agregar tarjeta */}
       {/*Cambiar la logica a un componente reutilizable*/}
-      {showCardModal && (
+      {/* {showCardModal && (
         <div className="modal">
           <div className="card-modal-content">
             <h3>Agregue una tarjeta</h3>
@@ -680,8 +722,7 @@ const ProceosFacturacion: React.FC = () => {
                 )}
               </div>
 
-              {/* Formulario de entrada de datos de tarjeta */}
-              {/*Cambiar la logica a un componente reutilizable*/}
+       
               <form className="card-form">
                 <label className="textoPrincial">Número de tarjeta</label>
                 <input
@@ -748,7 +789,7 @@ const ProceosFacturacion: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

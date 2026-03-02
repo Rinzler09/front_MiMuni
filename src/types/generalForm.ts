@@ -42,3 +42,13 @@ export type codigoVerificacion = {
     otp: string
 }
 export type codigoVerif = Pick<codigoVerificacion, 'otp'> & {}
+
+export type tarjetaPago = {
+    number: string;
+    nombreTarjeta: string;
+    expiry: string;
+    cvv: string;
+    direccion?: string;
+}
+
+export type cardForm = Pick<tarjetaPago, 'number' | 'nombreTarjeta' | 'expiry' | 'cvv'> & {}

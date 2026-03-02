@@ -25,6 +25,10 @@
   width: 80px;
 }
 
+.sidebar-conatiner .mobileOpen {
+  transform: translateX(0);
+}
+
 /* ─── Scrollbar WebKit en .sidebar-container ───────────────────────────── */
 .sidebar-container::-webkit-scrollbar {
   width: 8px;
@@ -148,12 +152,14 @@
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.4s ease, opacity 0.4s ease;
+
 }
 
 .menu-list.show {
   max-height: 60vh;
   /* limita la altura y deja espacio para scroll */
   overflow-y: auto;
+  /*Necesario porque si no entonces quedan los elementos flotando invisibles y son cliqueables*/
   opacity: 1;
 
   /* Firefox */
@@ -333,6 +339,17 @@
   display: none;
 }
 
+/* ------- rotación SOLO al chevron --------*/
+.section-chev {
+  transition: transform 0.3s ease;
+}
+
+.section-title.active .section-chev {
+  transform: rotate(180deg);
+}
+
+
+
 .sidebar-container .sidebar.collapsed {
   transform: translateX(-100%);
   transition: transform 0.3s ease;
@@ -347,7 +364,7 @@
 }
 
 
-@media (max-width: 992px) {
+/* @media (max-width: 992px) { //por metodo de prueba comentarlos
   .hamburger-icon {
     display: flex;
   }
@@ -359,5 +376,73 @@
 
   .sidebar-container.active {
     transform: translateX(0);
+  }
+} */
+
+/* ================= MODO MÓVIL ================= */
+@media (max-width: 768px) {
+  .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80%;
+    max-width: 280px;
+    background: #e2d4c9;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 10000;
+  }
+
+  .app-container.mobileOpen .sidebar-container {
+    transform: translateX(0);
+  }
+
+  /* En móvil NO existe collapsed */
+  .app-container.collapsed .sidebar-container {
+    width: 80%;
+  }
+
+  /* Backdrop */
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9000;
+  }
+
+}
+
+/* ================= TABLET / iPad ================= */
+/* Colapsado automático entre 769px y 1024px */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80%;
+    max-width: 280px;
+    background: #e2d4c9;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 10000;
+  }
+
+  .app-container.mobileOpen .sidebar-container {
+    transform: translateX(0);
+  }
+
+  /* En móvil NO existe collapsed */
+  .app-container.collapsed .sidebar-container {
+    width: 80%;
+  }
+
+  /* Backdrop */
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9000;
   }
 }

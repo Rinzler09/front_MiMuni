@@ -47,14 +47,30 @@ export const styles = StyleSheet.create({
 
     table: {
         width: "100%",
-        borderColor: "1px solid #f3f4f6",
-        margin: "20px 0"
+        fontSize: "10px",
+        // borderWidth: 1, //param para transparencia de borde
+        // borderBottomWidth: 1, //param para transparencia de borde
+        // borderStyle: "solid", //param para transparencia de borde
+        // borderColor: "#fff" //param para transparencia de borde
+        borderStyle: "dashed",
+        borderColor: "#000",
+        margin: "20px auto",
     },
     tableHeader: {
-        backgroundColor: "#e5e5e5",
+        backgroundColor: "#e26c0c",
+        borderRadius: "10px",
+        margin: "0 -15px",
+    },
+    tableData: {
+        margin: "0 -15px",
     },
     td: {
-        padding: 6,
+        padding: 3,
+        textAlign: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
     },
 
     totals: {

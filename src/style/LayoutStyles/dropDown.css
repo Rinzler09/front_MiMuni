@@ -1,4 +1,4 @@
-/* Contenedor del dropdown */
+/* Lista sin estilos por defecto */
 .dropdown-menu {
     position: absolute;
     top: 50px;
@@ -9,14 +9,19 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 240px;
     display: block;
-    /* Mostrar el menú */
+    max-height: 0;
+    overflow-y: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.4s ease;
+    pointer-events: none;
 }
 
-/* Lista sin estilos por defecto */
-.dropdown-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+
+.dropdown-menu.show {
+    max-height: 200px;
+    opacity: 1;
+    overflow-y: auto;
+    pointer-events: all;
 }
 
 /* Cada ítem: eliminamos padding aquí y lo colocamos en el enlace */

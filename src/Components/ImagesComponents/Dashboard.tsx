@@ -88,6 +88,7 @@ const Dashboard: React.FC = () => {
               type="button"
               data-bs-target="#carouselExampleIndicators"
               data-bs-slide="prev"
+              title='Anterior'
             >
               <span
                 className="carousel-control-prev-icon"
@@ -100,6 +101,7 @@ const Dashboard: React.FC = () => {
               type="button"
               data-bs-target="#carouselExampleIndicators"
               data-bs-slide="next"
+              title='Siguiente'
             >
               <span
                 className="carousel-control-next-icon"

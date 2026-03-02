@@ -43,6 +43,9 @@ const HistorialPagos: React.FC = () => {
     { label: 'Plan de Pago', value: "PP" },
     { label: 'Servicios Varios', value: 'OT' },
   ];
+  // const [clavesCat, setClavesCat] = useState<string[]>([""]);
+  const [clavesCat, setClavesCat] = useState<string[]>([""]);
+  const [selectedClaveCat, setSelectedClaveCat] = useState<string>("");
 
   /*Se use el hook de useState para el arreglo de Facturas*/
   const [historialFacturas, setHistorialFacturas] = useState<FacturasPagadas[]>([]);
@@ -57,16 +60,20 @@ const HistorialPagos: React.FC = () => {
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
 
 
-  /* REALIZADO POR MARLEY */
-
-
   const handleTaxChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log("parametro seleccionado: ", e.target.value)
     setSelectedTax(e.target.value); // Update selected option
+
+    if (e.target.value === "BI") {
+      console.log("La primera clave cata: ", clavesCat?.[0]);
+      setSelectedClaveCat(clavesCat?.[0]);//se define como predeterminado el primer valor de las claves catastrales
+    } else {
+      setSelectedClaveCat("");
+    }
   };
 
   const fetchHistorialPagos = useCallback(async () => {
-
+    setPaginaActual(1);
     setLoading(true);
 
     if (!selectedMunicipality) {
@@ -76,11 +83,19 @@ const HistorialPagos: React.FC = () => {
     }
 
     try {
-      const respuesta = await facturasPagadas(selectedMunicipality, token);
+      const respuesta: FacturasPagadas = await facturasPagadas(selectedMunicipality, token);
       console.log("Esta es la respuesta de las facturas pagadas: ", respuesta);
 
       if (respuesta && Array.isArray(respuesta)) {
         setHistorialFacturas(respuesta)
+        setClavesCat([
+          ...new Set(//sae usa new Set para eliminar valores duplicados del arreglo que se esta enviando
+            respuesta.filter((factura) => factura.ClaveCatastral)//con filter solo se mantienene las facturas donde exista el valor para la key ClaveCatastral
+              .map((factura) => factura.ClaveCatastral)//con map se extraen solo los valores de las keys claveCatastral de los objetos
+          )
+        ]);
+        // console.log("La primera clave cata: ", respuesta?.[0]?.ClaveCatastral);
+        //setSelectedClaveCat(respuesta?.[0]?.ClaveCatastral);//se define como predeterminado el primer valor de las claves catastrales
       }
 
     } catch (error) {
@@ -107,14 +122,15 @@ const HistorialPagos: React.FC = () => {
       setLoading(false);
       return;
     }
-
+    setPaginaActual(1);
     setLoading(true);
     try {
-      const respuesta = await facturasPagadas_F(selectedMunicipality, selectedTax, startDateFormatted, endDateFormatted, token);
-      console.log("Esta es la respuesta de las facturas pagadas: ", respuesta);
+      const respuesta: FacturasPagadas = await facturasPagadas_F(selectedMunicipality, selectedTax, startDateFormatted, endDateFormatted, selectedClaveCat, token);
+      console.log("Esta es la respuesta de las facturas pagadas Filtradas: ", respuesta);
 
       if (respuesta && Array.isArray(respuesta)) {
         setHistorialFacturas(respuesta)
+        // console.log("historial facturas: ", historialFacturas);
       }
     } catch (error) {
       console.log("Error obteniendo registros:", error);
@@ -172,6 +188,26 @@ const HistorialPagos: React.FC = () => {
               <FaSearch /></button>{/**Este boton nos ayuda poder refrescar la factuaras actuales*/}
 
           </div>
+
+          <div className="date-range-label">
+            {selectedTax === 'BI' && (
+              <label htmlFor="selClaveCat" style={{ marginTop: '5px' }}>Clave Catastral</label>)}
+          </div>
+
+          <div className="date-range-filter">
+            {selectedTax === 'BI' && (
+              <select id="selClaveCat" style={{ width: "200px" }} className="selectInvoice"
+                onChange={((e) => setSelectedClaveCat(e.target.value))}>
+                {clavesCat.map(clave => (
+                  <option key={clave} value={clave}>
+                    {clave}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+
+
         </div>
       </div>
 

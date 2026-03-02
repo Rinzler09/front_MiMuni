@@ -4,8 +4,10 @@ import { Table, TH, TD, TR } from '@ag-media/react-pdf-table';
 import { FaDownload } from 'react-icons/fa';
 import "../../../style/PDF_Styles/reporteBIStyle.css";
 import { useAuth } from '../../../Auth/AuthContext';
-import { useLocation } from 'react-router-dom';
-import MuniLogo from '../../../../public/img/LogoSantaLucia.png';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+// import logoMuni from '../../../../public/img/Logos/Municipalidad de Marcovia.png';
+import { toast } from "sonner";
 
 interface facturaBi {
     facturas: string;
@@ -21,11 +23,13 @@ interface facturaBi {
 
 export default function ReportBI() {//recibe un objeto llamado data de tipo any
 
+    const navigate = useNavigate();
     const fechaActual = new Date().toLocaleDateString("es-HN"); // se obtiene la fecha Actual
     const horaActual = new Date().toLocaleTimeString();
     const { identifier, selectedMunicipality } = useAuth();
+    const logoMuni = `/img/Logos/${selectedMunicipality}.png`;
     const { state } = useLocation();
-    const { impuesto } = state;
+    const { impuesto } = (state ?? {});
 
     const tableData: facturaBi[] =
         [
@@ -40,6 +44,19 @@ export default function ReportBI() {//recibe un objeto llamado data de tipo any
                 prontopago: 0,
                 subtotal: 800.00
             },
+
+            {
+                facturas: "28394",
+                periodo: "2017",
+                descripcion: "Impuesto Bien Inmueble Periodo 2017",
+                precio: 736.32,
+                ajuste: 64.68,
+                adm: 0,
+                amnistia: 0,
+                prontopago: 0,
+                subtotal: 800.00
+            }
+            ,
 
             {
                 facturas: "28394",
@@ -69,12 +86,19 @@ export default function ReportBI() {//recibe un objeto llamado data de tipo any
         },
     ]
 
+    useEffect(() => {
+        if (!impuesto) {
+            toast.error("Debe seleccionar una factura para poder visualizar el recibo.",);
+            navigate("/error-404"); //si no existe una clave catastral seleccionada entonces navega a facturas-bi
+        }
+    }, []);
+
     const ReportePDF = () => (
         <Document>
             <Page size="A4" style={styles.page}>
                 <Text style={[styles.title, styles.textBold]}>RECIBO DE PAGO</Text>
                 <View style={styles.header}>
-                    <Image src={MuniLogo} style={styles.img} />
+                    <Image src={logoMuni} style={styles.img} />
                     <View>
                         <Text style={[styles.title, styles.textBold]}>{selectedMunicipality}</Text>
                         <Text style={[styles.title2, styles.textBold]}>{impuesto} </Text>
@@ -99,27 +123,27 @@ export default function ReportBI() {//recibe un objeto llamado data de tipo any
 
                 <Table style={styles.table}>
                     <TH style={[styles.tableHeader, styles.textBold]}>
-                        <TD>N° Factura</TD>
-                        <TD>Periodo</TD>
-                        <TD>Descripcion</TD>
-                        <TD>Precio Unit.</TD>
-                        <TD>Ajuste</TD>
-                        <TD>Adulto Mayor</TD>
-                        <TD>Amnistia</TD>
-                        <TD>Pronto Pago</TD>
-                        <TD>Subtotal</TD>
+                        <TD style={styles.td}>N° Factura</TD>
+                        <TD style={styles.td}>Periodo</TD>
+                        <TD style={styles.td}>Descripcion</TD>
+                        <TD style={styles.td}>Precio Unit.</TD>
+                        <TD style={styles.td}>Ajuste</TD>
+                        <TD style={styles.td}>Adulto Mayor</TD>
+                        <TD style={styles.td}>Amnistia</TD>
+                        <TD style={styles.td}>Pronto Pago</TD>
+                        <TD style={styles.td}>Subtotal</TD>
                     </TH>
                     {tableData.map((item, index) => (
-                        <TR key={index}>
+                        <TR key={index} style={[styles.tableData]}>
                             <TD style={styles.td}>{item.facturas}</TD>
                             <TD style={styles.td}>{item.periodo}</TD>
                             <TD style={styles.td}>{item.descripcion}</TD>
-                            <TD style={styles.td}>{item.precio}</TD>
-                            <TD style={styles.td}>{item.ajuste}</TD>
-                            <TD style={styles.td}>{item.adm}</TD>
-                            <TD style={styles.td}>{item.amnistia}</TD>
-                            <TD style={styles.td}>{item.prontopago}</TD>
-                            <TD style={styles.td}>{item.subtotal}</TD>
+                            <TD style={styles.td}>L.&nbsp;{item.precio} </TD>
+                            <TD style={styles.td}> L.&nbsp;{item.ajuste}</TD>
+                            <TD style={styles.td}>L.&nbsp;{item.adm}</TD>
+                            <TD style={styles.td}>L.&nbsp;{item.amnistia}</TD>
+                            <TD style={styles.td}>L.&nbsp;{item.prontopago}</TD>
+                            <TD style={styles.td}>L.&nbsp;{item.subtotal}</TD>
                         </TR>
                     ))}
                 </Table>

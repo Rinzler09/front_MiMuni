@@ -1,3 +1,8 @@
+body .detalles-impuesto-container {
+  min-width: 412px;
+  overflow-x: auto;
+}
+
 .detalles-impuesto-container {
 
   display: flex;
