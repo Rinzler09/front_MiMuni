@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form';//Libreria para validar los campos del
 import ErrorMessage from '../../ErrorMessage/MostrarMensajesError'; //Importacion del componenete que viene el mensaje del error
 import { resetPwdSessionService } from '../../../services/RstPwdSessionService'; //Servicio para enviar la solicitud de cambio de contraseña
 import type { resetPwdSession } from '../../../types/generalForm'//Importancion del type para el manejo de los datos del formulario
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import { useAuth } from '../../../Auth/AuthContext';
 import Modal from '../../shared/ModalComponents/modalComponent';
 import { useNavigate } from 'react-router-dom';
 import { logoutUsuario } from '../../../services/EliminacionCookie';
-
+import iconoExito from "../../../assets/img/procesado.svg";
 
 const ResetPwdSession: React.FC = () => {
   const navigate = useNavigate();
@@ -290,7 +290,7 @@ const ResetPwdSession: React.FC = () => {
       </form>
       {/*Ventana modal para poder avisar que todo esta perfecto*/}
       <Modal isVisible={showModalDatos} title="Exito" message="La contraseña se actualizo correctamente. Por seguridad inicia sesion con tus nuevas credenciales."
-        iconSrc="img/procesado.svg" iconAlt="Icono de exito" closeButtonLabel="Aceptar" onClose={() => handleLogout()} />
+        iconSrc={iconoExito} iconAlt="Icono de exito" closeButtonLabel="Aceptar" onClose={() => handleLogout()} />
 
     </div>
   );

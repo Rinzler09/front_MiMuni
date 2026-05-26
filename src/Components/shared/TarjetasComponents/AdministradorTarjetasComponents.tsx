@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../style/TarjetasStyles/agregarTarjeta.css";
+import "../../../style/TarjetasStyles/agregarTarjeta.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ const AdministradorTarjetas: React.FC = () => {
   const navigate = useNavigate();
   const [cardNumber, setCardNumber] = useState<string>("•••• •••• •••• ••••");
   const [cardExpiry, setCardExpiry] = useState<string>("MM / YY");
-  const [cardCVV, setCardCVV] = useState<string>("888");
+  // const [cardCVV, setCardCVV] = useState<string>("888");
   const [cardName, setCardName] = useState<string>("SU NOMBRE AQUÍ");
 
   const goBack = () => {
@@ -49,7 +49,7 @@ const AdministradorTarjetas: React.FC = () => {
       body: JSON.stringify(
         {
           "num_tarjeta": cardNumber,
-          "cvv": cardCVV,
+          "cvv": "888",
           "nombre_tarjeta": cardName,
           "fecha_exp": "2025-05-30",
           "estado": 1

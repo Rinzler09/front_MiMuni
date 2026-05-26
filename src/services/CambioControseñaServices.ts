@@ -9,7 +9,7 @@ export const cambiarContra = async (n_psswd: string) => {
   try {
     // Obtén el correo electrónico y la contraseña vieja desde localStorage
     const email = sessionStorage.getItem("email");//se guarda en login form 
-    const o_psswd = sessionStorage.getItem("password");//se guarda en login form 
+    //const o_psswd = sessionStorage.getItem("password");//se guarda en login form 
     const token = sessionStorage.getItem("access_TKN_OT");//Se usa esta logica debido a que no se puede instancear el hook useAuth()
     console.log("este es el token en cambiocontraseñaservices ", token);
     if (!email) {
@@ -20,7 +20,7 @@ export const cambiarContra = async (n_psswd: string) => {
     const payload = {
       email: email.replace(/"/g, ""), // elimina comillas en caso de que existan
       n_psswd, // Nueva contraseña
-      o_psswd, // Contraseña temporal que en este caso es la que se mando al correo
+      // o_psswd, // Contraseña temporal que en este caso es la que se mando al correo
     };
 
     // Realiza la petición al backend con los headers que incluyan el token nuevo

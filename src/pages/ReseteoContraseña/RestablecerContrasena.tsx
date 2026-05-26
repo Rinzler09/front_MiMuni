@@ -1,6 +1,5 @@
 // src/Pages/CambioContraseña.tsx
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import "../../style/PagesStyles/cambioContraseñaStyles.css";
 import type { cambioContrasena } from "../../types/generalForm";
 import ErrorMessage from "../../Components/ErrorMessage/MostrarMensajesError";
@@ -11,12 +10,11 @@ import { receteoContraServices } from "../../services/EnvioEmailServices";
 import { useAuth } from "../../Auth/AuthContext";
 import { Toaster, toast } from "sonner";
 import Modal from "../../Components/shared/ModalComponents/modalComponent"
-import { logoutUsuario } from "../../services/EliminacionCookie";
 // import { useSessionModal } from "../../hook/UseSessionTimeout";
 import { useSessionTimeout } from "../../hooks/UseSessionTimeout";
+import exitoIcon from "../../assets/img/procesado.svg";
 
 const RestablecerContrasena: React.FC = () => {
-  const navigate = useNavigate();
   // const location = useLocation();
   //const { token, logout } = useAuth(); //Extrae el token del context de autenticacion
   //console.log("Token desde RestablecerContra:",token);
@@ -50,8 +48,7 @@ const RestablecerContrasena: React.FC = () => {
 
   //Comparar la contraseña 
   const password = watch("contrasena");
-  const [isRecaptchaVerified, setIsRecaptchaVerified] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [_isEmailSent, setIsEmailSent] = useState(false);
   const [isChngPwd, setIsChngPwd] = useState(false);//hook para validar si se esta restableciendo la PWD
 
   //Funcion para poder cambiar la pagina al login
@@ -108,12 +105,18 @@ const RestablecerContrasena: React.FC = () => {
 
     <div className="reset-pass-page">
       <Toaster richColors position="top-right" />
+      <div className="circle circle1"></div>{/*Estos circulos son para el efecto de foco detras del Login Form*/}
+      <div className="circle circle2"></div>
+      <div className="circle circle3"></div>
+
       <div className="reset-pass-container">
         <h2 className="text-center mb-3">Restablece tu contraseña</h2>
         <form onSubmit={handleSubmit(handleRecuperar)}>
           {/* contraseña */}
           <div className="email-field mb-3">
-            <label htmlFor="contraseña" className="form-label">Ingresa una nueva contraseña</label>
+            <label htmlFor="contraseña" className="form-label" style={{ marginTop: "1rem" }}>
+              Ingresa una nueva contraseña
+            </label>
             {/* Agracion de metodologia del input */}
             <input
               type={showPassword ? "text" : "password"}
@@ -188,7 +191,7 @@ const RestablecerContrasena: React.FC = () => {
         </form>
         {/*Ventana modal para poder avisar que todo esta perfecto*/}
         <Modal isVisible={showModalDatos} title="Exito" message="La contraseña se actualizo correctamente."
-          iconSrc="img/procesado.svg" iconAlt="Icono de exito" closeButtonLabel="Aceptar" onClose={() => navegacionLogin()} />
+          iconSrc={exitoIcon} iconAlt="Icono de exito" closeButtonLabel="Aceptar" onClose={() => navegacionLogin()} />
 
       </div>
 

@@ -1,13 +1,13 @@
 import React from "react";
 import "../../style/ImagesStyles/imagenMunicipalidad.css";
+import logoMML from "../../../src/assets/img/MML_Logo.jpg";
 
 
 const Municipalidad: React.FC = () => {
 
     return (
         <div className="img-Municipalidad">
-            {/* <img src="public/img/Muni.png" alt="logoMunicipalidad" /> */}
-            <img src="public/img/MML_Logo.jpg" alt="logoMunicipalidad" />
+            <img src={logoMML} />
         </div>
     );
 };

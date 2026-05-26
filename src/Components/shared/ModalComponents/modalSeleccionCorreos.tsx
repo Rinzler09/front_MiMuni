@@ -6,6 +6,7 @@ import Modals from './modalComponent';
 import { useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'sonner';
 import { FaInfoCircle } from "react-icons/fa";
+import iconoExito from "../../../assets/img/procesado.svg";
 
 interface Props {
     showSeleccionCorreos: boolean;
@@ -112,7 +113,7 @@ const SeleccionCorreos: React.FC<Props> = ({ showSeleccionCorreos, handleClose, 
 
             {/* Reutilización de la ventana modal de éxito */}
             <Modals
-                iconSrc="public\img\procesado.svg"
+                iconSrc={iconoExito}
                 isVisible={showModalDatos}
                 title="Éxito"
                 message={`Contraseña temporal enviada exitosamente en su correo de elección (${correoprincipal}), revise su correo.`}

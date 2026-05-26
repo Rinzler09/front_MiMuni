@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Municipalidad from "../ImagesComponents/Municipalidad";
 import "../../style/ImpuestosStyles/impuestoPersonal.css";
 

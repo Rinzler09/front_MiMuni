@@ -38,7 +38,7 @@ export default function CardForm({ onSave, onCancel, initialData }: CardFormProp
     //Validacion de los campos del formulario
     const initialValues: tarjetaPago = { number: "", nombreTarjeta: "", expiry: "", cvv: "", direccion: "" };
     const { register, handleSubmit, setValue, formState: { errors } } = useForm({ defaultValues: initialValues });
-    const [expirationDate, setExpirationDate] = useState("");
+    const [_expirationDate, setExpirationDate] = useState("");//con _ se ignora la variable
 
     const cardImages: { [key: string]: string } = {
         "Visa": visaImagen,

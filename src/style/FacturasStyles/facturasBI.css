@@ -51,6 +51,25 @@ body,
     margin: 0px 15px;
 }
 
+.btnRecibos {
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #ff8a04;
+    height: 30px;
+    width: 60px;
+    border: none;
+    font-weight: bold;
+    transition: black 0.6s ease-in-out;
+}
+
+
+.pdfWrapperFA {
+    height: 83%;
+    border: 2px solid #000;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
 .detalles-impuesto-container {
 
     display: flex;
@@ -85,7 +104,7 @@ body,
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
-    margin-right: 315px;
+    margin-right: 85px;
 }
 
 .credit-card-section h3 {
@@ -123,10 +142,12 @@ body,
 .payment-summary {
     display: flex;
     align-items: center;
+    justify-content: end;
     /* Centra el contenido */
     margin-top: 20px;
     padding: 20px;
     border-top: 1px solid #ddd;
+    width: 100%;
 }
 
 .payment-summary p {
@@ -134,11 +155,23 @@ body,
     font-weight: bold;
     margin-bottom: 15px;
     /* Espacio entre el texto y los botones */
-    text-align: center;
+    /* text-align: center; */
     margin-right: 90px;
     margin-top: 15px;
 }
 
+.payment-actions-container {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.payment-actions-container>button,
+a {
+    max-height: fit-content;
+}
 
 .button-cancel,
 .button-pay {
@@ -249,6 +282,28 @@ body,
     margin-bottom: 10px;
     text-decoration: none;
 }
+
+.titleFA_BI {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    font-weight: bold;
+    color: #3B1F2B;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #f4f4f4;
+    width: 101%;
+    padding: 20px 200px;
+
+
+    max-width: 950px;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+}
+
 
 .modal-message {
     font-size: 15px;

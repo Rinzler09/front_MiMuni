@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
-  faBell,
   faRightFromBracket,
   faChevronDown,
   faEdit,
@@ -17,6 +16,7 @@ import { logoutUsuario } from "../../services/EliminacionCookie";
 import Tippy from "@tippyjs/react";//dependencia que se usa para el tooltip que se muestra cuando no se ha selecciona una municipalidad 
 import "tippy.js/dist/tippy.css";
 import Spinner from 'react-bootstrap/Spinner';
+import imgUsuario from "../../../src/assets/img/usuarios.png";
 
 // Props para controlar el collapse del sidebar
 interface HeaderProps {
@@ -81,7 +81,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, collapsed }) => {
         <div className="header-right">
           <div
             className="user-profile" onClick={toggleDropdown}>
-            <img src="/img/usuarios.png" alt="User" className="user-icon" />
+            <img src={imgUsuario} alt="User" className="user-icon" />
             <span className="user-name">{userEmail}</span>
             <FontAwesomeIcon icon={faChevronDown} className={`chevron-icon ${isOpen ? "rotate" : ""}`} />
 

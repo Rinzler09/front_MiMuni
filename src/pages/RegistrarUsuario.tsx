@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import "../style/PagesStyles/registrarUsuarioStyles.css";
-import { useNavigate } from "react-router-dom";
 import type { registroSolicitud } from '../types/generalForm';
 import Municipalidad from '../Components/ImagesComponents/Municipalidad';
 
@@ -9,14 +8,10 @@ import Municipalidad from '../Components/ImagesComponents/Municipalidad';
 import ErrorMessage from '../Components/ErrorMessage/MostrarMensajesError';
 import { registrarSolicitud } from '../services/RegistroUsuarioServices';
 import { Toaster, toast } from 'sonner';
-import Modal from '../Components/shared/ModalComponents/modalComponent';
-import { mensajes } from '../util/message';
 import SeleccionCorreos from '../Components/shared/ModalComponents/modalSeleccionCorreos';
 
 
 const RegistrarUsuario: React.FC = () => {
-    const [showModalDatos, setShowModalDatos] = useState(false);
-    const navigate = useNavigate();
     // Validacion de los campos del formulario
     // const initialValues: registroSolicitud = { nombrecompleto: "", identidad: "", rtn: "", correo: "", telefono: "", };
     const initialValues: registroSolicitud = { identidad: "", rtn: "", correo: "", telefono: "", };
@@ -77,16 +72,21 @@ const RegistrarUsuario: React.FC = () => {
     return (
         <div className="container mt-5">
             <Toaster position="top-right" richColors /> {/* Para la visualizacion */}
+
             <br />
             <div className='logoMuni'><Municipalidad /></div>
             <br />
             <div className='divTitle'><h2 className="mb-4" >Ingrese sus datos personales</h2></div>
 
             <form id='datosPersonales' onSubmit={handleSubmit(handleRegistrar)} >
-                <div className='form-container'>
+
+                <div className="circle circle1"></div>{/*Estos circulos son para el efecto de foco detras del Login Form*/}
+                <div className="circle circle2"></div>
+                <div className="circle circle3"></div>
+                <div className='form-container contenerFormulario'>
 
                     <div className="row mb-3">
-
+                        <p style={{ color: "#c71a1a", fontSize: "smaller" }}>Los campos con * son obligatorios</p>
                         {/* <div className="col-md-6">
                             <label htmlFor="nombrecompleto" className="form-label">
                                 Nombre
@@ -96,8 +96,8 @@ const RegistrarUsuario: React.FC = () => {
                             />
                             {errors.nombrecompleto && <ErrorMessage>{errors.nombrecompleto.message} </ErrorMessage>}
                         </div> */}
-
                         <div className="col-md-6 form-element">
+                            <span style={{ color: "#c71a1a" }}><strong>*</strong></span>
                             <label htmlFor="identidad" className="form-label">
                                 DNI
                             </label>
@@ -120,16 +120,17 @@ const RegistrarUsuario: React.FC = () => {
                             <input
                                 type="text" className="form-control" maxLength={14} placeholder='Ingrese su RTN'
                                 {...register("rtn", {
-                                    required: "El RTN es obligatorio",
+                                    // required: "El RTN es obligatorio",
                                     minLength: { value: 14, message: "El RTN debe tener exactamente 14 caracteres", },
                                     maxLength: { value: 14, message: "El RTN debe tener exactamente 14 caracteres", },
                                     pattern: { value: /^[0-9]+$/, message: "El RTN solo debe contener números", },
                                 })}
                             />
-                            {errors.rtn && <ErrorMessage>{errors.rtn.message} </ErrorMessage>}
+                            {errors.rtn && <ErrorMessage>{errors.rtn.message}</ErrorMessage>}
                         </div>
 
                         <div className="col-md-6 form-element">
+                            <span style={{ color: "#c71a1a" }}><strong>*</strong></span>
                             <label htmlFor="correo" className="form-label">
                                 Correo Electronico
                             </label>
@@ -143,9 +144,9 @@ const RegistrarUsuario: React.FC = () => {
                         </div>
 
                         <div className="col-md-6 form-element">
+                            <span style={{ color: "#c71a1a" }}><strong>*</strong></span>
                             <label htmlFor="telefono" className="form-label">
                                 Telefono
-
                             </label>
                             <input
                                 type="tel" className="form-control" placeholder='Ingrese su numero de telefono' maxLength={8}
@@ -157,7 +158,9 @@ const RegistrarUsuario: React.FC = () => {
                             />
                             {errors.telefono && <ErrorMessage>{errors.telefono.message} </ErrorMessage>}
                         </div>
+
                     </div>
+
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={handleSubmit(handleRegistrar)} >
                     {isSendingTPwd ? 'Activando...' : 'Activar Cuenta'}

@@ -2,7 +2,44 @@
     background-color: #fa883d;
 }
 
+.resetPwdContainer {
+    position: fixed;
+    background: #e0e2e5;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+    filter: blur(120px);
+}
+
+.circle1 {
+    width: 500px;
+    height: 500px;
+    background-color: #FF6600;
+    top: 10%;
+    left: 15%;
+}
+
+.circle2 {
+    width: 500px;
+    height: 500px;
+    background-color: #0e3475;
+    bottom: 10%;
+    right: 10%;
+}
+
+.circle3 {
+    width: 300px;
+    height: 400px;
+    background-color: #FF6600;
+    bottom: 30%;
+}
+
+
 .form-container-contraseña {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -12,13 +49,13 @@
     /*centra el div como tal ya que pone un margin automatico */
     background-color: rgb(232, 231, 231);
     padding: 20px 0px;
-    margin-bottom: 20px;
     border-radius: 20px;
     max-width: fit-content;
 
 }
 
 .form-container-contraseña>div {
+
     margin: 0px auto;
     /*este es el margin de los inputs   */
     min-width: 80%;
@@ -59,6 +96,7 @@
 
 /* 2. Card central */
 .reset-pass-container {
+    position: fixed;
     background: #fff;
     max-width: 500px;
     width: 100%;
@@ -117,9 +155,9 @@ p {
 .btn-contraseña {
     font-weight: bold;
     text-align: center;
-    margin-bottom: 90px;
+    margin-top: 40px;
     justify-self: center;
-    display: block;
+    display: flex;
     min-width: 20%;
     background-color: #c55d0d;
     color: #fff;
@@ -209,11 +247,7 @@ form:has(input:disabled) {
     margin: 3rem auto;
 }
 
-/* Inputs y botones extra-grandes */
-.form-control-xl {
-    padding: 1rem 1rem;
-    font-size: 1.125rem;
-}
+
 
 .btn-xl {
     padding: 0.75rem 1.5rem;
@@ -257,10 +291,10 @@ form:has(input:disabled) {
     /* quitamos el margin-bottom por defecto */
 }
 
-.reset-pass-container form>div.mb-3>.form-control {
+/* .reset-pass-container form>div.mb-3>.form-control {
     grid-area: input;
     width: 100%;
-}
+} */
 
 .reset-pass-container form>div.mb-3>span {
     grid-area: icon;

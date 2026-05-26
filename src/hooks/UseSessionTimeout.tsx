@@ -10,7 +10,6 @@ import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../Auth/AuthContext";
 import { logoutUsuario } from "../services/EliminacionCookie";
 import { deactivateSession } from "../services/DesactivarSesion";
-import { useSessionPoll } from "./UseSessionPoll";
 
 // const decoded = jwtDecode(token);
 
@@ -38,7 +37,6 @@ export function useSessionTimeout({ onExpire, isOTimeSession, }: UseSessionTimeo
     const warningTimer = useRef<ReturnType<typeof setTimeout> | null>(null); //este es el hook con el temporizador para mostrar la ventana de warning
     // const refreshTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const expireTimer = useRef<ReturnType<typeof setTimeout> | null>(null); //este es el hook con el temporizador para salir de la sesion al login form
-    const expireInterval = useRef<ReturnType<typeof setInterval> | null>(null); //este es el hook con el temporizador para salir de la sesion al login form
     const countdownInterval = useRef<ReturnType<typeof setInterval> | null>(null); //este es el hook con el temporizador dentro del warningTimer que actura como contador
     const showWarningRef = useRef(showWarning);
     const countdownRef = useRef(countdown);

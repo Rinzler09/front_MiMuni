@@ -39,10 +39,18 @@ export const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     date: {
-        marginLeft: '250px',
+        marginLeft: '200px',
     },
     billTo: {
         marginBottom: 10,
+    },
+
+    concepto: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        maxWidth: '400px',
+        marginTop: "15px",
     },
 
     table: {
@@ -57,7 +65,8 @@ export const styles = StyleSheet.create({
         margin: "20px auto",
     },
     tableHeader: {
-        backgroundColor: "#e26c0c",
+        backgroundColor: "#00352C",
+        color: "#fff",
         borderRadius: "10px",
         margin: "0 -15px",
     },

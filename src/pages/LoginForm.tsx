@@ -7,6 +7,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../style/PagesStyles/loginFormStyles.css";
 import { login } from "../services/loginFormServices";
 import { Toaster, toast } from "sonner";
+import { useIsMobile } from "../hooks/UseIsMobile";
 
 // Manejo de errores con react-hook-form
 import ErrorMessage from "../Components/ErrorMessage/MostrarMensajesError";
@@ -21,15 +22,12 @@ import { useAuth } from "../Auth/AuthContext";
 import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 
-// Imágenes del carrusel
 
-// import slide1 from "../../public/img/muni.png";
-// import slide2 from "../../public/img/muni.png";
-// import slide3 from "../../public/img/muni.png";
+import slide1 from "../../src/assets/img/MML_Logo.jpg";
+import slide2 from "../../src/assets/img/MML_Logo.jpg";
+import slide3 from "../../src/assets/img/MML_Logo.jpg";
 
-import slide1 from "../../public/img/MML_Logo.jpg";
-import slide2 from "../../public/img/MML_Logo.jpg";
-import slide3 from "../../public/img/MML_Logo.jpg";
+import letrasMAPEA from "../../src/assets/img/MapeaSinFondo.png";
 
 const slides = [
   { image: slide1, description: "Bienvenido, estamos en compromiso y servicio a la comunidad." },
@@ -45,6 +43,7 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isMobile = useIsMobile();
 
   // Carrusel
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -191,13 +190,6 @@ const LoginForm: React.FC = () => {
                 ))}
               </div>
 
-              {/* <img alt="LogoBancoAtlantida"
-                src="../../../public/img/LogocompletoBALinea.png"
-                style={{
-                  width: "220px",
-                  margin: "auto",
-                  marginTop: "40px"
-                }} /> */}
             </div>
 
             {/* Panel derecho: formulario */}
@@ -251,7 +243,7 @@ const LoginForm: React.FC = () => {
                   {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
                 </button>
               </form>
-              <div style={{
+              <div style={isMobile ? { margin: "70px auto 10px auto" } : {
                 display: "flex",
                 flexDirection: "row",
                 width: "280px",
@@ -262,10 +254,12 @@ const LoginForm: React.FC = () => {
                 }}>Powered by</span>
                 <img
                   style={{
-                    width: "160px",
+                    marginTop: "3px",
+                    width: "8rem",
+                    height: "2rem"
                   }}
-                  alt="LogoGeoRedes"
-                  src="../../../public/img/LetrasGeoRedes.png"
+                  alt="LogoMAPEA"
+                  src={letrasMAPEA}
                 />
               </div>
 

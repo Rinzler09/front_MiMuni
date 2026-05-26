@@ -13,9 +13,16 @@
     left: 30px;
     /* Ajusta la altura según el contenido */
     margin-left: 15%;
+    /* margin-right: 10%; */
     /* Ajusta margen para centrar */
     border: 1px solid #d3d3d3;
     margin-top: 65px;
+    overflow-x: scroll;
+}
+
+.historial-facturacion-container {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .buttonSearch {
@@ -125,6 +132,13 @@
     margin-right: 10px;
 }
 
+.pdfWrapperReceipt {
+    height: 83%;
+    border: 2px solid #000;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+}
+
 /* Se utilizara estas reglas CSS para la tabla que se cargue en historial Facturas */
 
 
@@ -152,7 +166,7 @@
     text-align: center;
     border-bottom: 1px solid #ddd;
     font-size: 11px;
-
+    margin: 0 auto;
 }
 
 
@@ -166,6 +180,7 @@
 }
 
 .btnRecibos {
+    margin: 0 auto;
     border-radius: 5px;
     background-color: #ff8a04;
     height: 30px;
@@ -260,3 +275,10 @@
 .pagination>li>a {
     color: #000;
 }
+
+/* 
+@media (max-width: 600px) {
+    .pdfWrapperReceipt {
+        height: 60%;
+    }
+} */

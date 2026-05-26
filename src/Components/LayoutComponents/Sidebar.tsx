@@ -9,10 +9,11 @@ import {
 import "../../style/LayoutStyles/sidebar.css";// Importacion de estilo de sidebar.css
 import { useAuth } from "../../Auth/AuthContext";// Importacion de useAuth de AuthContext.tsx
 import { Toaster, toast } from "sonner";// Importacion de Toast de la libreria sonner // Codigo descartado
-import { mensajes } from "../../util/message"//Importacion de mensajes de errores de util/message
+//import { mensajes } from "../../util/message"//Importacion de mensajes de errores de util/message
 import { MdErrorOutline } from "react-icons/md";// Importacion de MDErrorOutline, esto nos ayuda mostrar graficamente un simbolo de error en la interface donde lo estamos utilizando
 import Tippy from "@tippyjs/react";//dependencia que se usa para el tooltip que se muestra cuando no se ha selecciona una municipalidad 
 import "tippy.js/dist/tippy.css";
+import mml_logo from '../../../src/assets/img/MML_Logo.jpg';
 
 // // PROPS para controlar el collapse del sidebar
 export interface SidebarPROPS { //marley lo programo y no supo explicar
@@ -33,7 +34,8 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed, mobileOpen, onCloseMobile 
     Publicos: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
     Varios: false,//Aqui tenemos una un objeto donde es false significa que esta cerrada el desplegable
   });
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);/**Estamos usando isSidebarOpen: es la variable que utilizamos del estado si el sidebar esta abierta
+  //const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  /**Estamos usando isSidebarOpen: es la variable que utilizamos del estado si el sidebar esta abierta
   setIsSidebarOpen: es una funcion en donde podemos permitr el cambio de estado (Si esta abierto o cerrado)
   useState(false) Esto nos ayuda a poder inicializar el estado a un valor booleano false. */
   const { user, selectedMunicipality, setSelectedMunicipality } = useAuth();/**Tenemos el user  que es un objeto con el dato del usuario que se esta logueando tiene toda su informacion
@@ -54,9 +56,9 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed, mobileOpen, onCloseMobile 
     Tambien tenemos el ...prev, donde copia la propiedades existente de openSections ya que cada seccion con su valor es true o false*/
   };
 
-  const toggleSidebar = () => {//tenemos una funcion donde estara la funcionalidad de abrir y cerrar el menu de boton de hamburguesa.
-    setIsSidebarOpen(prev => !prev);
-  };
+  // const toggleSidebar = () => {//tenemos una funcion donde estara la funcionalidad de abrir y cerrar el menu de boton de hamburguesa.
+  //   setIsSidebarOpen(prev => !prev);
+  // };
   const gotoMenu = () => {
     navigate("/dashboard");
     setSelectedMunicipality(null);
@@ -115,12 +117,12 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed, mobileOpen, onCloseMobile 
       <Toaster closeButton position="top-right" richColors />
 
       {/* Contenedor del sidebar */}
-      <div className={`sidebar-container ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobileOpen' : ''}`}>
+      <div className={`sidebar-container ${collapsed ? 'collapsed' : ''} `}>
         {/* <div className={`sidebar-container ${isOpen ? "open" : ""}`}> */}
         {/* ——— Brand / Logo arriba ——— */}
         <div className="sidebar-brand">
           <img
-            src="../../public/img/MML_Logo.jpg" alt="Mi Muni En Línea" className="sidebar-logo" />
+            src={mml_logo} alt="Mi Muni En Línea" className="sidebar-logo" />
           {(
             <span className="sidebar-brand-text" onClick={gotoMenu}>Mi Muni En Línea</span>
           )}
@@ -173,9 +175,9 @@ const Sidebar: React.FC<SidebarPROPS> = ({ collapsed, mobileOpen, onCloseMobile 
                       console.log("El valor de selectedSubMenuIdx: ", selectedSubMenuIdx);
                       console.log("el className de restrictedprops: ", restrictedLinkProps.className);
                       setSelectedSubMenuIdx(index); //se guarda el numero de indice para cada subMenu de la lista el cual debe hacer match con el indice actual que se clickea
-                      if (window.innerWidth <= 768) {
-                        onCloseMobile?.();
-                      }
+                      // if (window.innerWidth <= 768) {
+                      //   onCloseMobile?.();
+                      // }
                     }}
                   >
                     {/* <FontAwesomeIcon icon={sbMenEstCuenta_I[index]} className="menu-icon" /> */}

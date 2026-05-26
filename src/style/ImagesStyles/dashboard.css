@@ -119,6 +119,15 @@ body,
   /* ancho colapsado del sidebar */
 }
 
+.carousel-inner-mob {
+  width: 600px;
+  height: 1200px;
+}
+
+.carousel-inner-mob {
+  height: 1100px;
+}
+
 
 @keyframes fadeInUp {
   from {
@@ -135,9 +144,9 @@ body,
 @media (max-width: 768px) {
 
   /* 1) Oculta el sidebar */
-  .sidebar-container {
+  /* .sidebar-container {
     display: none !important;
-  }
+  } */
 
   /* 2) Fija el carousel como “pantalla completa” bajo el header */
   .main-content.full-carousel-container {

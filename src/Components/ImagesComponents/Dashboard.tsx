@@ -2,8 +2,15 @@
 import React, { useEffect } from 'react';
 import '../../style/ImagesStyles/dashboard.css';
 import { Carousel as BSCarousel } from 'bootstrap';
+import imgValle from "../../../src/assets/img/ValleDeAngeles.jpg";
+import imgSanta from "../../../src/assets/img/Santa.jpg";
+import imgAlcadia from "../../../src/assets/img/alcaldia.jpg";
+import imgMarcovia from "../../assets/img/Carusel/MarcoviaCarrusel.png"
+import { useIsMobile } from '../../hooks/UseIsMobile';
 
 const Dashboard: React.FC = () => {
+  const isMobile = useIsMobile();
+
   useEffect(() => {
     //Tenemos declardo un indice, que corresponde al contenedor del carousel de Booststrap
     const indice = document.getElementById('carouselExampleIndicators');
@@ -50,10 +57,10 @@ const Dashboard: React.FC = () => {
                 aria-label="Slide 3"
               ></button>
             </div>
-            <div className="carousel-inner">
+            <div className={isMobile ? "carousel-inner-mob" : "carousel-inner"}>
               <div className="carousel-item active">
                 <img
-                  src="/img/alcaldia.jpg"
+                  src={imgAlcadia}
                   className="d-block carousel-image"
                   alt="Alcaldía"
                 />
@@ -63,7 +70,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="carousel-item">
                 <img
-                  src="/img/ValleDeAngeles.jpg"
+                  src={imgValle}
                   className="d-block carousel-image"
                   alt="Noticias"
                 />
@@ -73,7 +80,8 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="carousel-item">
                 <img
-                  src="/img/Santa.jpg"
+                  style={isMobile ? {} : { height: "650px" }}
+                  src={imgMarcovia}
                   className="d-block carousel-image"
                   alt="Santa Lucía"
                 />
@@ -81,6 +89,7 @@ const Dashboard: React.FC = () => {
                   <h5>Gestión ágil y segura</h5>
                 </div>
               </div>
+
             </div>
 
             <button

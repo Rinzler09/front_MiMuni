@@ -15,6 +15,8 @@
     padding: 15px;
 }
 
+
+
 .btn-primary:hover {
     background: #e65b00;
     transform: translateY(-1px);
@@ -64,6 +66,42 @@
 
 .form-control {
     background-color: white;
+}
+
+.contenerFormulario {
+    background-color: #e0dfdf;
+    position: relative;
+}
+
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+    filter: blur(120px);
+}
+
+.circle1 {
+    width: 500px;
+    height: 500px;
+    background-color: #FF6600;
+    top: 10%;
+    left: 15%;
+}
+
+.circle2 {
+    width: 500px;
+    height: 500px;
+    background-color: #0e3475;
+    bottom: 10%;
+    right: 10%;
+}
+
+.circle3 {
+    width: 300px;
+    height: 400px;
+    background-color: #FF6600;
+    bottom: 30%;
 }
 
 .col-md-6>label {

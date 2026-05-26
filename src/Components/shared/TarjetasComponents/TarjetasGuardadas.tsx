@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import "../../style/TarjetasStyles/tarjetasGuardadas.css";
-import "../../style/ModalesStyles/TarjetasModal/modalEliminarTarjeta.css";
+import "../../../style/TarjetasStyles/tarjetasGuardadas.css";
+// import "../../style/ModalesStyles/TarjetasModal/modalEliminarTarjeta.css";
+import "../../../style/ModalesStyles/TarjetasModal/modalEliminarTarjeta.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 

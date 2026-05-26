@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import NotFound from "../Components/ErrorMessage/NotFound";
 import LoginForm from "../pages/LoginForm";
 import RegistrarUsuario from "../pages/RegistrarUsuario";
 import General from "../pages/General";

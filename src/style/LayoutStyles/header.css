@@ -115,7 +115,7 @@
 /* ========================= MEDIA QUERY ==================== */
 
 @media(max-width: 768px) {
-  .header {
+  /* .header {
     left: 0;
     width: 100%;
     transition: left 0.1s ease, width 0.2s ease;
@@ -125,7 +125,7 @@
     left: 0;
     width: 100%;
     transition: left 0.1s ease, width 0.2s ease;
-  }
+  } */
 
   .user-name {
     display: none;

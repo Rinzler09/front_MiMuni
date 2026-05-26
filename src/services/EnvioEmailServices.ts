@@ -1,6 +1,4 @@
-import auth, { setAuthToken } from "../Auth/auth";
-import type { AxiosResponseHeaders } from "axios";
-import { useAuth } from "../Auth/AuthContext";
+import auth from "../Auth/auth";
 
 
 //Declaramos las variables que contiene la URL del endpoint

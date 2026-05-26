@@ -3,6 +3,11 @@ body .detalles-impuesto-container {
   overflow-x: auto;
 }
 
+/* .headerContainer {
+  display: flex;
+  flex-direction: row;
+} */
+
 .detalles-impuesto-container {
 
   display: flex;
@@ -54,30 +59,35 @@ body .detalles-impuesto-container {
 }
 
 
-.title img {
+/* .title img {
   position: relative;
   right: 120px;
+} */
+
+.imgLogo {
+  width: 7rem;
+  margin: 0.4rem 1rem;
 }
 
-.title {
+.titleBI {
   display: flex;
+  justify-content: center;
   flex-direction: row;
-  font-size: 24px;
   font-weight: bold;
   color: #3B1F2B;
   margin-bottom: 20px;
-  text-align: center;
+  align-items: center;
   background-color: #f4f4f4;
-  width: 101%;
-  padding: 20px 200px;
-
-
+  width: 100%;
   max-width: 950px;
   border-collapse: collapse;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+.titleBI h2 {
+  font-size: 1.7rem;
 }
 
 .subTitles {

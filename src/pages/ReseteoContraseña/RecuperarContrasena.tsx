@@ -4,19 +4,19 @@ import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../style/PagesStyles/cambioContraseñaStyles.css";
 import type { verificacion, codigoVerificacion } from "../../types/generalForm";
-import ErrorMessage from "../../Components/ErrorMessage/MostrarMensajesError";
 import { useForm } from "react-hook-form";
 import ReCAPTCHA from "react-google-recaptcha";
-
+import emailIcon from "../../../src/assets/img/email.png";
 import { correoRecuperacionContrasenia, verificacioCodigoServices, } from "../../services/EnvioEmailServices";
 import Modal from "../../Components/shared/ModalComponents/modalComponent";
-import { mensajes } from "../../util/message";
 import { Toaster, toast } from "sonner";
 import { useAuth } from "../../Auth/AuthContext";
 
 const RecuperarContrasena: React.FC = () => {
   const navigate = useNavigate();
-  const RECAPTCHA_KEY = "6LfhvTErAAAAAMf6tWN5DlCFbZcIljmrLErok5yW";
+  //const RECAPTCHA_KEY = "6LfhvTErAAAAAMf6tWN5DlCFbZcIljmrLErok5yW";
+  const RECAPTCHA_KEY = import.meta.env.VITE_RECAPTCHA_KEY;
+  console.log("La recpoatcha KEY: ", RECAPTCHA_KEY);
 
   // Estados UI
   const [isRecaptchaVerified, setIsRecaptchaVerified] = useState(false); //hook para validar si el captcha se soluciono
@@ -133,17 +133,18 @@ const RecuperarContrasena: React.FC = () => {
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <Toaster position="top-right" />
+      <div className="circle circle1"></div>{/*Estos circulos son para el efecto de foco detras del Login Form*/}
+      <div className="circle circle2"></div>
+      <div className="circle circle3"></div>
       <div className="card shadow-sm reset-pass-container">
         <div className="card-body">
           {/* Título */}
-          <h2 className="card-title display-6 mb-2"> Restablecer contraseña</h2>
+          <h2 className="card-title  mb-2">RECUPERAR CONTRASEÑA</h2>
 
           {/* Descripción solo en paso 'email' */}
           {step === 'email' && (
-            <p className="lead-text mb-3 text-center">
-              Ingresa el correo electrónico asociado a tu cuenta. Te enviaremos
-              un código temporal que deberás ingresar para poder restablecer
-              tu contraseña.
+            <p className="lead-text mb-3 text-center" style={{ marginTop: "2rem" }}>
+              Ingresa tu correo electrónico para recibir un código temporal, que posteriormente deberás ingresar.
             </p>
           )}
 
@@ -169,7 +170,7 @@ const RecuperarContrasena: React.FC = () => {
               </div>
 
               <button type="submit" className="btn btn-xl w-100 mb-2" style={orange} disabled={!isValid || !isRecaptchaVerified || isSending}>
-                {isSending ? 'Enviando…' : 'Enviar código'}
+                {isSending ? 'ENVIANDO…' : 'ENVIAR CÓDIGO'}
               </button>
             </form>
           )}
@@ -178,7 +179,7 @@ const RecuperarContrasena: React.FC = () => {
           {step === 'otp' && (
             <>
               {/* Descripción OTP */}
-              <p className="lead-text mb-3 text-center" style={{ textAlign: "left" }}>
+              <p className="lead-text mb-3 text-center" style={{ textAlign: "left", marginTop: "2rem" }}>
                 Ingresa el código temporal enviado a tu correo electrónico.
                 Revisa tu bandeja de entrada y spam.
               </p>
@@ -215,8 +216,8 @@ const RecuperarContrasena: React.FC = () => {
         </div>
       </div>
 
-      <Modal isVisible={showModal} title="Correo Enviado" message="El correo ha sido enviado. Revisa tu bandeja de entrada y spam." iconSrc="img/email.png"
-        iconAlt="Icono de email" closeButtonLabel="Aceptar" onClose={() => setShowModal(false)} />
+      <Modal isVisible={showModal} title="Correo Enviado" message="El correo ha sido enviado. Revisa tu bandeja de entrada y spam."
+        iconSrc={emailIcon} iconAlt="Icono de email" closeButtonLabel="Aceptar" onClose={() => setShowModal(false)} />
     </div>
   );
 };

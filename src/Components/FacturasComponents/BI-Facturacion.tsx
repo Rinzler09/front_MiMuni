@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../style/FacturasStyles/facturasBI.css";
 import "../../style/ModalesStyles/TarjetasModal/modalAddTarjeta.css";
 import "../../style/PagesStyles/titulo_TablasStyle.css"
 import { PaginationControl } from 'react-bootstrap-pagination-control';
 import { facturaBienesInmueble } from "../../services/facturasBI";
+import { pdfFacturasAct } from "../../services/pdfFacturasAct";
 import { useAuth } from "../../Auth/AuthContext";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast } from "sonner";
 import Spinner from 'react-bootstrap/Spinner';
-import ReportBI from "../PDF_Components/PDF_Impuestos/reporteBI";
 import { FaEye } from "react-icons/fa";
 import visaImagen from "../../assets/iconoVisa.png";
 import mastercardImagen from "../../assets/master.png";
@@ -20,6 +21,10 @@ import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../shared/ModalComponents/modalComponent";
 import ModalsConteiners from "../shared/ModalComponents/ModalsConteiners";
 import CardForm from "../shared/TarjetasComponents/formTarjetas";
+import imgProcessed from "../../../src/assets/img/procesado.svg";
+import alertPayment from "../../../src/assets/img/alert.svg";
+import pagoPen from "../../assets/img/pendiente.svg";
+import { useIsMobile } from "../../hooks/UseIsMobile";
 
 interface Facturas {
   numFactura: number;
@@ -43,6 +48,8 @@ interface LocationState {
 
 const ProceosFacturacion: React.FC = () => {
 
+  const isMobile = useIsMobile();
+
   /*Se incializan los hook States de los parametros para la factura*/
   const [modalDetPago, setModalDetPago] = useState(false);
   const [modalProPay, setModalProPay] = useState(false);
@@ -62,23 +69,12 @@ const ProceosFacturacion: React.FC = () => {
 
 
   const [showModals, setShowModals] = useState<boolean>(false);
-  // const [selectedAmount, setSelectedAmount] = useState(0);
-  // const [selectedYears, setSelectedYears] = useState<number[]>([]);
-  // const [showModal, setShowModal] = useState(false);
   const [showCheckboxModal, setShowCheckboxModal] = useState(false);
   // const [showCardModal, setShowCardModal] = useState(false);
   const [showCardRequiredModal, setShowCardRequiredModal] = useState(false);
-  // const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  // const [showConfirmationIcon, setShowConfirmationIcon] = useState(false);
-  // const [showOkButton, setShowOkButton] = useState(false);
-  // const [confirmationMessage, setConfirmationMessage] =
-  //   useState("Procesando...");
-  // Estados para los datos de la tarjeta
-  // const [cardNumber, setCardNumber] = useState("•••• •••• •••• ••••");
-  // const [cardName, setCardName] = useState("SU NOMBRE AQUÍ");
-  // const [cardExpiry, setCardExpiry] = useState("MM / YY");
-  // const [cardCVV, setCardCVV] = useState("");
-  // const [isBackView, setIsBackView] = useState(false);
+  const [showFacturaActPDF, setShowFacturaActPDF] = useState<boolean>(false);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
   const [savedCard, setSavedCard] = useState<{
     number: string;
     name: string;
@@ -103,7 +99,6 @@ const ProceosFacturacion: React.FC = () => {
   const handleCardSaved = (card: any) => {
     setSavedCard(card);
   }
-
 
   /*HOOKS PARA PAGOS A DB GEOREDES*/
   const [facturas, setFacturas] = useState<Facturas[]>([]);
@@ -154,6 +149,7 @@ const ProceosFacturacion: React.FC = () => {
         const respuesta = await facturaBienesInmueble(selectedMunicipality, claveCat, token);
 
         if (respuesta && Array.isArray(respuesta)) {
+          console.log("respuesta facturas: ", respuesta);
           setFacturas(respuesta);
         } else {
           console.error("La respuesta de la API no contiene un arreglo:", respuesta);
@@ -167,6 +163,17 @@ const ProceosFacturacion: React.FC = () => {
 
     fetchFacturas();
   }, [claveCat, selectedMunicipality, user]);
+
+  const getFacturaActPDF = async (facturaID: string) => {
+    try {
+      const respuesta = await pdfFacturasAct(facturaID, selectedMunicipality, claveCat, token);
+      const url = URL.createObjectURL(respuesta?.data);
+      setPdfUrl(url);
+    } catch (error) {
+      console.log("Error obteniendo registros:", error);
+    }
+  }
+
 
   //Cuando se clickea el boton pagar se ejecuta el metodo handlePayButtonClick
   //el cual mediante fetch usa un post para enviar el json conteniendo la estrucutar del pago de factura  
@@ -248,44 +255,10 @@ const ProceosFacturacion: React.FC = () => {
     }, 2000)
   }
 
-  // const closeModal = () => setShowModal(false);
-  // const closeCheckboxModal = () => setShowCheckboxModal(false);
-  // const closeCardRequiredModal = () => setShowCardRequiredModal(false);
-  // const openCardModal = () => setShowCardModal(true);
-  // const closeCardModal = () => setShowCardModal(false);
-
-  // const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const rawValue = e.target.value.replace(/\s+/g, "");
-  //   const formattedValue = rawValue.replace(/(\d{4})(?=\d)/g, "$1 ");
-  //   setCardNumber(formattedValue || "•••• •••• •••• ••••");
-  // };
-
-  // const handleCardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setCardName(e.target.value || "SU NOMBRE AQUÍ");
-  // };
-
-  // const handleCardExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setCardExpiry(e.target.value || "MM / YY");
-  // };
-
-  // const handleCardCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setCardCVV(e.target.value);
-  // };
-
-  // const handleSaveCard = () => {
-  //   setSavedCard({
-  //     number: cardNumber,
-  //     name: cardName,
-  //     expiry: cardExpiry,
-  //   });
-  //   closeCardModal();
-  // };
-
-
   return (
     <div className="detalles-impuesto-container">
 
-      <div className="title" style={{ textAlign: "center" }}> ESTADO DE CUENTA BIENES INMUEBLES</div>
+      <div className="titleFA_BI" style={{ textAlign: "center" }}> FACTURAS PENDIENTES - BIENES INMUEBLES</div>
 
       <h2 className="subTitles">Datos del Inmueble</h2>
 
@@ -355,6 +328,7 @@ const ProceosFacturacion: React.FC = () => {
             <th>Ajuste</th>
             <th>Valor Pagado</th>
             <th>Total</th>
+            <th>VER</th>
           </tr>
         </thead>
 
@@ -364,7 +338,7 @@ const ProceosFacturacion: React.FC = () => {
             // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
             ? Array.from({ length: registrosPorPagina }).map((_, i) => (
               <tr key={i}>
-                {Array.from({ length: 11 }).map((__, j) => (
+                {Array.from({ length: 12 }).map((__, j) => (
                   <td key={j} style={{ textAlign: "center" }}>
                     <Skeleton height={20} />
                   </td>
@@ -382,7 +356,7 @@ const ProceosFacturacion: React.FC = () => {
                     onChange={() => seleccionFilas(item)}
                   />
                 </td>
-                <td style={{ textAlign: "center" }}>{item.numFactura}</td>
+                <td style={{ textAlign: "center", color: "#6f2806" }}>{item.numFactura}</td>
                 <td style={{ textAlign: "center" }}>{item.fechaVence}</td>
                 <td style={{ textAlign: "center" }}>{item.descripcion}</td>
                 <td style={{ textAlign: "center" }}>L{item.subtotal}</td>
@@ -392,6 +366,12 @@ const ProceosFacturacion: React.FC = () => {
                 <td style={{ textAlign: "center" }}>L{item.ajuste}</td>
                 <td style={{ textAlign: "center" }}>L{item.valorPagado}</td>
                 <td style={{ textAlign: "center" }}>L{item.total}</td>
+                <td>
+                  <button className="btnRecibos" onClick={() => {
+                    setShowFacturaActPDF(true);
+                    getFacturaActPDF((item.numFactura).toString());
+                  }}><FaEye /></button>
+                </td>
               </tr>
             ))}
 
@@ -417,45 +397,46 @@ const ProceosFacturacion: React.FC = () => {
 
       )}
 
-
-      {/* Sección de "Mis tarjetas de crédito y débito" */}
-      <div className="credit-card-section"> {/*Cambiar la logica a un componente reutilizable*/}
-        <h3>Mis tarjetas de credito y debito</h3>
-        <div className="card-display-container">
-          {savedCard ?
-            (<div className="mini-card">
-              <div className={`mini-card-bg ${savedCard?.type?.toLowerCase() || ""}-bg`}>
-                {getCardLogo(savedCard.type) && (
-                  <img src={getCardLogo(savedCard.type)} className="mini-card-logo" alt="" />)}
-                <p className="mini-card-number">{formatCardNumber(savedCard.number)}</p>
-                <p className="mini-card-name">{savedCard.name}</p>
-                <p className="saved-card-expiry">Válida hasta {savedCard.expiry}</p>
-              </div>
-              <div >
-                <button className="butto-card" onClick={() => { setShowModals(true) }}
-                  title="Editar Tarjeta" >
-                  <FontAwesomeIcon icon={faPencil} /> Editar</button>
-              </div>
-            </div>
-            ) : (
-              <button className="add-card-link" onClick={() => setShowModals(true)}>Agregar una tarjeta</button>
-            )}
-          <p className="card-info">
-            Aceptamos las principales tarjetas de credito
-          </p>
-
-          <ModalsConteiners open={showModals} onClose={() => setShowModals(false)}>
-            <div style={{ padding: '20px', color: 'black' }}>
-              <CardForm onSave={handleCardSaved} onCancel={() => setShowModals(false)} initialData={savedCard ?? undefined} />
-            </div>
-          </ModalsConteiners>
-        </div>
-      </div>
-
       {/* Total y botones */}
       <div className="payment-summary">
         <p>Total a Pagar: LPS {seleccionCantidad.toLocaleString()}</p>
-        <button className="button-cancel">Cancelar</button>
+      </div>
+
+      {/* Sección de "Mis tarjetas de crédito y débito" */} {/*Cambiar la logica a un componente reutilizable*/}
+      <div className="payment-actions-container">
+        <div className="credit-card-section">
+          <h3>Mis tarjetas de credito y debito</h3>
+          <div className="card-display-container">
+            {savedCard ?
+              (<div className="mini-card">
+                <div className={`mini-card-bg ${savedCard?.type?.toLowerCase() || ""}-bg`}>
+                  {getCardLogo(savedCard.type) && (
+                    <img src={getCardLogo(savedCard.type)} className="mini-card-logo" alt="" />)}
+                  <p className="mini-card-number">{formatCardNumber(savedCard.number)}</p>
+                  <p className="mini-card-name">{savedCard.name}</p>
+                  <p className="saved-card-expiry">Válida hasta {savedCard.expiry}</p>
+                </div>
+                <div >
+                  <button className="butto-card" onClick={() => { setShowModals(true) }}
+                    title="Editar Tarjeta" >
+                    <FontAwesomeIcon icon={faPencil} /> Editar</button>
+                </div>
+              </div>
+              ) : (
+                <button className="add-card-link" onClick={() => setShowModals(true)}>Agregar una tarjeta</button>
+              )}
+            <p className="card-info">
+              Aceptamos las principales tarjetas de credito
+            </p>
+
+            <ModalsConteiners open={showModals} onClose={() => setShowModals(false)}>
+              <div style={{ padding: '20px', color: 'black' }}>
+                <CardForm onSave={handleCardSaved} onCancel={() => setShowModals(false)} initialData={savedCard ?? undefined} />
+              </div>
+            </ModalsConteiners>
+          </div>
+        </div>
+        {/* <button className="button-cancel">Cancelar</button> */}
         <Link
           to="/Proceso-Tarjeta"
           className="button-links"
@@ -467,7 +448,7 @@ const ProceosFacturacion: React.FC = () => {
 
       {/* Modal de advertencia */}
 
-      <Modal isVisible={showCheckboxModal} title="MENSAJE DE ADVERTENCIA" showCloseButton={false} >
+      <Modal showIcon={true} isVisible={showCheckboxModal} title="MENSAJE DE ADVERTENCIA" showCloseButton={false} >
         <div style={{ padding: '20px', color: 'black', textAlign: 'center' }}>
           <p>Debe seleccionar al menos un periodo de deuda para continuar con el pago.</p>
           <button className="modal-button"
@@ -476,7 +457,7 @@ const ProceosFacturacion: React.FC = () => {
       </Modal>
 
       {/* Modal de advertencia para agregar tarjeta de crédito */}
-      <Modal isVisible={showCardRequiredModal} title="MENSAJE DE ADVERTENCIA" showCloseButton={false} >
+      <Modal showIcon={true} isVisible={showCardRequiredModal} title="MENSAJE DE ADVERTENCIA" showCloseButton={false} >
         <div style={{ padding: '20px', color: 'black', textAlign: 'center' }}>
           <p>Debes agregar una tarjeta de crédito o débito antes de proceder con el pago.</p>
           <button className="modal-button"
@@ -484,96 +465,17 @@ const ProceosFacturacion: React.FC = () => {
         </div>
       </Modal>
 
-      {/* {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <img src="img/error.svg" alt="Advertencia" className="modal-icon" />
-            <h3 className="modal-title" style={{ textAlign: "center" }}>
-              Mensaje de advertencia
-            </h3>
-            <p className="modal-message">
-              Lo siento, tienes periodos anteriores sin pagar.
-            </p>
-            <button onClick={closeModal} className="modal-button">
-              OK
-            </button>
-          </div>
-        </div>
-      )} */}
 
-
-      {/* Modal de advertencia de selección de checkbox */}
-      {/*Cambiar la logica a un componente reutilizable*/}
-      {/* {showCheckboxModal && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <img src="img/error.svg" alt="Advertencia" className="modal-icon" />
-            <h3 className="modal-title" style={{ textAlign: "center" }}>
-              Mensaje de advertencia
-            </h3>
-            <p className="modal-message">
-              Debe seleccionar al menos un periodo de deuda para continuar con
-              el pago.
-            </p>
-
-            <button onClick={closeCheckboxModal} className="modal-button">
-              OK
-            </button>
-          </div>
+      {/* Modal que renderiza el pdf de factura activa */}
+      <Modal isVisible={showFacturaActPDF} showIcon={false}
+        modalWidth="80%" modalHeight={isMobile ? "72%" : "95%"} showCloseButton={true}
+        onClose={() => setShowFacturaActPDF(false)}>
+        <div style={{ fontSize: "20px", fontWeight: "bold" }}>FACTURA PENDIENTE DE PAGO</div>
+        <div className="pdfWrapperFA">
+          {pdfUrl ? (<iframe src={pdfUrl} width="100%" height="100%" />)
+            : (<Spinner style={{ marginTop: "50px" }} animation="border" />)}
         </div>
-      )} */}
-      {/* Modal de advertencia para agregar tarjeta de crédito */}
-      {/*Cambiar la logica a un componente reutilizable*/}
-      {/* {showCardRequiredModal && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <img src="img/error.svg" alt="Advertencia" className="modal-icon" />
-            <h3 className="modal-title" style={{ textAlign: "center" }}>
-              Mensaje de advertencia
-            </h3>
-            <p className="modal-message">
-              Debe agregar una tarjeta de crédito o débito antes de proceder el
-              pago.
-            </p>
-            <button
-              onClick={() => {
-                closeCardRequiredModal();
-                openCardModal();
-              }}
-              className="modal-button"
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )} */}
-
-      {/* Modal de confirmación */}
-      {/*Cambiar la logica a un componente reutilizable*/}
-      {/* {showConfirmationModal && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            {showConfirmationIcon ? (
-              <img
-                src="img/procesado.svg"
-                alt="Confirmación"
-                className="modal-icon"
-              />
-            ) : (
-              <div className="loading-circle"></div>
-            )}
-            <h3 className="modal-title" style={{ textAlign: "center" }}>
-              Mensaje de Confirmación
-            </h3>
-            <p className="modal-message">{confirmationMessage}</p>
-            {showOkButton && (
-              <Link to="/historial-pagos" className="modal-button">
-                OK
-              </Link>
-            )}
-          </div>
-        </div>
-      )} */}
+      </Modal>
 
       {/* Modal desglose de cobro durante transaccion (donde se cobran los 30 lps)*/}
       {/*Cambiar la logica a un componente reutilizable*/}
@@ -582,7 +484,7 @@ const ProceosFacturacion: React.FC = () => {
           <div className="modalPago">
             <h3 className="modal-title" style={{ textAlign: "center" }}>
               <img
-                src="img/alert.svg"
+                src={alertPayment}
                 alt="alertaPago"
                 className="modal-icon"
               />{" "}
@@ -653,6 +555,7 @@ const ProceosFacturacion: React.FC = () => {
         </div>
       )}
 
+      {/* Modal de procesando el pago */}
       {modalProPay && (
         <div className="modal-overlay ">
           <div className="modalPago">
@@ -663,11 +566,12 @@ const ProceosFacturacion: React.FC = () => {
           </div>
         </div>
       )}
+
       {/* {pagoExitoso && <ReportBI />} */}
       {pagoExitoso && (
         <div className="modal-overlay ">
           <div className="modalPago exitoPago">
-            <img src="public/img/procesado.svg" alt="Success" className="modal-icon" />
+            <img src={imgProcessed} alt="Success" className="modal-icon" />
             <h2 className="modal-title" style={{ textAlign: "center" }}>
               Pago Realizado Exitosamente
             </h2>
@@ -679,7 +583,7 @@ const ProceosFacturacion: React.FC = () => {
                 onClick={() => {
                   setPagoExitoso(false);
                   // setViewPDF(true);
-                  navigate("/recibo-BI", { state: { impuesto: "BIENES INMUEBLES" } });
+                  navigate("/recibo-BI", { state: { impuesto: "BIENES INMUEBLES", numRecibo: 22233 } });
                 }}
               >
                 <FaEye /> &nbsp; Visualizar Comprobante
@@ -697,99 +601,6 @@ const ProceosFacturacion: React.FC = () => {
         </div>
       )}
 
-      {/* Modal para agregar tarjeta */}
-      {/*Cambiar la logica a un componente reutilizable*/}
-      {/* {showCardModal && (
-        <div className="modal">
-          <div className="card-modal-content">
-            <h3>Agregue una tarjeta</h3>
-            <br />
-            <div className="card-modal-body">
-              <div className="card-preview">
-                {isBackView ? (
-                  <div className="card-back">
-                    <div className="black-bar"></div>
-                    <div className="cvv-box">
-                      <span className="cvv-text">{cardCVV || "•••"}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="card-image">
-                    <p className="card-number">💳 {cardNumber}</p>
-                    <p className="card-name">{cardName}</p>
-                    <p className="card-expiry">Válida hasta {cardExpiry}</p>
-                  </div>
-                )}
-              </div>
-
-       
-              <form className="card-form">
-                <label className="textoPrincial">Número de tarjeta</label>
-                <input
-                  type="text"
-                  placeholder="•••• •••• •••• ••••"
-                  onChange={handleCardNumberChange}
-                  minLength={13}
-                  maxLength={19}
-                  onFocus={() => setIsBackView(false)}
-                />
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label className="textoPrincial">Fecha Exp</label>
-                    <input
-                      type="text"
-                      placeholder="MM / YY"
-                      onChange={handleCardExpiryChange}
-                      maxLength={5}
-                      onFocus={() => setIsBackView(false)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="textoPrincial">CVV</label>
-                    <input
-                      type="text"
-                      placeholder="123"
-                      onChange={handleCardCVVChange}
-                      maxLength={3}
-                      minLength={3}
-                      onFocus={() => setIsBackView(true)}
-                      onBlur={() => setIsBackView(false)}
-                    />
-                  </div>
-                </div>
-
-                <label className="textoPrincial">Nombre en la tarjeta</label>
-                <input
-                  type="text"
-                  placeholder="Nombre completo"
-                  onChange={handleCardNameChange}
-                  maxLength={50}
-                  onFocus={() => setIsBackView(false)} />
-                <label className="textoPrincial">Direccion de la tarjeta</label>
-                <input
-                  type="text"
-                  placeholder="Calle, Colonia, Ciudad"
-                  onChange={handleCardNameChange}
-                  maxLength={100}
-                  onFocus={() => setIsBackView(false)} />
-                <button
-                  type="button"
-                  className="button-continue"
-                  onClick={handleSaveCard}>
-                  Agregar
-                </button>
-                <button
-                  type="button"
-                  className="button-back"
-                  onClick={closeCardModal}>
-                  Atrás
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };

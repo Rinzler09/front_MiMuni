@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import "../style/PagesStyles/cambioContraseñaStyles.css";
 import Municipalidad from "../Components/ImagesComponents/Municipalidad";
-import { useEffect } from "react";
 // Importación nuevas al proyecto
 import type { cambioContrasena } from "../types/generalForm";
 import ErrorMessage from "../Components/ErrorMessage/MostrarMensajesError";
@@ -10,14 +8,12 @@ import { useForm } from "react-hook-form";
 import { cambiarContra } from "../services/CambioControseñaServices";
 import { Toaster, toast } from "sonner";
 import Modal from "../Components/shared/ModalComponents/modalComponent";
-import { useAuth } from "../Auth/AuthContext";
-import { logoutUsuario } from "../services/EliminacionCookie";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importar estilos de bootstrap icons (si no lo has hecho globalmente)
 import { useSessionTimeout } from "../hooks/UseSessionTimeout";
 // import { useSessionModal } from "../hook/UseSessionTimeout";
+import processedIcon from "../assets/img/procesado.svg";
 
 const CambioContrasena: React.FC = () => {
-  const navigate = useNavigate();
   // const location = useLocation(); //llamamos a este hook para ver donde estamos ubicados actualmente y asi saber 
   // que solo se navegara a(/) si estamos en la pantalla actual de cambio-contraseña  
 
@@ -105,15 +101,21 @@ const CambioContrasena: React.FC = () => {
 
   return (
     <div className="container mt-5">
+
       <Toaster position="top-right" />
+
       <br />
       <div className="logoMuni"> <Municipalidad /> </div>
       <br />
 
       <div className="divTitlecontra"> <h2 className="mb-4">Cambio de contraseña</h2> </div>
-
+      <div className="circle circle1"></div>{/*Estos circulos son para el efecto de foco detras del Login Form*/}
+      <div className="circle circle2"></div>
+      <div className="circle circle3"></div>
       <form id="datosPersonales" onSubmit={handleSubmit(handleContra)}>
-        <div className="form-container-contraseña">
+
+        <div className="form-container-contraseña resetPwdContainer">
+
           {/* Campo de nueva contraseña */}
           <div className="mb-3">
             <label htmlFor="contraseña" className="form-label"> Ingrese la nueva contraseña </label>
@@ -175,7 +177,7 @@ const CambioContrasena: React.FC = () => {
       </form>
 
       {/* Reutilización de la ventana modal */}
-      <Modal iconSrc="public\img\procesado.svg" isVisible={showModalDatos} title="Éxito"
+      <Modal iconSrc={processedIcon} isVisible={showModalDatos} title="Éxito"
         message="Contraseña actualizada correctamente, ingrese sus credenciales para continuar." onClose={() => cerrar()} />
       {Modals}
       {SsExpiredModal}  {/* Este hook se coloca al final del render para que las expiraciones aparezcan sobre el layout*/}

@@ -5,6 +5,11 @@
     align-items: center;
 }
 
+/* .app-container {
+    height: 900px;
+    background-color: aqua;
+} */
+
 .app-container.sidebar-collapsed .detalles-impuesto-container {
     /* desplaza hacia la derecha el mismo ancho que ocupa el sidebar */
     margin-left: calc(var(--sidebar-collapsed-width) + 15px);
@@ -14,7 +19,7 @@
 
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .app-container {
         flex-direction: column;
     }
@@ -23,4 +28,4 @@
         width: 100%;
         position: relative;
     }
-}
+} */

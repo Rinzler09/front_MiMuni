@@ -381,7 +381,7 @@
 
 /* ================= MODO MÓVIL ================= */
 @media (max-width: 768px) {
-  .sidebar-container {
+  /* .sidebar-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -392,23 +392,23 @@
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     z-index: 10000;
-  }
+  } */
 
-  .app-container.mobileOpen .sidebar-container {
+  /* .app-container.mobileOpen .sidebar-container {
     transform: translateX(0);
-  }
+  } */
 
   /* En móvil NO existe collapsed */
-  .app-container.collapsed .sidebar-container {
+  /* .app-container.collapsed .sidebar-container {
     width: 80%;
-  }
+  } */
 
-  /* Backdrop */
+  /* Backdrop  */
   .sidebar-backdrop {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
-    z-index: 9000;
+    z-index: 1000;
   }
 
 }
@@ -416,7 +416,7 @@
 /* ================= TABLET / iPad ================= */
 /* Colapsado automático entre 769px y 1024px */
 @media (max-width: 1024px) and (min-width: 769px) {
-  .sidebar-container {
+  /* .sidebar-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -427,22 +427,22 @@
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     z-index: 10000;
-  }
+  } */
 
-  .app-container.mobileOpen .sidebar-container {
+  /* .app-container.mobileOpen .sidebar-container {
     transform: translateX(0);
-  }
+  } */
 
   /* En móvil NO existe collapsed */
-  .app-container.collapsed .sidebar-container {
+  /* .app-container.collapsed .sidebar-container {
     width: 80%;
-  }
+  } */
 
   /* Backdrop */
-  .sidebar-backdrop {
+  /* .sidebar-backdrop {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
     z-index: 9000;
-  }
+  } */
 }

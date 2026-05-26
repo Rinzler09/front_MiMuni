@@ -1,13 +1,13 @@
 import React, { FC, Suspense, useState, useEffect, useCallback } from 'react'
-import { replace, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Sidebar from '../Components/LayoutComponents/Sidebar';
 import Header from '../Components/LayoutComponents/Header'
 import '../style/PagesStyles/generalStyles.css'
-import { useAuth } from '../Auth/AuthContext';
 import { useSessionTimeout } from '../hooks/UseSessionTimeout';
 import NotFound from '../Components/ErrorMessage/NotFound';
 import Modal from '../Components/shared/ModalComponents/modalComponent';
 import { useSessionPoll } from '../hooks/UseSessionPoll';
+import { useIsMobile } from "../hooks/UseIsMobile";
 //me quede por aqui ya que sera aqui en donde se implementara la logica 
 // de los eventos mas la logica de las modales
 
@@ -45,7 +45,8 @@ const Components: Components = {
     //'cambio-contraseña': React.lazy(() => import('../pages/CambioContraseña')),
 
     //Componente para visualizar recibo PDF
-    'recibo-BI': React.lazy(() => import('../Components/PDF_Components/PDF_Impuestos/reporteBI')),
+    // 'recibo-BI': React.lazy(() => import('../Components/PDF_Components/PDF_Impuestos/reporteBI')),
+    // 'recibos': React.lazy(() => import('../Components/PDF_Components/PDF_Impuestos/Recibos')),
 
 };
 
@@ -60,9 +61,10 @@ const General: FC = () => {
     //Todo lo de abajo se agrego para el control de inactividad y ventanas modales segun inactividad
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const isMobile = useIsMobile();
 
     const handleToggleSidebar = () => {
-        setMobileOpen(prev => !prev);
+        // setMobileOpen(prev => !prev);
         setCollapsed(c => !c);
     };
 
@@ -90,7 +92,7 @@ const General: FC = () => {
 
     // console.log("El valor de getTokenCb en General: ", getTokenCb()); // el problema definitavemnete no es aqui si no que dentro de useSessionPoll
     useSessionPoll({ // se instancia el hook para estar revisando el estado de la sesion actual 
-        intervalMs: 30_000,
+        intervalMs: 45_000,
         getToken: getTokenCb, //si ya se hizo "const function = useCallback(..) " como previamente, entonces en la opcion del hook solo se pasa " getToken: function, "
         onInvalid: onInvalidCb,
     });
@@ -112,15 +114,18 @@ const General: FC = () => {
     }, [initializeRFSession]); //resetSessionTimers no cambiara a menos de que una de sus dependencias internas cambien ya que usa useCallback
     //los timers internos de la funcion son los que cambian la funcion de resetSessionTimers como tal no
 
+    // useEffect(() => { if (isMobile) setCollapsed(true) }, []); //si es una version mobil entonces se esconde el sidebar al iniciar sesion
 
     return (
 
-        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''} ${mobileOpen ? 'mobileOpen' : ''}`}>
-            {mobileOpen && (
-                <div className='sidebar-backdrop' onClick={() => setMobileOpen(false)} />)}
-            <Sidebar collapsed={collapsed} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
+        <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''} `}>
+            {/* <div className={`app-container ${collapsed ? 'sidebar-collapsed' : ''} ${mobileOpen ? 'mobileOpen' : ''}`}></div> */}
+            {(isMobile && collapsed) && (
+                <div className='sidebar-backdrop' onClick={handleToggleSidebar} />)}
+            {/* <Sidebar collapsed={collapsed} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} /> */}
+            <Sidebar collapsed={isMobile ? !collapsed : collapsed} />
 
-            <Header collapsed={collapsed} onToggleSidebar={handleToggleSidebar} />
+            <Header collapsed={isMobile ? !collapsed : collapsed} onToggleSidebar={handleToggleSidebar} />
             <div className="generalDiv">
                 <Suspense fallback={<div>Cargando Impuesto ...</div>}>
                     {Componente ? (

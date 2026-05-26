@@ -1,6 +1,6 @@
 // src/components/DetallesImpuesto.tsx
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -12,7 +12,6 @@ import { PaginationControl } from 'react-bootstrap-pagination-control';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { biHeaders } from "../../util/headerDescrip";
-
 
 interface Claves {
   prop: string;
@@ -26,10 +25,12 @@ interface Claves {
   dni: string
 }
 
-
 const DetallesImpuesto: React.FC = () => {
   const navigate = useNavigate();
-  const { user, selectedMunicipality, token } = useAuth();
+  const { selectedMunicipality, token } = useAuth();
+  const logoMuni = new URL(`../../assets/img/Logos/${selectedMunicipality}.png`,
+    import.meta.url).href;
+  //console.log(import.meta.url);
   // const token = user?.token;
   // const { state } = useLocation();
   // console.log("eL ESTADO", state);
@@ -45,6 +46,10 @@ const DetallesImpuesto: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!selectedMunicipality) {
+      toast.error("Debe seleccionar al menos una Municipalidad para ver sus Bienes Inmuebles.",);
+      navigate("/error-404"); //si no existe una clave catastral seleccionada entonces navega a facturas-bi
+    }
     if (!selectedMunicipality || !token) return;
 
     const fetchClaves = async () => {
@@ -123,10 +128,12 @@ const DetallesImpuesto: React.FC = () => {
 
   return (
     <div className="detalles-impuesto-container">
-
-      <h2 className="title" style={{ textAlign: "center" }}>
-        LISTADO DE BIENES INMUEBLES
-      </h2>
+      <div className="titleBI">
+        <img className="imgLogo" src={logoMuni} alt="Logo de municipalidad" />
+        <h2 >
+          BIENES INMUEBLES REGISTRADOS
+        </h2>
+      </div>
 
       <div className="table-responsives">
         <table className="details-table table table-hover table-sm align-middle w-100">

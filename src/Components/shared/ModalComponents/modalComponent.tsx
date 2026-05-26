@@ -1,6 +1,7 @@
 // src/components/attributeComponents/ModalComponents/modalComponent.tsx
 import React from 'react';
 import "../../../style/ModalesStyles/PageModal/modalConfir.css";
+import iconoAlerta from "../../../../src/assets/img/advertencia.png";
 
 interface ModalProps {
   isVisible: boolean;
@@ -10,8 +11,11 @@ interface ModalProps {
   children?: React.ReactNode;
   showCloseButton?: boolean;
   closeButtonLabel?: string;
+  showIcon?: boolean;
   iconSrc?: string;
   iconAlt?: string;
+  modalWidth?: string;
+  modalHeight?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -22,8 +26,11 @@ const Modal: React.FC<ModalProps> = ({
   children,
   showCloseButton = true,
   closeButtonLabel = "Regresar",
-  iconSrc = "img/advertencia.png",
+  iconSrc = iconoAlerta,
   iconAlt,
+  modalWidth,
+  modalHeight,
+  showIcon = true,
 }) => {
   if (!isVisible) return null;
 
@@ -51,8 +58,9 @@ const Modal: React.FC<ModalProps> = ({
         onKeyDown={stop}
         onTouchStart={stop}
         onScroll={stop}
+        style={{ width: modalWidth, height: modalHeight }}
       >
-        <img src={iconSrc} alt={altText} className='modal-icon' />
+        {showIcon && <img src={iconSrc} alt={altText} className='modal-icon' />}
         {title && <h3 className="modal-title" style={{ textAlign: "center" }}>{title}</h3>}
         {message && <p className="modal-message">{message}</p>}
         {children}

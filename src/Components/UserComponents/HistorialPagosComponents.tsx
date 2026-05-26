@@ -9,8 +9,14 @@ import { useAuth } from "../../Auth/AuthContext";
 import { toast } from "sonner";
 import { facturasPagadas } from "../../services/facturasPagadas";
 import { facturasPagadas_F } from "../../services/facturasPagadas_F";
+import Modal from "../shared/ModalComponents/modalComponent";
+import Spinner from 'react-bootstrap/Spinner';
+import { recibos } from "../../services/recibos";
+import { useIsMobile } from "../../hooks/UseIsMobile";
 
 /* Se define la interface facturas con su tipo de dato */
+
+type ImpuestoKey = 'BI' | 'IP' | 'SP' | 'IC' | 'PP' | 'OT';
 
 interface FacturasPagadas {//Esta la funcion de interface que nos ayuda para poder definir un tipo de dato
   NoFactura: number;
@@ -21,16 +27,41 @@ interface FacturasPagadas {//Esta la funcion de interface que nos ayuda para pod
   FechaPago: string;
   FechaVence: string;
   NoRecibo: number;
-  TipoFactura: string;
+  TipoFactura: ImpuestoKey;
 }
 
 type Option = { label: string; value: string };
 
+// type ParamsRecibo = { //los params que se le pasaran al recibo para que sea maquetado
+//   nombreRecibo: string,
+//   dniRecibo: number,
+//   direccionRecibo: string,
+//   tipoImpuestoRecibo: string,
+//   claveCatRecibo: string,
+//   areaTerRecibo: number,
+//   periodosRecibo: string,
+//   rubroIdRecibo: string,
+//   txtRubroRecibo: string,
+//   precioUniRecibo: number,
+//   ajusteRecibo: number,
+//   admRecibo: number,
+//   amnRecibo: number,
+//   prontoPagoRecibo: number,
+//   totalMuniRecibo: number,
+//   totalPagRecibo: number,
+//   formaPagRecibo: number,
+//   cajeroRecibo: string,
+//   facturadoRecibo: string,
+//   fechaEmiRecibo: string,
+//   noComprobanteRecibo: string,
+// }
 
 const HistorialPagos: React.FC = () => {
 
-  const navigate = useNavigate();
-  const [startDate, setStartDate] = useState(new Date());
+  //hook usados para saber si es version movil
+  const isMobile = useIsMobile();
+
+  const [startDate, setStartDate] = useState(new Date("2020-04-08"));
   const [endDate, setEndDate] = useState(new Date());
   const { selectedMunicipality, token } = useAuth();
   const [selectedTax, setSelectedTax] = useState("ALL"); // Track selected dropdown option
@@ -43,12 +74,23 @@ const HistorialPagos: React.FC = () => {
     { label: 'Plan de Pago', value: "PP" },
     { label: 'Servicios Varios', value: 'OT' },
   ];
+
+  const impuestosKeys: Record<ImpuestoKey, string> = { // se define el diccionario para el tipo de Impuesto y se usa Record ya que es el tipado estandar para diccionarios 
+    BI: 'Bienes Inmuebles',
+    IP: 'Impuesto Vecinal',
+    SP: 'Servicios Publicos',
+    IC: 'Impuesto Industria, C y S',
+    PP: 'Plan de Pago',
+    OT: 'Servicios Varios'
+  }
+
   // const [clavesCat, setClavesCat] = useState<string[]>([""]);
-  const [clavesCat, setClavesCat] = useState<string[]>([""]);
+  const [clavesCat, setClavesCat] = useState<string[]>([]);
   const [selectedClaveCat, setSelectedClaveCat] = useState<string>("");
 
   /*Se use el hook de useState para el arreglo de Facturas*/
   const [historialFacturas, setHistorialFacturas] = useState<FacturasPagadas[]>([]);
+  //const [datosRecibo, setDatosRecibo] = useState<ParamsRecibo[]>([]); //Los datos que se recibiran al consumira la API
   const [loading, setLoading] = useState(true);// se declara un const para loading
   const [paginaActual, setPaginaActual] = useState(1);//Estado para la paginacion actual, con el estado de hook useState
   const registrosPorPagina = 5;//Esta contante utiliza el numero de registro por paginacion
@@ -59,6 +101,17 @@ const HistorialPagos: React.FC = () => {
   const registrosActuales = historialFacturas.slice(indPrimerReg, indUltimoReg);
   const handleCambioPag = (numPag: number) => setPaginaActual(numPag);
 
+  //Hooks para mostrar el recibo en formato PDF
+  const [showReciboPDF, setShowReciboPDF] = useState<boolean>(false);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  const getReciboPDF = async (numRecibo: string, municipalidad: string | null, token: string | null) => {
+    const respuesta = await recibos(numRecibo, municipalidad, token);
+    const url = URL.createObjectURL(respuesta?.data);
+    setPdfUrl(url);
+  }
+
+  const [claveImpuesto, setClaveImpuesto] = useState<ImpuestoKey>('BI');
 
   const handleTaxChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log("parametro seleccionado: ", e.target.value)
@@ -172,6 +225,7 @@ const HistorialPagos: React.FC = () => {
               className="date-inicio"
               value={startDate.toISOString().split('T')[0]}
               onChange={(e) => {
+                console.log("StartDate:", e.target.value);
                 setStartDate(new Date(e.target.value)); // se convierte el input string a Date
               }} />{/**En esta parte tenemos un input en donde pasamos la parte de fecha */}
 
@@ -195,7 +249,7 @@ const HistorialPagos: React.FC = () => {
           </div>
 
           <div className="date-range-filter">
-            {selectedTax === 'BI' && (
+            {(selectedTax === 'BI' && clavesCat.length >= 1) ? (
               <select id="selClaveCat" style={{ width: "200px" }} className="selectInvoice"
                 onChange={((e) => setSelectedClaveCat(e.target.value))}>
                 {clavesCat.map(clave => (
@@ -204,9 +258,11 @@ const HistorialPagos: React.FC = () => {
                   </option>
                 ))}
               </select>
-            )}
+            ) : (selectedTax === 'BI') &&
+            (<label style={{ color: "#EB5031", marginLeft: "-100px" }}>
+              No hay claves registradas
+            </label>)}
           </div>
-
 
         </div>
       </div>
@@ -215,6 +271,7 @@ const HistorialPagos: React.FC = () => {
         <table className="details-table table table-hover table-sm align-middle w-100">{/**En este caso tenemos las tablas que se le mostrarar en la parte del diseño al usuario*/}
           <thead>
             <tr>
+              <th>N° RECIBO</th>
               <th>N° FACTURA</th>
               <th>FECHA DE VENCIMIENTO</th>
               <th>CLAVE CATASTRAL </th>
@@ -222,7 +279,7 @@ const HistorialPagos: React.FC = () => {
               <th>VALOR FACTURADO</th>
               <th>VALOR PAGADO</th>
               <th>FECHA DE PAGO</th>
-              <th>VER RECIBO</th>
+              <th>VER</th>
             </tr>
           </thead>
 
@@ -231,7 +288,7 @@ const HistorialPagos: React.FC = () => {
               // Mientras carga, dibuja  registrosPorPagina filas de skeleton con 11 celdas cada una
               ? Array.from({ length: registrosPorPagina }).map((_, i) => (
                 <tr key={i}>
-                  {Array.from({ length: 8 }).map((__, j) => (
+                  {Array.from({ length: 9 }).map((__, j) => (
                     <td key={j} style={{ textAlign: "center" }}>
                       <Skeleton height={20} />
                     </td>
@@ -241,6 +298,7 @@ const HistorialPagos: React.FC = () => {
 
               : registrosActuales.map((registro, i) => (
                 <tr key={i} className="table-hovers">
+                  <td style={{ color: "#6f2806" }}>{registro.NoRecibo}</td>
                   <td>{registro.NoFactura}</td>
                   <td>{registro.FechaVence}</td>
                   <td>{registro.ClaveCatastral || "NO APLICA"}</td>
@@ -249,8 +307,20 @@ const HistorialPagos: React.FC = () => {
                   <td>L. {registro.ValorPagado}</td>
                   <td>{registro.FechaPago}</td>
                   <td >
-                    <button className="btnRecibos" title="Visualizar recibo" onClick={() => { navigate("/recibo-BI") }}>
-                      <FaEye /> &nbsp; {registro.NoRecibo}
+                    <button className="btnRecibos" title="Visualizar recibo" onClick={() => {
+                      setShowReciboPDF(true);
+                      getReciboPDF((registro.NoRecibo).toString(),
+                        selectedMunicipality, token);
+                      setClaveImpuesto(registro.TipoFactura);
+                      // navigate("/recibos", {
+                      //   state: {
+                      //     numRecibo: registro.NoRecibo,
+                      //     impuesto: registro.TipoFactura,
+                      //     municipalidad: selectedMunicipality,
+                      //   }
+                      // })
+                    }}>
+                      <FaEye />
                     </button>
                   </td>
 
@@ -277,6 +347,18 @@ const HistorialPagos: React.FC = () => {
           />
 
         )}
+
+        {/* Modal que renderiza el pdf de factura activa */}
+        <Modal isVisible={showReciboPDF} showIcon={false}
+          modalWidth="80%" modalHeight={isMobile ? "72%" : "95%"} showCloseButton={true}
+          onClose={() => setShowReciboPDF(false)}>
+          <div style={{ fontSize: "20px", fontWeight: "bold" }}>RECIBO POR PAGO DE {(impuestosKeys[claveImpuesto]).toUpperCase()}</div>
+          <div className="pdfWrapperReceipt">
+            {pdfUrl ? (<iframe src={pdfUrl} width="100%" height="100%" />)
+              : (<Spinner style={{ marginTop: "50px" }} animation="border" />)}
+          </div>
+        </Modal>
+
 
       </div>
     </div >

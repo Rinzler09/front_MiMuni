@@ -2,11 +2,10 @@ import { Page, Text, View, Document, PDFViewer, PDFDownloadLink, Image } from '@
 import { styles } from '../PDF_Structure/structureBI';
 import { Table, TH, TD, TR } from '@ag-media/react-pdf-table';
 import { FaDownload } from 'react-icons/fa';
-import "../../../style/PDF_Styles/reporteBIStyle.css";
+import "../../../style/PDF_Styles/reporteStyle.css";
 import { useAuth } from '../../../Auth/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from "react";
-// import logoMuni from '../../../../public/img/Logos/Municipalidad de Marcovia.png';
 import { toast } from "sonner";
 
 interface facturaBi {
@@ -26,10 +25,11 @@ export default function ReportBI() {//recibe un objeto llamado data de tipo any
     const navigate = useNavigate();
     const fechaActual = new Date().toLocaleDateString("es-HN"); // se obtiene la fecha Actual
     const horaActual = new Date().toLocaleTimeString();
-    const { identifier, selectedMunicipality } = useAuth();
-    const logoMuni = `/img/Logos/${selectedMunicipality}.png`;
+    const { selectedMunicipality } = useAuth();
+    const logoMuni = `src/assets/img/Logos/${selectedMunicipality}.png`;
     const { state } = useLocation();
-    const { impuesto } = (state ?? {});
+    const { impuesto, numRecibo, dni } = (state ?? {});
+
 
     const tableData: facturaBi[] =
         [
@@ -102,7 +102,6 @@ export default function ReportBI() {//recibe un objeto llamado data de tipo any
                     <View>
                         <Text style={[styles.title, styles.textBold]}>{selectedMunicipality}</Text>
                         <Text style={[styles.title2, styles.textBold]}>{impuesto} </Text>
-                        <Text style={{ margin: '0 auto' }}>Recibo #RCB-2024-001</Text>
                     </View>
                 </View>
 
@@ -110,13 +109,19 @@ export default function ReportBI() {//recibe un objeto llamado data de tipo any
                     <View style={styles.spaceY}>
                         <Text style={[styles.billTo, styles.textBold]}>Datos Personales</Text>
                         <Text>Nombre:</Text>
-                        <Text>DNI: {identifier}</Text>
+                        <Text>DNI: {dni}</Text>
                         <Text>Direccion:</Text>
+                        <View style={[styles.concepto]}>
+                            <Text>Concepto: </Text>
+                            {/* <Text>Impuesto de Bienes Inmuebles. Clave Catastral: 24-33-10, Área Terreno: 415.54. 2025 - 2026</Text> */}
+                        </View>
                     </View>
 
                     <View style={[styles.spaceY, styles.date]}>
-                        <Text>Fecha de Emision: {fechaActual}</Text>
-                        <Text>Hora de Emision: {horaActual}</Text>
+                        <Text>Fecha de Impresion: {fechaActual} {horaActual}</Text>
+                        <Text>N.° de Recibo: {numRecibo}</Text>
+                        <Text>N.° de Comprobante: 1117738239812</Text>
+                        <Text>Fecha de Emision: 92132138</Text>
                     </View>
                 </View>
 
@@ -171,7 +176,6 @@ export default function ReportBI() {//recibe un objeto llamado data de tipo any
                             </View>
 
                         ))}
-
 
                     </View>
                 </View>
